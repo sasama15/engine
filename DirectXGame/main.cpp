@@ -28,6 +28,8 @@
 #include "WinApp.h"
 #include "DirectXcommon.h"
 
+#include "Object3d.h"
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -726,86 +728,86 @@ void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdList, const SpriteCommon& 
 }
 
 // 3Dオブジェクト型
-struct Object3d
-{
-    // 定数バッファ
-    ComPtr<ID3D12Resource> constBuff;
-    // アフィン変換情報
-    XMFLOAT3 scale = { 1,1,1 };
-    XMFLOAT3 rotation = { 0,0,0 };
-    XMFLOAT3 position = { 0,0,0 };
-    // ワールド変換行列
-    XMMATRIX matWorld;
-    // 親オブジェクトへのポインタ
-    Object3d* parent = nullptr;
-};
+//struct Object3d
+//{
+//    // 定数バッファ
+//    ComPtr<ID3D12Resource> constBuff;
+//    // アフィン変換情報
+//    XMFLOAT3 scale = { 1,1,1 };
+//    XMFLOAT3 rotation = { 0,0,0 };
+//    XMFLOAT3 position = { 0,0,0 };
+//    // ワールド変換行列
+//    XMMATRIX matWorld;
+//    // 親オブジェクトへのポインタ
+//    Object3d* parent = nullptr;
+//};
 
-// 3Dオブジェクト初期化
-void InitializeObject3d(Object3d* object, int index, ID3D12Device* dev, ID3D12DescriptorHeap* descHeap)
-{
-    HRESULT result;
-        
-    // 定数バッファの生成
-    result = dev->CreateCommittedResource(
-        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),   // アップロード可能
-        D3D12_HEAP_FLAG_NONE,
-        &CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff),
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&object->constBuff));
-}
+//// 3Dオブジェクト初期化
+//void InitializeObject3d(Object3d* object, int index, ID3D12Device* dev, ID3D12DescriptorHeap* descHeap)
+//{
+//    HRESULT result;
+//        
+//    // 定数バッファの生成
+//    result = dev->CreateCommittedResource(
+//        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),   // アップロード可能
+//        D3D12_HEAP_FLAG_NONE,
+//        &CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff),
+//        D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr,
+//        IID_PPV_ARGS(&object->constBuff));
+//}
 
-void UpdateObject3d(Object3d* object, XMMATRIX& matView, XMMATRIX& matProjection)
-{
-    XMMATRIX matScale, matRot, matTrans;
+//void UpdateObject3d(Object3d* object, XMMATRIX& matView, XMMATRIX& matProjection)
+//{
+//    XMMATRIX matScale, matRot, matTrans;
+//
+//    // スケール、回転、平行移動行列の計算
+//    matScale = XMMatrixScaling( object->scale.x, object->scale.y, object->scale.z);
+//    matRot = XMMatrixIdentity();
+//    matRot *= XMMatrixRotationZ(XMConvertToRadians(object->rotation.z));
+//    matRot *= XMMatrixRotationX(XMConvertToRadians(object->rotation.x));
+//    matRot *= XMMatrixRotationY(XMConvertToRadians(object->rotation.y));
+//    matTrans = XMMatrixTranslation( object->position.x, object->position.y, object->position.z);
+//
+//    // ワールド行列の合成
+//    object->matWorld = XMMatrixIdentity(); // 変形をリセット
+//    object->matWorld *= matScale; // ワールド行列にスケーリングを反映
+//    object->matWorld *= matRot; // ワールド行列に回転を反映
+//    object->matWorld *= matTrans; // ワールド行列に平行移動を反映
+//
+//    // 親オブジェクトがあれば
+//    if (object->parent != nullptr) {
+//        // 親オブジェクトのワールド行列を掛ける
+//        object->matWorld *= object->parent->matWorld;
+//    }
+//
+//    // 定数バッファへデータ転送
+//    ConstBufferData* constMap = nullptr;
+//    if (SUCCEEDED(object->constBuff->Map(0, nullptr, (void**)&constMap))) {
+//        constMap->color = XMFLOAT4(1, 1, 1, 1); // RGBA
+//        constMap->mat = object->matWorld * matView * matProjection;
+//        object->constBuff->Unmap(0, nullptr);
+//    }
+//}
 
-    // スケール、回転、平行移動行列の計算
-    matScale = XMMatrixScaling( object->scale.x, object->scale.y, object->scale.z);
-    matRot = XMMatrixIdentity();
-    matRot *= XMMatrixRotationZ(XMConvertToRadians(object->rotation.z));
-    matRot *= XMMatrixRotationX(XMConvertToRadians(object->rotation.x));
-    matRot *= XMMatrixRotationY(XMConvertToRadians(object->rotation.y));
-    matTrans = XMMatrixTranslation( object->position.x, object->position.y, object->position.z);
-
-    // ワールド行列の合成
-    object->matWorld = XMMatrixIdentity(); // 変形をリセット
-    object->matWorld *= matScale; // ワールド行列にスケーリングを反映
-    object->matWorld *= matRot; // ワールド行列に回転を反映
-    object->matWorld *= matTrans; // ワールド行列に平行移動を反映
-
-    // 親オブジェクトがあれば
-    if (object->parent != nullptr) {
-        // 親オブジェクトのワールド行列を掛ける
-        object->matWorld *= object->parent->matWorld;
-    }
-
-    // 定数バッファへデータ転送
-    ConstBufferData* constMap = nullptr;
-    if (SUCCEEDED(object->constBuff->Map(0, nullptr, (void**)&constMap))) {
-        constMap->color = XMFLOAT4(1, 1, 1, 1); // RGBA
-        constMap->mat = object->matWorld * matView * matProjection;
-        object->constBuff->Unmap(0, nullptr);
-    }
-}
-
-void DrawObject3d(Object3d* object, ID3D12GraphicsCommandList* cmdList, ID3D12DescriptorHeap* descHeap, D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView, D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV, unsigned short* indices, UINT numIndices )
-{
-    // デスクリプタヒープの配列
-    ID3D12DescriptorHeap* ppHeaps[] = { descHeap };
-    cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-    // 頂点バッファの設定
-    cmdList->IASetVertexBuffers(0, 1, &vbView);
-    // インデックスバッファの設定
-    cmdList->IASetIndexBuffer(&ibView);
-
-    // 定数バッファビューをセット
-    cmdList->SetGraphicsRootConstantBufferView(0, object->constBuff->GetGPUVirtualAddress());
-    // シェーダリソースビューをセット
-    cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);
-    // 描画コマンド
-    cmdList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);
-}
+//void DrawObject3d(Object3d* object, ID3D12GraphicsCommandList* cmdList, ID3D12DescriptorHeap* descHeap, D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView, D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV, unsigned short* indices, UINT numIndices )
+//{
+//    // デスクリプタヒープの配列
+//    ID3D12DescriptorHeap* ppHeaps[] = { descHeap };
+//    cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+//
+//    // 頂点バッファの設定
+//    cmdList->IASetVertexBuffers(0, 1, &vbView);
+//    // インデックスバッファの設定
+//    cmdList->IASetIndexBuffer(&ibView);
+//
+//    // 定数バッファビューをセット
+//    cmdList->SetGraphicsRootConstantBufferView(0, object->constBuff->GetGPUVirtualAddress());
+//    // シェーダリソースビューをセット
+//    cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);
+//    // 描画コマンド
+//    cmdList->DrawIndexedInstanced(numIndices, 1, 0, 0, 0);
+//}
 
 // チャンクヘッダ
 struct ChunkHeader
@@ -1022,6 +1024,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #pragma endregion DirectX初期化処理
 
 #pragma region 描画初期化処理
+    // 3Dオブジェクト静的初期化
+    Object3d::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+
+    // 3Dオブジェクト生成
+    Object3d* object3d = Object3d::Create();
+
+   
 
     // 頂点データ構造体
     struct Vertex
@@ -1195,27 +1204,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     Object3d object3ds[OBJECT_NUM];
 
     // 配列内の全オブジェクトに対して
-    for (int i = 0; i < _countof(object3ds); i++)
-    {
-        // 初期化
-        InitializeObject3d(&object3ds[i], i, dxCommon->devGeter().Get(), basicDescHeap.Get());
+    //for (int i = 0; i < _countof(object3ds); i++)
+    //{
+    //    // 初期化
+    //    InitializeObject3d(&object3ds[i], i, dxCommon->devGeter().Get(), basicDescHeap.Get());
 
-        // ここから↓は親子構造のサンプル
-        // 先頭以外なら
-        //if (i > 0) {
-        //    // 一つ前のオブジェクトを親オブジェクトとする
-        //    //object3ds[i].parent = &object3ds[i - 1];
-        //    // 親オブジェクトの9割の大きさ
-        //    object3ds[i].scale = { 0.9f,0.9f,0.9f };
-        //    // 親オブジェクトに対してZ軸まわりに30度回転
-        //    object3ds[i].rotation = { 0.0f,0.0f,30.0f };
-        //    // 親オブジェクトに対してZ方向-8.0ずらす
-        //    object3ds[i].position = { 0.0f,0.0f,-8.0f };
-        //}
-    }
+    //    // ここから↓は親子構造のサンプル
+    //    // 先頭以外なら
+    //    //if (i > 0) {
+    //    //    // 一つ前のオブジェクトを親オブジェクトとする
+    //    //    //object3ds[i].parent = &object3ds[i - 1];
+    //    //    // 親オブジェクトの9割の大きさ
+    //    //    object3ds[i].scale = { 0.9f,0.9f,0.9f };
+    //    //    // 親オブジェクトに対してZ軸まわりに30度回転
+    //    //    object3ds[i].rotation = { 0.0f,0.0f,30.0f };
+    //    //    // 親オブジェクトに対してZ方向-8.0ずらす
+    //    //    object3ds[i].position = { 0.0f,0.0f,-8.0f };
+    //    //}
+    //}
 
-    object3ds[0].scale = { 0.5f, 0.5f, 0.5f };
-    object3ds[1].scale = { 0.5f, 0.5f, 0.5f };
+    /*object3ds[0].scale = { 0.5f, 0.5f, 0.5f };
+    object3ds[1].scale = { 0.5f, 0.5f, 0.5f };*/
 
     // スプライト共通データ生成
     spriteCommon = SpriteCommonCreate(dxCommon->devGeter().Get(), WinApp::window_width, WinApp::window_height);
@@ -1330,6 +1339,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         // 入力の更新
         input->Update();
 
+        // 3Dオブジェクト更新
+        object3d->Update();
+
 
         const int cycle = 540; // 繰り返しの周期
         counter++;
@@ -1343,13 +1355,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         //scale /= 2.0f; // [0,+1]の数値
         scale *= 360.0f;
 
-        object3ds[0].rotation = { 0, 0, scale };
-        object3ds[1].rotation = { 0, 0, -scale };
+       /* object3ds[0].rotation = { 0, 0, scale };
+        object3ds[1].rotation = { 0, 0, -scale };*/
 
         float offset = sinf(XM_2PI * (float)counter / cycle);
         offset *= 10.0f;
-        object3ds[0].position = { offset, 0, 0 };
-        object3ds[1].position = { -offset, 0, 0 };
+       /* object3ds[0].position = { offset, 0, 0 };
+        object3ds[1].position = { -offset, 0, 0 };*/
 
         if (input->PushKey(DIK_0)) // 数字の0キーが押されていたら
         {
@@ -1365,13 +1377,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         }
 
         // 座標操作
-        if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
+        /*if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
         {
             if (input->PushKey(DIK_UP)) { object3ds[0].position.y += 1.0f; }
             else if (input->PushKey(DIK_DOWN)) { object3ds[0].position.y -= 1.0f; }
             if (input->PushKey(DIK_RIGHT)) { object3ds[0].position.x += 1.0f; }
             else if (input->PushKey(DIK_LEFT)) { object3ds[0].position.x -= 1.0f; }
-        }
+        }*/
 
 
         if (input->PushKey(DIK_D) || input->PushKey(DIK_A))
@@ -1385,30 +1397,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
             matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
         }
 
-        for (int i = 0; i < _countof(object3ds); i++)
+       /* for (int i = 0; i < _countof(object3ds); i++)
         {
             UpdateObject3d(&object3ds[i], matView, matProjection);
-        }
+        }*/
 
         // ワールド行列の最下段がワールド座標
-        const XMVECTOR& position1 = object3ds[0].matWorld.r[3];
-        const XMVECTOR& position2 = object3ds[1].matWorld.r[3];
+       /* const XMVECTOR& position1 = object3ds[0].matWorld.r[3];
+        const XMVECTOR& position2 = object3ds[1].matWorld.r[3];*/
 
         // ２つの座標の差
-        XMVECTOR position_sub = position1 - position2;
+        //XMVECTOR position_sub = position1 - position2;
 
         // ２つの座標の距離
-        position_sub = XMVector3Length(position_sub);
-        float distance = position_sub.m128_f32[0];
+       // position_sub = XMVector3Length(position_sub);
+       // float distance = position_sub.m128_f32[0];
 
         // 各オブジェクトの半径
         const float radius1 = 3.0f;
         const float radisu2 = 3.0f;
 
         // 距離が半径の和以下なら当たっている
-        if (distance <= radius1 + radisu2) {
+        /*if (distance <= radius1 + radisu2) {
             debugText.Print(spriteCommon, "Hit", 100, 100, 10.0f);
-        }
+        }*/
 
         //// X座標,Y座標を指定して表示
         //debugText.Print(spriteCommon, "Hello,DirectX!!", 200, 100);
@@ -1454,12 +1466,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         dxCommon->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         // dxCommon->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
-        for (int i = 0; i < _countof(object3ds); i++)
+       /* for (int i = 0; i < _countof(object3ds); i++)
         {
             DrawObject3d(&object3ds[i], dxCommon->cmdListGeter().Get(), basicDescHeap.Get(), vbView, ibView,
                 CD3DX12_GPU_DESCRIPTOR_HANDLE(basicDescHeap->GetGPUDescriptorHandleForHeapStart(), constantBufferNum, dxCommon->devGeter()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)),
                 indices, _countof(indices));
-        }
+        }*/
+
+        // 3Dオブジェクト描画前処理
+        Object3d::PreDraw(dxCommon->GetCmdList());
+
+        // 3Dオブジェクトの描画
+        object3d->Draw();
+
+        // 3Dオブジェクト描画後処理
+        Object3d::PostDraw();
 
         // スプライト共通コマンド
         SpriteCommonBeginDraw(spriteCommon, dxCommon->cmdListGeter().Get());
@@ -1473,6 +1494,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         // 描画後処理
         dxCommon->PostDraw();
+
+        
+        
         // ４．描画コマンドここまで
     }
 
@@ -1494,6 +1518,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     delete winApp;
     // DirectX解放
     delete dxCommon;
+    // 3Dオブジェクト解放
+    delete object3d;
 
 	return 0;
 }
