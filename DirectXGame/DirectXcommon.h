@@ -38,6 +38,7 @@ private:
 	// バックバッファ
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> backBuffers;
 
+	// フェンス値
 	UINT64 fenceVal = 0;
 
 public:
@@ -46,6 +47,15 @@ public:
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchainGeter() { return swapchain; }
 
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdListGeter() { return cmdList; }
+
+	// ↓素直に作ればこれ
+	//Microsoft::WRL::ComPtr<ID3D12Device> GetDev() { return dev; }
+
+	// デバイス取得
+	ID3D12Device* GetDev() { return dev.Get(); }
+
+	//コマンドリスト取得
+	ID3D12GraphicsCommandList* GetCmdList() { return cmdList.Get(); }
 
 private:
 	// デバイスの初期化
