@@ -6,6 +6,8 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 
+#include "Model.h"
+
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
@@ -20,14 +22,17 @@ private: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
+	// モデル
+	Model* model = nullptr;
+
 public: // サブクラス
 	// 頂点データ構造体
-	struct VertexPosNormalUv
-	{
-		XMFLOAT3 pos; // xyz座標
-		XMFLOAT3 normal; // 法線ベクトル
-		XMFLOAT2 uv;  // uv座標
-	};
+	//struct VertexPosNormalUv
+	//{
+	//	XMFLOAT3 pos; // xyz座標
+	//	XMFLOAT3 normal; // 法線ベクトル
+	//	XMFLOAT2 uv;  // uv座標
+	//};
 
 	// 定数バッファ用データ構造体
 	//struct ConstBufferData
@@ -37,21 +42,21 @@ public: // サブクラス
 	//};
 
 	// マテリアル
-	struct Material {
-		std::string name;				// マテリアル名
-		XMFLOAT3 ambient;				// アンビエント影響度
-		XMFLOAT3 diffuse;				// ディフューズ影響度
-		XMFLOAT3 specular;				// スペキュラー影響度
-		float alpha;					// アルファ
-		std::string textureFilename;	// テクスチャファイル名
-		// コンストラクタ
-		Material() {
-			ambient = { 0.3f, 0.3f, 0.3f };
-			diffuse = { 0.0f, 0.0f, 0.0f };
-			specular = { 0.0f, 0.0f, 0.0f };
-			alpha = 1.0f;
-		}
-	};
+	//struct Material {
+	//	std::string name;				// マテリアル名
+	//	XMFLOAT3 ambient;				// アンビエント影響度
+	//	XMFLOAT3 diffuse;				// ディフューズ影響度
+	//	XMFLOAT3 specular;				// スペキュラー影響度
+	//	float alpha;					// アルファ
+	//	std::string textureFilename;	// テクスチャファイル名
+	//	// コンストラクタ
+	//	Material() {
+	//		ambient = { 0.3f, 0.3f, 0.3f };
+	//		diffuse = { 0.0f, 0.0f, 0.0f };
+	//		specular = { 0.0f, 0.0f, 0.0f };
+	//		alpha = 1.0f;
+	//	}
+	//};
 
 	// 定数バッファ用データ構造体B0
 	struct ConstBufferDataB0
@@ -61,15 +66,15 @@ public: // サブクラス
 	};
 
 	// 定数バッファ用データ構造体B1
-	struct ConstBufferDataB1
-	{
-		XMFLOAT3 ambient;	// アンビエント係数
-		float pad1;			// パディング
-		XMFLOAT3 diffuse;	// ディフューズ係数
-		float pad2;			// パディング
-		XMFLOAT3 specular;	// スペキュラー係数
-		float alpha;		// パディング
-	};
+	//struct ConstBufferDataB1
+	//{
+	//	XMFLOAT3 ambient;	// アンビエント係数
+	//	float pad1;			// パディング
+	//	XMFLOAT3 diffuse;	// ディフューズ係数
+	//	float pad2;			// パディング
+	//	XMFLOAT3 specular;	// スペキュラー係数
+	//	float alpha;		// パディング
+	//};
 
 private: // 定数
 	static const int division = 50;					// 分割数
@@ -138,13 +143,16 @@ public: // 静的メンバ関数
 	/// <summary>
 	/// マテリアル読み込み
 	/// </summary>
-	static void LoadMaterial(const std::string& directoryPath, const std::string& filename);
+	//static void LoadMaterial(const std::string& directoryPath, const std::string& filename);
+
+	// setter
+	void SetModel(Model* model) { this->model = model; }
 
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device;
 	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
+	//static UINT descriptorHandleIncrementSize;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
 	// ルートシグネチャ
@@ -152,17 +160,17 @@ private: // 静的メンバ変数
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
 	// デスクリプタヒープ
-	static ComPtr<ID3D12DescriptorHeap> descHeap;
-	// 頂点バッファ
-	static ComPtr<ID3D12Resource> vertBuff;
-	// インデックスバッファ
-	static ComPtr<ID3D12Resource> indexBuff;
-	// テクスチャバッファ
-	static ComPtr<ID3D12Resource> texbuff;
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	// シェーダリソースビューのハンドル(CPU)
-	static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	//static ComPtr<ID3D12DescriptorHeap> descHeap;
+	//// 頂点バッファ
+	//static ComPtr<ID3D12Resource> vertBuff;
+	//// インデックスバッファ
+	//static ComPtr<ID3D12Resource> indexBuff;
+	//// テクスチャバッファ
+	//static ComPtr<ID3D12Resource> texbuff;
+	//// シェーダリソースビューのハンドル(CPU)
+	//static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	//// シェーダリソースビューのハンドル(CPU)
+	//static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
 	// ビュー行列
 	static XMMATRIX matView;
 	// 射影行列
@@ -173,25 +181,25 @@ private: // 静的メンバ変数
 	static XMFLOAT3 target;
 	// 上方向ベクトル
 	static XMFLOAT3 up;
-	// 頂点バッファビュー
-	static D3D12_VERTEX_BUFFER_VIEW vbView;
-	// インデックスバッファビュー
-	static D3D12_INDEX_BUFFER_VIEW ibView;
+	//// 頂点バッファビュー
+	//static D3D12_VERTEX_BUFFER_VIEW vbView;
+	//// インデックスバッファビュー
+	//static D3D12_INDEX_BUFFER_VIEW ibView;
 	// 頂点データ配列
-	//static VertexPosNormalUv vertices[vertexCount];
-	static std::vector<VertexPosNormalUv> vertices;
-	// 頂点インデックス配列
-	//static unsigned short indices[planeCount * 3];
-	static std::vector<unsigned short> indices;
-	// マテリアル
-	static Material material;
+	////static VertexPosNormalUv vertices[vertexCount];
+	//static std::vector<VertexPosNormalUv> vertices;
+	//// 頂点インデックス配列
+	////static unsigned short indices[planeCount * 3];
+	//static std::vector<unsigned short> indices;
+	//// マテリアル
+	//static Material material;
 
 private:// 静的メンバ関数
 	/// <summary>
 	/// デスクリプタヒープの初期化
 	/// </summary>
 	/// <returns></returns>
-	static bool InitializeDescriptorHeap();
+	//static bool InitializeDescriptorHeap();
 
 	/// <summary>
 	/// カメラ初期化
@@ -249,7 +257,7 @@ public: // メンバ関数
 private: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff;	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
-	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
+	//ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
 	// 色
 	XMFLOAT4 color = { 1,1,1,1 };
 	// ローカルスケール

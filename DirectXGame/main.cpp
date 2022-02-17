@@ -29,6 +29,7 @@
 #include "DirectXcommon.h"
 
 #include "Object3d.h"
+#include "Model.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -1027,10 +1028,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     // 3Dオブジェクト静的初期化
     Object3d::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 
+    // OBJからモデルデータを読み込む
+    Model* model_1 = Model::LoadFromOBJ("ground");
+    Model* model_2 = Model::LoadFromOBJ("triangle_mat");
+    Model* model_3 = Model::LoadFromOBJ("sphere");
     // 3Dオブジェクト生成
-    Object3d* object3d = Object3d::Create();
+    Object3d* object3d_1 = Object3d::Create();
+    Object3d* object3d_2 = Object3d::Create();
+    Object3d* object3d_3 = Object3d::Create();
+    /*Object3d* object3d_4 = Object3d::Create();
+    Object3d* object3d_5 = Object3d::Create();*/
 
-   
+   // オブジェクトにモデルをひも付ける
+    object3d_1->SetModel(model_1);
+    object3d_2->SetModel(model_2);
+    object3d_3->SetModel(model_2);
+    /*object3d_4->SetModel(model_3);
+    object3d_5->SetModel(model_3);*/
+
+
+    // 3Dオブジェクトの位置を指定
+    object3d_2->SetPosition({ -5, 0, -5 });
+    object3d_3->SetPosition({ +5, 0, +5 });
+    /*object3d_4->SetPosition({ -5, 0, -5 });
+    object3d_5->SetPosition({ +5, 0, +5 });*/
 
     // 頂点データ構造体
     struct Vertex
@@ -1340,7 +1361,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         input->Update();
 
         // 3Dオブジェクト更新
-        object3d->Update();
+        object3d_1->Update();
+        object3d_2->Update();
+        object3d_3->Update();
+        /*object3d_4->Update();
+        object3d_5->Update();*/
 
 
         const int cycle = 540; // 繰り返しの周期
@@ -1370,10 +1395,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 
-        if (input->PushKey(DIK_SPACE))     // スペースキーが押されていたら
-        {
-            // 画面クリアカラーの数値を書き換える
-            clearColor[1] = 1.0f;
+        if (input->PushKey(DIK_SPACE)) {
+            object3d_2->SetModel(model_3);
+            object3d_3->SetModel(model_3);
+        }
+        else {
+            object3d_2->SetModel(model_2);
+            object3d_3->SetModel(model_2);
         }
 
         // 座標操作
@@ -1386,15 +1414,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         }*/
 
 
-        if (input->PushKey(DIK_D) || input->PushKey(DIK_A))
-        {
-            if (input->PushKey(DIK_D)) { angle += XMConvertToRadians(1.0f); }
-            else if (input->PushKey(DIK_A)) { angle -= XMConvertToRadians(1.0f); }
+        //if (input->PushKey(DIK_D) || input->PushKey(DIK_A))
+        //{
+        //    if (input->PushKey(DIK_D)) { angle += XMConvertToRadians(1.0f); }
+        //    else if (input->PushKey(DIK_A)) { angle -= XMConvertToRadians(1.0f); }
 
-            // angleラジアンだけY軸まわりに回転。半径は-100
-            eye.x = -100 * sinf(angle);
-            eye.z = -100 * cosf(angle);
-            matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+        //    // angleラジアンだけY軸まわりに回転。半径は-100
+        //    eye.x = -100 * sinf(angle);
+        //    eye.z = -100 * cosf(angle);
+        //    matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+        //}
+
+        // カメラ移動
+        if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+        {
+            if (input->PushKey(DIK_W)) { Object3d::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
+            else if (input->PushKey(DIK_S)) { Object3d::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
+            if (input->PushKey(DIK_D)) { Object3d::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
+            else if (input->PushKey(DIK_A)) { Object3d::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
         }
 
        /* for (int i = 0; i < _countof(object3ds); i++)
@@ -1477,7 +1514,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         Object3d::PreDraw(dxCommon->GetCmdList());
 
         // 3Dオブジェクトの描画
-        object3d->Draw();
+        object3d_1->Draw();
+        
+        //if (input->PushKey(DIK_SPACE))     // スペースキーが押されていたら
+        //{
+           
+            /*object3d_4->Draw();
+            object3d_5->Draw();*/
+       // }
+        //else {
+            object3d_2->Draw();
+            object3d_3->Draw();
+        //}
+        
 
         // 3Dオブジェクト描画後処理
         Object3d::PostDraw();
@@ -1518,8 +1567,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     delete winApp;
     // DirectX解放
     delete dxCommon;
+    // 3Dモデル解放
+    delete model_1;
+    delete model_2;
+    delete model_3;
     // 3Dオブジェクト解放
-    delete object3d;
+    delete object3d_1;
+    delete object3d_2;
+    delete object3d_3;
+    /*delete object3d_4;
+    delete object3d_5;*/
 
 	return 0;
 }
