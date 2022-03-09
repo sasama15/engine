@@ -76,12 +76,6 @@ public:	// Ã“Iƒƒ“ƒoŠÖ”
     static void Finalize();
 
 private:
-   
-
-   
-
-    
-
     static Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
     static IXAudio2MasteringVoice* masterVoice;
     XAudio2VoiceCallback voiceCallback;

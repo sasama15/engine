@@ -1,0 +1,12 @@
+PipelineSet.hを作る
+
+// パイプラインセット
+struct PipelineSet
+{
+    // パイプラインステートオブジェクト
+    ComPtr<ID3D12PipelineState> pipelinestate;
+    // ルートシグネチャ
+    ComPtr<ID3D12RootSignature> rootsignature;
+};
+
+↑入れる
