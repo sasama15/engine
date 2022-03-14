@@ -148,6 +148,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectXcommon.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
@@ -165,6 +166,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectXcommon.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
