@@ -26,26 +26,21 @@ void Framework::Run()
 void Framework::Initialize()
 {
     // WindowsAPIの初期化
-    //WinApp* winApp = new WinApp();
     winApp = new WinApp();
     winApp->Initialize();
 
     // DirectXの初期化
-    //DirectXcommon* dxCommon = new DirectXcommon();
     dxCommon = new DirectXcommon();
     dxCommon->Initialize(winApp);
 
     // スプライト共通部分の初期化
-   //SpriteCommon* spriteCommon = new SpriteCommon();
     spriteCommon = new SpriteCommon();
     spriteCommon->Initialize(dxCommon->devGeter().Get(), dxCommon->cmdListGeter().Get(), winApp->window_width, winApp->window_height);
 
     // デバッグテキスト
-    //DebugText* debugText = new DebugText();
     debugText = new DebugText();
 
     // デバッグテキスト用のテクスチャ番号を指定
-    //const int debugTextTexNumber = 2;
     const int debugTextTexNumber = 0;
     // デバッグテキスト用のテクスチャ読み込み
     spriteCommon->LoadTexture(debugTextTexNumber, L"Resources/debugfont.png");
@@ -61,7 +56,6 @@ void Framework::Initialize()
     Audio::Initialize();
 
     // 音声読み込み
-    //Audio::SoundData soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
     soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
 
     // 3Dオブジェクト静的初期化

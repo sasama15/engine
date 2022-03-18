@@ -39,22 +39,8 @@ public:
     /// </summary>
     void Draw() override;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    //bool IsEndRequst() { return endRequst_; }
-
 private:
-   /* bool endRequst_ = false;
-
-    WinApp* winApp = nullptr;
-    DirectXcommon* dxCommon = nullptr;
-    Input* input = nullptr;
-    DebugText* debugText = nullptr;
-    SpriteCommon* spriteCommon = nullptr;*/
-
-    std::vector<Sprite*> sprites;
+   std::vector<Sprite*> sprites;
 
     Model* model_1 = nullptr;
     Model* model_2 = nullptr;
@@ -63,7 +49,5 @@ private:
     Object3d* object3d_1 = nullptr;
     Object3d* object3d_2 = nullptr;
     Object3d* object3d_3 = nullptr;
-
-   /* Audio::SoundData soundData1;*/
 };
 
