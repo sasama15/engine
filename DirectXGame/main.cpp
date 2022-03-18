@@ -2,27 +2,32 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    SampleGame game;
+    //SampleGame game;
+    Framework* game = new SampleGame();
 
-    // ゲームの初期化
-    game.Initialize();
+    //// ゲームの初期化
+    //game->Initialize();
 
-    while (true)  // ゲームループ
-    {
-        // 毎フレーム更新
-        game.Update();
+    //while (true)  // ゲームループ
+    //{
+    //    // 毎フレーム更新
+    //    game->Update();
 
-        // 終了リクエストが来たら抜ける
-        if (game.IsEndRequst()) {
-            break;
-        }
+    //    // 終了リクエストが来たら抜ける
+    //    if (game->IsEndRequst()) {
+    //        break;
+    //    }
 
-        // 描画
-        game.Draw();
+    //    // 描画
+    //    game->Draw();
 
-    }
-    // ゲームの終了
-    game.Finalize();
+    //}
+    //// ゲームの終了
+    //game->Finalize();
+
+    game->Run();
+
+    delete game;
 
 	return 0;
 }

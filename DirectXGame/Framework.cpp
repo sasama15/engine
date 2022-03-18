@@ -1,0 +1,113 @@
+#include "Framework.h"
+
+void Framework::Run()
+{
+    // ゲームの初期化
+    Initialize();
+
+    while (true)  // ゲームループ
+    {
+        // 毎フレーム更新
+        Update();
+
+        // 終了リクエストが来たら抜ける
+        if (IsEndRequst()) {
+            break;
+        }
+
+        // 描画
+        Draw();
+
+    }
+    // ゲームの終了
+    Finalize();
+}
+
+void Framework::Initialize()
+{
+    // WindowsAPIの初期化
+    //WinApp* winApp = new WinApp();
+    winApp = new WinApp();
+    winApp->Initialize();
+
+    // DirectXの初期化
+    //DirectXcommon* dxCommon = new DirectXcommon();
+    dxCommon = new DirectXcommon();
+    dxCommon->Initialize(winApp);
+
+    // スプライト共通部分の初期化
+   //SpriteCommon* spriteCommon = new SpriteCommon();
+    spriteCommon = new SpriteCommon();
+    spriteCommon->Initialize(dxCommon->devGeter().Get(), dxCommon->cmdListGeter().Get(), winApp->window_width, winApp->window_height);
+
+    // デバッグテキスト
+    //DebugText* debugText = new DebugText();
+    debugText = new DebugText();
+
+    // デバッグテキスト用のテクスチャ番号を指定
+    //const int debugTextTexNumber = 2;
+    const int debugTextTexNumber = 0;
+    // デバッグテキスト用のテクスチャ読み込み
+    spriteCommon->LoadTexture(debugTextTexNumber, L"Resources/debugfont.png");
+    // デバッグテキスト初期化
+    debugText->Initialize(spriteCommon, debugTextTexNumber);
+
+    // 入力の初期化
+    //Input* input = new Input();
+    input = new Input();
+    input->Initialize(winApp);
+
+    // サウンド
+    Audio::Initialize();
+
+    // 音声読み込み
+    //Audio::SoundData soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
+    soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
+
+    // 3Dオブジェクト静的初期化
+    Object3d::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+}
+
+void Framework::Finalize()
+{
+    // デバッグテキスト解放
+    delete debugText;
+
+    // スプライト共通部分解放
+    delete spriteCommon;
+
+    // 音声データ解放
+    Audio::SoundUnload(&soundData1);
+
+    Audio::Finalize();
+
+    // DirectX解放
+    delete dxCommon;
+    // 入力解放
+    delete input;
+
+    // WindowsAPIの終了処理
+    winApp->Finalize();
+    // WindowsAPI解放
+    delete winApp;
+}
+
+void Framework::Update()
+{
+#pragma region ウィンドウメッセージ処理
+    // Windowsのメッセージ処理
+    if (winApp->ProcessMessage()) {
+        // ゲームループを抜ける
+        endRequst_ = true;
+        return;
+    }
+#pragma endregion ウィンドウメッセージ処理
+
+    // 入力の更新
+    input->Update();
+}
+
+void Framework::Draw()
+{
+
+}

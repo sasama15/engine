@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectXcommon.cpp" />
+    <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectXcommon.h" />
+    <ClInclude Include="Framework.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Object3d.h" />

@@ -2,16 +2,19 @@
 
 void SampleGame::Initialize()
 {
-#pragma region WindowsAPI初期化
-    // WindowsAPIの初期化
-    //WinApp* winApp = new WinApp();
-    winApp = new WinApp();
-    winApp->Initialize();
+    // 基底クラスの初期化処理
+    Framework::Initialize();
 
-    // DirectXの初期化
-    //DirectXcommon* dxCommon = new DirectXcommon();
-    dxCommon = new DirectXcommon();
-    dxCommon->Initialize(winApp);
+#pragma region WindowsAPI初期化
+    //// WindowsAPIの初期化
+    ////WinApp* winApp = new WinApp();
+    //winApp = new WinApp();
+    //winApp->Initialize();
+
+    //// DirectXの初期化
+    ////DirectXcommon* dxCommon = new DirectXcommon();
+    //dxCommon = new DirectXcommon();
+    //dxCommon->Initialize(winApp);
 
     MSG msg{};  // メッセージ
 
@@ -28,29 +31,29 @@ void SampleGame::Initialize()
 
     HRESULT result;
 
-    // スプライト共通部分の初期化
-    //SpriteCommon* spriteCommon = new SpriteCommon();
-    spriteCommon = new SpriteCommon();
-    spriteCommon->Initialize(dxCommon->devGeter().Get(), dxCommon->cmdListGeter().Get(), winApp->window_width, winApp->window_height);
+    //// スプライト共通部分の初期化
+    ////SpriteCommon* spriteCommon = new SpriteCommon();
+    //spriteCommon = new SpriteCommon();
+    //spriteCommon->Initialize(dxCommon->devGeter().Get(), dxCommon->cmdListGeter().Get(), winApp->window_width, winApp->window_height);
 
-    // サウンド
-    Audio::Initialize();
+    //// サウンド
+    //Audio::Initialize();
 
-    // 音声読み込み
-    //Audio::SoundData soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
-    soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
+    //// 音声読み込み
+    ////Audio::SoundData soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
+    //soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
 
-    // 入力の初期化
-    //Input* input = new Input();
-    input = new Input();
-    input->Initialize(winApp);
+    //// 入力の初期化
+    ////Input* input = new Input();
+    //input = new Input();
+    //input->Initialize(winApp);
 
     // DirectX初期化処理　ここまで
 #pragma endregion DirectX初期化処理
 
 #pragma region 描画初期化処理
-    // 3Dオブジェクト静的初期化
-    Object3d::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+    //// 3Dオブジェクト静的初期化
+    //Object3d::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 
     // OBJからモデルデータを読み込む
     /*Model* model_1 = Model::LoadFromOBJ("ground");
@@ -103,17 +106,17 @@ void SampleGame::Initialize()
         sprites.push_back(sprite);
     }
 
-    // デバッグテキスト
-    //DebugText* debugText = new DebugText();
-    debugText = new DebugText();
+    //// デバッグテキスト
+    ////DebugText* debugText = new DebugText();
+    //debugText = new DebugText();
 
-    // デバッグテキスト用のテクスチャ番号を指定
-    //const int debugTextTexNumber = 2;
-    const int debugTextTexNumber = 0;
-    // デバッグテキスト用のテクスチャ読み込み
-    spriteCommon->LoadTexture(debugTextTexNumber, L"Resources/debugfont.png");
-    // デバッグテキスト初期化
-    debugText->Initialize(spriteCommon, debugTextTexNumber);
+    //// デバッグテキスト用のテクスチャ番号を指定
+    ////const int debugTextTexNumber = 2;
+    //const int debugTextTexNumber = 0;
+    //// デバッグテキスト用のテクスチャ読み込み
+    //spriteCommon->LoadTexture(debugTextTexNumber, L"Resources/debugfont.png");
+    //// デバッグテキスト初期化
+    //debugText->Initialize(spriteCommon, debugTextTexNumber);
 
 #pragma endregion 描画初期化処理
 
@@ -122,28 +125,28 @@ void SampleGame::Initialize()
 
 void SampleGame::Finalize()
 {
-    // 音声データ解放
-    Audio::SoundUnload(&soundData1);
-
-    Audio::Finalize();
-
-#pragma region WindowsAPI後始末
-    // WindowsAPIの終了処理
-    winApp->Finalize();
+//    // 音声データ解放
+//    Audio::SoundUnload(&soundData1);
+//
+//    Audio::Finalize();
+//
+//#pragma region WindowsAPI後始末
+//    // WindowsAPIの終了処理
+//    winApp->Finalize();
 
 #pragma endregion WindowsAPI後始末
 #pragma endregion WindowsAPI初期化
 
-    // デバッグテキスト解放
-    delete debugText;
+    //// デバッグテキスト解放
+    //delete debugText;
 
     // スプライト個別解放
     for (auto& sprite : sprites) {
         delete sprite;
     }
     sprites.clear();
-    // スプライト共通部分解放
-    delete spriteCommon;
+    //// スプライト共通部分解放
+    //delete spriteCommon;
 
     // 3Dモデル解放
     delete model_1;
@@ -154,31 +157,37 @@ void SampleGame::Finalize()
     delete object3d_2;
     delete object3d_3;
 
-    // DirectX解放
-    delete dxCommon;
-    // 入力解放
-    delete input;
-    // WindowsAPI解放
-    delete winApp;
+    //// DirectX解放
+    //delete dxCommon;
+    //// 入力解放
+    //delete input;
+    //// WindowsAPI解放
+    //delete winApp;
+
+    // 基底クラスの終了処理
+    Framework::Finalize();
 }
 
 void SampleGame::Update()
 {
-#pragma region ウィンドウメッセージ処理
-    // Windowsのメッセージ処理
-    if (winApp->ProcessMessage()) {
-        // ゲームループを抜ける
-        endRequst_ = true;
-        return;
-    }
+    // 基底クラスの更新処理
+    Framework::Update();
 
-#pragma endregion ウィンドウメッセージ処理
+//#pragma region ウィンドウメッセージ処理
+//    // Windowsのメッセージ処理
+//    if (winApp->ProcessMessage()) {
+//        // ゲームループを抜ける
+//        endRequst_ = true;
+//        return;
+//    }
+//
+//#pragma endregion ウィンドウメッセージ処理
 
 #pragma region DirectX毎フレーム処理
     // DirectX毎フレーム処理　ここから
 
-    // 入力の更新
-    input->Update();
+    //// 入力の更新
+    //input->Update();
 
     // 3Dオブジェクト更新
     object3d_1->Update();
