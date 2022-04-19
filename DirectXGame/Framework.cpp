@@ -34,11 +34,11 @@ void Framework::Initialize()
     dxCommon->Initialize(winApp);
 
     // スプライト共通部分の初期化
-    spriteCommon = new SpriteCommon();
+    spriteCommon = SpriteCommon::GetInstance();
     spriteCommon->Initialize(dxCommon->devGeter().Get(), dxCommon->cmdListGeter().Get(), winApp->window_width, winApp->window_height);
 
     // デバッグテキスト
-    debugText = new DebugText();
+    debugText = DebugText::GetInstance();
 
     // デバッグテキスト用のテクスチャ番号を指定
     const int debugTextTexNumber = 0;
@@ -49,26 +49,32 @@ void Framework::Initialize()
 
     // 入力の初期化
     //Input* input = new Input();
-    input = new Input();
+    input = Input::GetInstance();
     input->Initialize(winApp);
 
     // サウンド
     Audio::Initialize();
 
     // 音声読み込み
-    soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
+    //soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
 
     // 3Dオブジェクト静的初期化
-    Object3d::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+    Object3d::StaticInitialize(dxCommon->GetDev(), dxCommon->GetCmdList(), WinApp::window_width, WinApp::window_height);
+
+    // シーンマネージャーの生成
+    sceneManager_ = new SceneManager;
 }
 
 void Framework::Finalize()
 {
+    // シーンマネージャー解放
+    delete sceneManager_;
+
     // デバッグテキスト解放
-    delete debugText;
+    //delete debugText;
 
     // スプライト共通部分解放
-    delete spriteCommon;
+    //delete spriteCommon;
 
     // 音声データ解放
     Audio::SoundUnload(&soundData1);
@@ -78,7 +84,7 @@ void Framework::Finalize()
     // DirectX解放
     delete dxCommon;
     // 入力解放
-    delete input;
+    //delete input;
 
     // WindowsAPIの終了処理
     winApp->Finalize();
@@ -99,9 +105,22 @@ void Framework::Update()
 
     // 入力の更新
     input->Update();
+
+    // シーンの更新
+    sceneManager_->Update();
 }
 
 void Framework::Draw()
 {
+    // 描画前処理
+    dxCommon->PreDraw();
 
+    // シーン描画
+    sceneManager_->Draw();
+
+    // デバッグテキスト描画
+    debugText->DrawAll();
+
+    // 描画後処理
+    dxCommon->PostDraw();
 }

@@ -8,6 +8,8 @@
 #include "Sprite.h"
 #include "Audio.h"
 #include "DebugText.h"
+//#include "IScene.h"
+#include "SceneManager.h"
 
 /// <summary>
 /// フレームワーク
@@ -38,7 +40,8 @@ public:
     /// <summary>
     /// 描画
     /// </summary>
-    virtual void Draw() = 0;
+    //virtual void Draw() = 0;
+    virtual void Draw();
 
     /// <summary>
     /// 
@@ -56,5 +59,11 @@ protected:
     DebugText* debugText = nullptr;
     SpriteCommon* spriteCommon = nullptr;
     Audio::SoundData soundData1;
+    SceneManager* sceneManager_ = nullptr;
+
+    // シーン
+    //GamePlayScene* scene_ = nullptr;
+    //TitleScene* scene_ = nullptr;
+    //IScene* scene_ = nullptr;
 };
 

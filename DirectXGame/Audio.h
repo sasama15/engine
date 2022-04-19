@@ -43,6 +43,8 @@ public: // インナークラス
         unsigned int bufferSize;
     };
 
+    static Audio* GetInstance();
+
     class XAudio2VoiceCallback : public IXAudio2VoiceCallback
     {
     public:
@@ -76,12 +78,6 @@ public:	// 静的メンバ関数
     static void Finalize();
 
 private:
-   
-
-   
-
-    
-
     static Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
     static IXAudio2MasteringVoice* masterVoice;
     XAudio2VoiceCallback voiceCallback;

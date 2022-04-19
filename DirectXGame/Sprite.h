@@ -30,17 +30,16 @@ public:
     /// <summary>
     /// スプライト生成
     /// </summary>
-    /// <param name="spriteCommon">スプライト共通</param>
     /// <param name="texNumber">テクスチャ番号</param>
     /// <param name="anchorpoint">アンカーポイント</param>
     /// <param name="isFlipX">X反転するか</param>
     /// <param name="isFlipY">Y反転するか</param>
     /// <returns>スプライト</returns>
-    static Sprite* Create(SpriteCommon* spriteCommon, UINT texNumber, XMFLOAT2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
+    static Sprite* Create(UINT texNumber, XMFLOAT2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
 
 private:
     // スプライト共通部分
-    SpriteCommon* spriteCommon_ = nullptr;
+    //SpriteCommon* spriteCommon_ = nullptr;
     //頂点バッファ;
     ComPtr<ID3D12Resource> vertBuff_;
     //頂点バッファビュー;
@@ -76,7 +75,7 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Initialize(SpriteCommon* spriteCommon, UINT texNumber, XMFLOAT2 anchorpoint, bool isFlipX, bool isFlipY);
+    void Initialize(UINT texNumber, XMFLOAT2 anchorpoint, bool isFlipX, bool isFlipY);
 
     /// <summary>
     /// 頂点バッファの転送

@@ -2,6 +2,8 @@
 
 #include "Framework.h"
 
+//#include "IScene.h"
+
 //#include "Input.h"
 //#include "WinApp.h"
 //#include "DirectXcommon.h"
@@ -12,6 +14,9 @@
 //#include "DebugText.h"
 
 #include <vector>
+
+//class GamePlayScene;
+//class TitleScene;
 
 /// <summary>
 /// ゲーム固有のクラス(ここは作るゲームの名前を入れ、毎回作る)
@@ -39,15 +44,15 @@ public:
     /// </summary>
     void Draw() override;
 
+    /// <summary>
+    /// HPバーなどの表示物
+    /// </summary>
+    //void DrawUI();
+
 private:
-   std::vector<Sprite*> sprites;
-
-    Model* model_1 = nullptr;
-    Model* model_2 = nullptr;
-    Model* model_3 = nullptr;
-
-    Object3d* object3d_1 = nullptr;
-    Object3d* object3d_2 = nullptr;
-    Object3d* object3d_3 = nullptr;
+    // シーン
+    //GamePlayScene* scene_ = nullptr;
+    //TitleScene* scene_ = nullptr;
+    //IScene* scene_ = nullptr;
 };
 

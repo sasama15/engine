@@ -9,6 +9,13 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
+SpriteCommon* SpriteCommon::GetInstance()
+{
+    static SpriteCommon instance;
+
+    return &instance;
+}
+
 void SpriteCommon::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, int window_width, int window_height)
 {
     // nullポインタチェック

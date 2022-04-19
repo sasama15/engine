@@ -7,6 +7,13 @@ using namespace Microsoft::WRL;
 ComPtr<IXAudio2> Audio::xAudio2;
 IXAudio2MasteringVoice* Audio::masterVoice;
 
+Audio* Audio::GetInstance()
+{
+    static Audio instance;
+
+    return &instance;
+}
+
 Audio::SoundData Audio::SoundLoadWave(const char* filename)
 {
     // ファイル入力ストリームのインスタンス

@@ -1,34 +1,36 @@
 #include "Sprite.h"
 #include <d3dx12.h>
 
-Sprite* Sprite::Create(SpriteCommon* spriteCommon, UINT texNumber, XMFLOAT2 anchorpoint, bool isFlipX, bool isFlipY)
+Sprite* Sprite::Create(UINT texNumber, XMFLOAT2 anchorpoint, bool isFlipX, bool isFlipY)
 {
     // メモリ確保
     Sprite* instance = new Sprite();
     // インスタンス初期化
-    instance->Initialize(spriteCommon, texNumber, anchorpoint, isFlipX, isFlipY);
+    instance->Initialize(texNumber, anchorpoint, isFlipX, isFlipY);
 
     return instance;
 }
 
-void Sprite::Initialize(SpriteCommon* spriteCommon, UINT texNumber, XMFLOAT2 anchorpoint, bool isFlipX, bool isFlipY)
+void Sprite::Initialize(UINT texNumber, XMFLOAT2 anchorpoint, bool isFlipX, bool isFlipY)
 {
     HRESULT result = S_FALSE;
 
     // メンバ変数に書き込む
-    spriteCommon_ = spriteCommon;
+    //spriteCommon_ = spriteCommon;
     texNumber_ = texNumber;
     anchorpoint_ = anchorpoint;
     isFlipX_ = isFlipX;
     isFlipY_ = isFlipY;
 
+    SpriteCommon* spriteCommon = SpriteCommon::GetInstance();
+
     // 頂点データ
     VertexPosUv vertices[4];
 
     // 指定番号の画像が読み込み済みなら
-    if (spriteCommon_->GetTexBuff(texNumber_)) {
+    if (spriteCommon->GetTexBuff(texNumber_)) {
         // テクスチャ情報取得
-        D3D12_RESOURCE_DESC resDesc = spriteCommon_->GetTexBuff(texNumber_)->GetDesc();
+        D3D12_RESOURCE_DESC resDesc = spriteCommon->GetTexBuff(texNumber_)->GetDesc();
 
         // スプライトの大きさを画像の解像度に合わせる
         size_ = { (float)resDesc.Width, (float)resDesc.Height };
@@ -36,7 +38,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, UINT texNumber, XMFLOAT2 anc
     }
 
     // 頂点バッファ生成
-    result = spriteCommon_->GetDevice()->CreateCommittedResource(
+    result = spriteCommon->GetDevice()->CreateCommittedResource(
         &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
         D3D12_HEAP_FLAG_NONE,
         &CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
@@ -51,7 +53,7 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, UINT texNumber, XMFLOAT2 anc
     vbView_.StrideInBytes = sizeof(vertices[0]);
 
     // 定数バッファの生成
-    result = spriteCommon_->GetDevice()->CreateCommittedResource(
+    result = spriteCommon->GetDevice()->CreateCommittedResource(
         &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
         D3D12_HEAP_FLAG_NONE,
         &CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff),
@@ -62,12 +64,14 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, UINT texNumber, XMFLOAT2 anc
     ConstBufferData* constMap = nullptr;
     result = constBuff_->Map(0, nullptr, (void**)&constMap);
     constMap->color = XMFLOAT4(1, 1, 1, 1); // 色指定（RGBA）
-    constMap->mat = spriteCommon_->GetMatProjection();
+    constMap->mat = spriteCommon->GetMatProjection();
     constBuff_->Unmap(0, nullptr);
 }
 
 void Sprite::TransferVertexBuffer()
 {
+    SpriteCommon* spriteCommon = SpriteCommon::GetInstance();
+
     HRESULT result = S_FALSE;
 
     // 頂点データ
@@ -105,9 +109,9 @@ void Sprite::TransferVertexBuffer()
     vertices[RT].pos = { right, top,    0.0f }; // 右上
 
     // 指定番号の画像が読み込み済みなら
-    if (spriteCommon_->GetTexBuff(texNumber_)) {
+    if (spriteCommon->GetTexBuff(texNumber_)) {
         // テクスチャ情報取得
-        D3D12_RESOURCE_DESC resDesc = spriteCommon_->GetTexBuff(texNumber_)->GetDesc();
+        D3D12_RESOURCE_DESC resDesc = spriteCommon->GetTexBuff(texNumber_)->GetDesc();
 
         float tex_left = texLeftTop_.x / resDesc.Width;
         float tex_right = (texLeftTop_.x + texSize_.x) / resDesc.Width;
@@ -129,6 +133,8 @@ void Sprite::TransferVertexBuffer()
 
 void Sprite::Update()
 {
+    SpriteCommon* spriteCommon = SpriteCommon::GetInstance();
+
     // ワールド行列の更新
     matWorld_ = XMMatrixIdentity();
     // Z軸回転
@@ -139,18 +145,20 @@ void Sprite::Update()
     // 定数バッファの転送
     ConstBufferData* constMap = nullptr;
     HRESULT result = constBuff_->Map(0, nullptr, (void**)&constMap);
-    constMap->mat = matWorld_ * spriteCommon_->GetMatProjection();
+    constMap->mat = matWorld_ * spriteCommon->GetMatProjection();
     constMap->color = color_;
     constBuff_->Unmap(0, nullptr);
 }
 
 void Sprite::Draw()
 {
+    SpriteCommon* spriteCommon = SpriteCommon::GetInstance();
+
     if (isInvisible_) {
         return;
     }
 
-    ID3D12GraphicsCommandList* commandList = spriteCommon_->GetCommandList();
+    ID3D12GraphicsCommandList* commandList = spriteCommon->GetCommandList();
 
     // 頂点バッファをセット
     commandList->IASetVertexBuffers(0, 1, &vbView_);
@@ -159,7 +167,7 @@ void Sprite::Draw()
     commandList->SetGraphicsRootConstantBufferView(0, constBuff_->GetGPUVirtualAddress());
 
     // ルートパラメータ1番にシェーダリソースビューをセット
-    spriteCommon_->SetGraphicsRootDescriptorTable(1, texNumber_);
+    spriteCommon->SetGraphicsRootDescriptorTable(1, texNumber_);
 
     /*commandList->SetGraphicsRootDescriptorTable(1,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(
