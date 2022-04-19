@@ -28,7 +28,7 @@ void SampleGame::Initialize()
 
 #pragma region 描画初期化処理
 
-    BaseScene* scene = new TitleScene(sceneManager_);
+    BaseScene* scene = new TitleScene();
     // シーンマネージャーに最初のシーンをセット
     sceneManager_->SetNextScene(scene);
 

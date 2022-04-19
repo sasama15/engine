@@ -1,1 +1,7 @@
+<<<<<<< HEAD
 ブランチ完全に分けたい
+=======
+aaaaaaaaaaaaaaaa
+dekiteru?
+wakereta!
+>>>>>>> ef61ce86c18315cf4fb10dab9e306146946e0d50
