@@ -8,7 +8,6 @@
 #include "Sprite.h"
 #include "Audio.h"
 #include "DebugText.h"
-//#include "IScene.h"
 #include "SceneManager.h"
 
 /// <summary>
@@ -60,10 +59,5 @@ protected:
     SpriteCommon* spriteCommon = nullptr;
     Audio::SoundData soundData1;
     SceneManager* sceneManager_ = nullptr;
-
-    // ÉVÅ[Éì
-    //GamePlayScene* scene_ = nullptr;
-    //TitleScene* scene_ = nullptr;
-    //IScene* scene_ = nullptr;
 };
 

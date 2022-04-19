@@ -32,29 +32,9 @@ void GamePlayScene::Initialize()
 
     // スプライト共通テクスチャ読み込み
     SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/gamePlay.jpg");
-    /*spriteCommon->LoadTexture(1, L"Resources/texture.png");
-    spriteCommon->LoadTexture(2, L"Resources/house.png");*/
-    //spriteCommon->LoadTexture(1, L"Resources/gamePlay.jpg");
-
+    
     // スプライトの生成
     sprite = Sprite::Create(1, { 0,0 }, false, false);
-
-    //for (int i = 0; i < 20; i++)
-    //{
-    //    int texNumber = 1;
-    //    Sprite* sprite = Sprite::Create(spriteCommon, texNumber, { 0,0 }, false, false);
-    //    
-    //    // スプライトの座標変更
-    //    sprite->SetPosition({ (float)(rand() % 1280), (float)(rand() % 720), 0 });
-
-    //    sprite->SetSize({ (float)(rand() % 400), (float)(rand() % 400) });
-
-    //    // 頂点バッファに反映
-    //    sprite->TransferVertexBuffer();
-
-    //    sprites.push_back(sprite);
-    //}
-
 
     // 音声読み込み
     soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
@@ -63,10 +43,7 @@ void GamePlayScene::Initialize()
 void GamePlayScene::Finalize()
 {
     // スプライト個別解放
-    /*for (auto& sprite : sprites) {*/
     delete sprite;
-    /* }
-     sprites.clear();*/
 
      // 3Dモデル解放
     delete model_1;
@@ -89,9 +66,7 @@ void GamePlayScene::Update()
     object3d_3->Update();
 
     // スプライト更新
-    /*for (auto& sprite : sprites) {*/
     sprite->Update();
-    /*}*/
 
     Input* input = Input::GetInstance();
 
@@ -143,9 +118,7 @@ void GamePlayScene::Draw()
     // スプライト共通コマンド
     SpriteCommon::GetInstance()->PreDrow();
     // スプライト描画
-    /*for (auto& sprite : sprites) {*/
     sprite->Draw();
-    /*}*/
 
     // 3Dオブジェクト描画前処理
     Object3d::PreDraw();
@@ -161,8 +134,4 @@ void GamePlayScene::Draw()
 
     // スプライト共通コマンド
     SpriteCommon::GetInstance()->PreDrow();
-    // スプライト描画
-    /*for (auto& sprite : sprites) {*/
-     //   sprite->Draw();
-    /*}*/
 }

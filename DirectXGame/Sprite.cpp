@@ -169,12 +169,6 @@ void Sprite::Draw()
     // ルートパラメータ1番にシェーダリソースビューをセット
     spriteCommon->SetGraphicsRootDescriptorTable(1, texNumber_);
 
-    /*commandList->SetGraphicsRootDescriptorTable(1,
-        CD3DX12_GPU_DESCRIPTOR_HANDLE(
-            spriteCommon.descHeap->GetGPUDescriptorHandleForHeapStart(),
-            texNumber_,
-            spriteCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));*/
-
     // ポリゴンの描画（4頂点で四角形）
     commandList->DrawInstanced(4, 1, 0, 0);
 }

@@ -70,10 +70,6 @@ void Model::LoadFromOBJInternal(const std::string& modelname)
 			line_stream >> position.z;
 			// 座標データに追加
 			positions.emplace_back(position);
-			// 頂点データに追加
-			/*VertexPosNormalUv vertex{};
-			vertex.pos = position;
-			vertices.emplace_back(vertex);*/
 		}
 
 		// 先頭文字列がvtならテクスチャ
@@ -97,10 +93,6 @@ void Model::LoadFromOBJInternal(const std::string& modelname)
 			line_stream >> normal.z;
 			// 座標データに追加
 			normals.emplace_back(normal);
-			// 頂点データに追加
-			/*VertexPosNormalUv vertex{};
-			vertex.pos = position;
-			vertices.emplace_back(vertex);*/
 		}
 
 		// 先頭文字がfならポリゴン(三角形)
@@ -110,10 +102,6 @@ void Model::LoadFromOBJInternal(const std::string& modelname)
 			while (getline(line_stream, index_string, ' ')) {
 				// 頂点インデックス1個分の文字列をストリームに変換して解析しやすくする
 				std::istringstream index_stream(index_string);
-				//unsigned short indexPosition;
-				//index_stream >> indexPosition;
-				//// 頂点インデックスに追加
-				//indices.emplace_back(indexPosition - 1);
 				unsigned short indexPosition, indexNormal, indexTexcoord;
 				index_stream >> indexPosition;
 				index_stream.seekg(1, ios_base::cur);	// スラッシュを飛ばす
@@ -237,10 +225,6 @@ bool Model::LoadTexture(const std::string& directoryPath, const std::string& fil
 		wfilepath, WIC_FLAGS_NONE,
 		&metadata, scratchImg);
 
-	//result = LoadFromWICFile(
-	//	//L"Resources/tex1.png", WIC_FLAGS_NONE,
-	//	L"Resources/texture.png", WIC_FLAGS_NONE,
-	//	&metadata, scratchImg);
 	if (FAILED(result)) {
 		return result;
 	}
@@ -332,7 +316,6 @@ void Model::CreateBuffers()
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
-		//&CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
 		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
@@ -346,7 +329,6 @@ void Model::CreateBuffers()
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
-		//&CD3DX12_RESOURCE_DESC::Buffer(sizeof(indices)),
 		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
@@ -360,7 +342,6 @@ void Model::CreateBuffers()
 	VertexPosNormalUv* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
-		//memcpy(vertMap, vertices, sizeof(vertices));
 		std::copy(vertices.begin(), vertices.end(), vertMap);
 		vertBuff->Unmap(0, nullptr);
 	}
@@ -371,24 +352,18 @@ void Model::CreateBuffers()
 	if (SUCCEEDED(result)) {
 
 		// 全インデックスに対して
-		//for (int i = 0; i < _countof(indices); i++)
-		//{
-		//	indexMap[i] = indices[i];	// インデックスをコピー
-		//}
 		std::copy(indices.begin(), indices.end(), indexMap);
 		indexBuff->Unmap(0, nullptr);
 	}
 
 	// 頂点バッファビューの作成
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-	//vbView.SizeInBytes = sizeof(vertices);
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(vertices[0]);
 
 	// インデックスバッファビューの作成
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
-	//ibView.SizeInBytes = sizeof(indices);
 	ibView.SizeInBytes = sizeIB;
 
 	// 定数バッファの生成

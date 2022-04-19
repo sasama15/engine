@@ -2,21 +2,7 @@
 
 #include "Framework.h"
 
-//#include "IScene.h"
-
-//#include "Input.h"
-//#include "WinApp.h"
-//#include "DirectXcommon.h"
-//#include "Object3d.h"
-//#include "Model.h"
-//#include "Sprite.h"
-//#include "Audio.h"
-//#include "DebugText.h"
-
 #include <vector>
-
-//class GamePlayScene;
-//class TitleScene;
 
 /// <summary>
 /// ゲーム固有のクラス(ここは作るゲームの名前を入れ、毎回作る)
@@ -50,9 +36,5 @@ public:
     //void DrawUI();
 
 private:
-    // シーン
-    //GamePlayScene* scene_ = nullptr;
-    //TitleScene* scene_ = nullptr;
-    //IScene* scene_ = nullptr;
 };
 

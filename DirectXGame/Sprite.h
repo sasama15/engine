@@ -38,8 +38,6 @@ public:
     static Sprite* Create(UINT texNumber, XMFLOAT2 anchorpoint = { 0.5f,0.5f }, bool isFlipX = false, bool isFlipY = false);
 
 private:
-    // スプライト共通部分
-    //SpriteCommon* spriteCommon_ = nullptr;
     //頂点バッファ;
     ComPtr<ID3D12Resource> vertBuff_;
     //頂点バッファビュー;

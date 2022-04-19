@@ -70,12 +70,6 @@ void Framework::Finalize()
     // シーンマネージャー解放
     delete sceneManager_;
 
-    // デバッグテキスト解放
-    //delete debugText;
-
-    // スプライト共通部分解放
-    //delete spriteCommon;
-
     // 音声データ解放
     Audio::SoundUnload(&soundData1);
 
@@ -83,8 +77,6 @@ void Framework::Finalize()
 
     // DirectX解放
     delete dxCommon;
-    // 入力解放
-    //delete input;
 
     // WindowsAPIの終了処理
     winApp->Finalize();

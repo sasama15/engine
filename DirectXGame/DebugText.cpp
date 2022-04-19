@@ -45,19 +45,13 @@ void DebugText::Print(const std::string& text, float x, float y, float scale)
         int fontIndexX = fontIndex % fontLineCount;
 
         // 座標計算
-        //sprites[spriteIndex]->position_ = { x + fontWidth * scale * i, y, 0 };
         sprites_[spriteIndex_]->SetPosition({ x + fontWidth * scale * i, y, 0 });
-        //sprites[spriteIndex].texLeftTop = { (float)fontIndexX * fontWidth, (float)fontIndexY * fontHeight };
         sprites_[spriteIndex_]->SetTexLeftTop({ (float)fontIndexX * fontWidth, (float)fontIndexY * fontHeight });
-        //sprites[spriteIndex].texSize = { fontWidth, fontHeight };
         sprites_[spriteIndex_]->SetTexSize({ fontWidth, fontHeight });
-        //sprites[spriteIndex].size = { fontWidth * scale, fontHeight * scale };
         sprites_[spriteIndex_]->SetSize({ fontWidth * scale, fontHeight * scale });
         // 頂点バッファ転送
-        //SpriteTransferVertexBuffer(sprites[spriteIndex], spriteCommon);
         sprites_[spriteIndex_]->TransferVertexBuffer();
         // 更新
-        //SpriteUpdate(sprites[spriteIndex], spriteCommon);
         sprites_[spriteIndex_]->Update();
 
         // 文字を１つ進める
@@ -72,7 +66,6 @@ void DebugText::DrawAll()
     for (int i = 0; i < spriteIndex_; i++)
     {
         // スプライト描画
-        //SpriteDraw(sprites[i], cmdList, spriteCommon, dev);
         sprites_[i]->Draw();
     }
     spriteIndex_ = 0;

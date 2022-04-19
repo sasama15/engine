@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "IScene.h"
 #include "BaseScene.h"
 #include "Sprite.h"
 #include "Object3d.h"
@@ -35,7 +34,6 @@ public:
     void Draw() override;
 
 private:
-    //std::vector<Sprite*> sprites;
     Sprite* sprite = nullptr;
 
     Model* model_1 = nullptr;
