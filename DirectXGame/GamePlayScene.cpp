@@ -21,8 +21,10 @@ void GamePlayScene::Initialize()
     object3d_2->SetModel(model_2);
     object3d_3->SetModel(model_2);
 
+    position = { -5, 20, 20 };
+
     // 3Dオブジェクトの位置を指定
-    object3d_2->SetPosition({ -5, 0, -5 });
+    object3d_2->SetPosition(position);
     object3d_3->SetPosition({ +5, 0, +5 });
 
     // スプライト共通テクスチャ読み込み
@@ -79,6 +81,17 @@ void GamePlayScene::Update()
     else {
         object3d_2->SetModel(model_2);
         object3d_3->SetModel(model_2);
+    }
+
+    if (input->PushKey(DIK_RETURN)) {
+        position = { -5, 20, 20 };
+        object3d_2->SetPosition(position);
+        speed = 0.0f;
+    }
+    else {
+        speed += gravity;
+        position.y += speed;
+        object3d_2->SetPosition(position);
     }
 
     if (input->TriggerKey(DIK_P)) {

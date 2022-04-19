@@ -43,5 +43,10 @@ private:
     Object3d* object3d_3 = nullptr;
 
     Audio::SoundData soundData1;
+
+    const float gravity = (-9.8f / 60);
+    float speed;
+
+    XMFLOAT3 position;
 };
 
