@@ -4,11 +4,6 @@
 #include "GamePlayScene.h"
 #include "SceneManager.h"
 
-TitleScene::TitleScene(SceneManager* sceneManager)
-    :BaseScene(sceneManager)
-{
-}
-
 void TitleScene::Initialize()
 {
 #pragma region シーン初期化処理
@@ -43,7 +38,7 @@ void TitleScene::Update()
 
     if (input->TriggerKey(DIK_RETURN)){
         //シーン切り替え
-        BaseScene* scene = new GamePlayScene(sceneManager_);
+        BaseScene* scene = new GamePlayScene();
         sceneManager_->SetNextScene(scene);
     }
 

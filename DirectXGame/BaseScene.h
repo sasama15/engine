@@ -9,7 +9,7 @@ class SceneManager;
 class BaseScene
 {
 public:
-    BaseScene(SceneManager* sceneManager);
+    virtual ~BaseScene() = default;
 
     /// <summary>
     /// 初期化
@@ -31,7 +31,8 @@ public:
     /// </summary>
     virtual void Draw() = 0;
 
-//private:
+    virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
+
 protected:
     // シーンマネージャー(借りてくる)
     SceneManager* sceneManager_ = nullptr;

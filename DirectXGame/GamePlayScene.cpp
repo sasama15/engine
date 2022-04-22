@@ -2,11 +2,6 @@
 #include "Input.h"
 #include "DebugText.h"
 
-GamePlayScene::GamePlayScene(SceneManager* sceneManager)
-    :BaseScene(sceneManager)
-{
-}
-
 void GamePlayScene::Initialize()
 {
 #pragma region ƒV[ƒ“‰Šú‰»ˆ—
