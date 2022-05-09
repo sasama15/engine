@@ -7,6 +7,15 @@ SceneManager::~SceneManager()
 	delete scene_;
 }
 
+SceneManager* SceneManager::GetInstance()
+{
+	// 初めて呼ばれた時だけインスタンスが生成される
+	static SceneManager instance;
+
+	// 2回目以降は以下のみ通る
+	return &instance;
+}
+
 void SceneManager::Update()
 {
 	// シーン切り替えがあるなら
@@ -21,8 +30,8 @@ void SceneManager::Update()
 		scene_ = nextScene_;
 		nextScene_ = nullptr;
 
-		// シーンマネージャーをセット
-		scene_->SetSceneManager(this);
+		//// シーンマネージャーをセット
+		//scene_->SetSceneManager(this);
 
 		// 新シーンの初期化
 		scene_->Initialize();

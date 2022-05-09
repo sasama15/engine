@@ -60,16 +60,10 @@ void Framework::Initialize()
 
     // 3Dオブジェクト静的初期化
     Object3d::StaticInitialize(dxCommon->GetDev(), dxCommon->GetCmdList(), WinApp::window_width, WinApp::window_height);
-
-    // シーンマネージャーの生成
-    sceneManager_ = new SceneManager;
 }
 
 void Framework::Finalize()
 {
-    // シーンマネージャー解放
-    delete sceneManager_;
-
     // 音声データ解放
     Audio::SoundUnload(&soundData1);
 
@@ -99,7 +93,7 @@ void Framework::Update()
     input->Update();
 
     // シーンの更新
-    sceneManager_->Update();
+    SceneManager::GetInstance()->Update();
 }
 
 void Framework::Draw()
@@ -108,7 +102,7 @@ void Framework::Draw()
     dxCommon->PreDraw();
 
     // シーン描画
-    sceneManager_->Draw();
+    SceneManager::GetInstance()->Draw();
 
     // デバッグテキスト描画
     debugText->DrawAll();

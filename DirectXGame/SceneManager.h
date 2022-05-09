@@ -8,7 +8,8 @@
 class SceneManager
 {
 public:
-	~SceneManager();
+	// このクラス全体で使う機能
+	static SceneManager* GetInstance();
 
 	/// <summary>
 	/// 更新
@@ -28,5 +29,13 @@ private:
 	BaseScene* scene_ = nullptr;
 	// 次のシーン
 	BaseScene* nextScene_ = nullptr;
+
+	//コンストラクタとデストラクタの隠蔽
+	SceneManager() = default;
+	~SceneManager();
+	// コピーインストラクタの隠蔽
+	SceneManager(const SceneManager&) = delete;
+	// コピー代入演算子の隠蔽
+	void operator = (const SceneManager&) = delete;
 };
 
