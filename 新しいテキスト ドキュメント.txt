@@ -5,5 +5,9 @@ koremowaketai
 =======
 wakereta!
 wan
+<<<<<<< HEAD
 >>>>>>> 056e838eedb1682c2b3f2a44b99b0171b713d730
 dekitano?
+=======
+dekita
+>>>>>>> 29e995c8b92814139d3fb5bdafb0cf17da176f2c

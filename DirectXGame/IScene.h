@@ -1,15 +1,11 @@
 #pragma once
 
-// 前方宣言
-class SceneManager;
-
 /// <summary>
-/// シーン基底
+/// シーンインターフェイス
 /// </summary>
-class BaseScene
+class IScene
 {
 public:
-    virtual ~BaseScene() = default;
 
     /// <summary>
     /// 初期化
@@ -30,11 +26,5 @@ public:
     /// 描画
     /// </summary>
     virtual void Draw() = 0;
-
-    //virtual void SetSceneManager(SceneManager* sceneManager) { sceneManager_ = sceneManager; }
-
-//protected:
-//    // シーンマネージャー(借りてくる)
-//    SceneManager* sceneManager_ = nullptr;
 };
 

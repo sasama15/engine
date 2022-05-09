@@ -39,7 +39,8 @@ void TitleScene::Update()
     if (input->TriggerKey(DIK_RETURN)){
         //シーン切り替え
         BaseScene* scene = new GamePlayScene();
-        sceneManager_->SetNextScene(scene);
+        //sceneManager_->SetNextScene(scene);
+        SceneManager::GetInstance()->SetNextScene(scene);
     }
 
     // DirectX毎フレーム処理　ここまで

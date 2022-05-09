@@ -1,6 +1,8 @@
 #include "GamePlayScene.h"
 #include "Input.h"
 #include "DebugText.h"
+#include "TitleScene.h"
+#include "SceneManager.h"
 
 void GamePlayScene::Initialize()
 {
@@ -68,6 +70,13 @@ void GamePlayScene::Update()
     if (input->PushKey(DIK_0)) // 数字の0キーが押されていたら
     {
         OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
+    }
+
+    if (input->TriggerKey(DIK_SPACE)) {
+        //シーン切り替え
+        BaseScene* scene = new TitleScene();
+        //sceneManager_->SetNextScene(scene);
+        SceneManager::GetInstance()->SetNextScene(scene);
     }
 
     float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
