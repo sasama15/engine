@@ -1,7 +1,6 @@
 #include "GamePlayScene.h"
 #include "Input.h"
 #include "DebugText.h"
-//#include "TitleScene.h"
 #include "SceneManager.h"
 
 void GamePlayScene::Initialize()
@@ -74,8 +73,6 @@ void GamePlayScene::Update()
 
     if (input->TriggerKey(DIK_SPACE)) {
         //ƒV[ƒ“Ø‚è‘Ö‚¦
-        //BaseScene* scene = new TitleScene();
-        //sceneManager_->ChangeScene(scene);
         SceneManager::GetInstance()->ChangeScene("TITLE");
     }
 

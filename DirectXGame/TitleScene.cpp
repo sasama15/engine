@@ -1,9 +1,7 @@
 #include "TitleScene.h"
 #include "Input.h"
 #include "DebugText.h"
-//#include "GamePlayScene.h"
 #include "SceneManager.h"
-//#include "SceneFactory.h"
 
 void TitleScene::Initialize()
 {
@@ -39,10 +37,6 @@ void TitleScene::Update()
 
     if (input->TriggerKey(DIK_RETURN)){
         //ƒV[ƒ“Ø‚è‘Ö‚¦
-        /*SceneFactory factory;
-        BaseScene* scene = factory.CreateScene("GAMEPLAY");*/
-        //BaseScene* scene = new GamePlayScene();
-        //sceneManager_->ChangeScene(scene);
         SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
     }
 
