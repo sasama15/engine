@@ -1,6 +1,4 @@
 #include "SampleGame.h"
-//#include "GamePlayScene.h"
-//#include "TitleScene.h"
 #include "SceneFactory.h"
 
 void SampleGame::Initialize()
@@ -32,7 +30,6 @@ void SampleGame::Initialize()
     sceneFactory_ = new SceneFactory();
     SceneManager::GetInstance()->SetSceneFactory(sceneFactory_);
 
-    //BaseScene* scene = new TitleScene();
     // シーンマネージャーに最初のシーンをセット
     SceneManager::GetInstance()->ChangeScene("TITLE");
 

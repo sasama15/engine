@@ -48,7 +48,6 @@ void Framework::Initialize()
     debugText->Initialize(spriteCommon, debugTextTexNumber);
 
     // “ü—Í‚Ì‰Šú‰»
-    //Input* input = new Input();
     input = Input::GetInstance();
     input->Initialize(winApp);
 
