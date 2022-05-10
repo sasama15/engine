@@ -1,6 +1,7 @@
 #include "SampleGame.h"
-#include "GamePlayScene.h"
-#include "TitleScene.h"
+//#include "GamePlayScene.h"
+//#include "TitleScene.h"
+#include "SceneFactory.h"
 
 void SampleGame::Initialize()
 {
@@ -26,13 +27,16 @@ void SampleGame::Initialize()
     // DirectX初期化処理　ここまで
 #pragma endregion DirectX初期化処理
 
-#pragma region 描画初期化処理
+#pragma region シーン初期化処理
+    // シーンマネージャーを生成し、マネージャーにセット
+    sceneFactory_ = new SceneFactory();
+    SceneManager::GetInstance()->SetSceneFactory(sceneFactory_);
 
-    BaseScene* scene = new TitleScene();
+    //BaseScene* scene = new TitleScene();
     // シーンマネージャーに最初のシーンをセット
-    SceneManager::GetInstance()->SetNextScene(scene);
+    SceneManager::GetInstance()->ChangeScene("TITLE");
 
-#pragma endregion 描画初期化処理
+#pragma endregion シーン初期化処理
 }
 
 void SampleGame::Finalize()

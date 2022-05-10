@@ -1,8 +1,9 @@
 #include "TitleScene.h"
 #include "Input.h"
 #include "DebugText.h"
-#include "GamePlayScene.h"
+//#include "GamePlayScene.h"
 #include "SceneManager.h"
+//#include "SceneFactory.h"
 
 void TitleScene::Initialize()
 {
@@ -38,9 +39,11 @@ void TitleScene::Update()
 
     if (input->TriggerKey(DIK_RETURN)){
         //シーン切り替え
-        BaseScene* scene = new GamePlayScene();
-        //sceneManager_->SetNextScene(scene);
-        SceneManager::GetInstance()->SetNextScene(scene);
+        /*SceneFactory factory;
+        BaseScene* scene = factory.CreateScene("GAMEPLAY");*/
+        //BaseScene* scene = new GamePlayScene();
+        //sceneManager_->ChangeScene(scene);
+        SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
     }
 
     // DirectX毎フレーム処理　ここまで
