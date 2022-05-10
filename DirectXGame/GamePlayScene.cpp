@@ -1,7 +1,7 @@
 #include "GamePlayScene.h"
 #include "Input.h"
 #include "DebugText.h"
-#include "TitleScene.h"
+//#include "TitleScene.h"
 #include "SceneManager.h"
 
 void GamePlayScene::Initialize()
@@ -74,9 +74,9 @@ void GamePlayScene::Update()
 
     if (input->TriggerKey(DIK_SPACE)) {
         //ƒV[ƒ“Ø‚è‘Ö‚¦
-        BaseScene* scene = new TitleScene();
-        //sceneManager_->SetNextScene(scene);
-        SceneManager::GetInstance()->SetNextScene(scene);
+        //BaseScene* scene = new TitleScene();
+        //sceneManager_->ChangeScene(scene);
+        SceneManager::GetInstance()->ChangeScene("TITLE");
     }
 
     float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // Â‚Á‚Û‚¢F
