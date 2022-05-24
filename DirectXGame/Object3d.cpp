@@ -64,7 +64,8 @@ void Object3d::PostDraw()
 {
 }
 
-Object3d * Object3d::Create()
+//Object3d * Object3d::Create()
+std::unique_ptr<Object3d> Object3d::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
 	Object3d* object3d = new Object3d();
@@ -83,7 +84,14 @@ Object3d * Object3d::Create()
 	float scale_val = 20;
 	object3d->scale = { scale_val, scale_val, scale_val };
 
-	return object3d;
+	//std::unique_ptr<Object3d> ptr_test(object3d);
+
+	//std::unique_ptr<Object3d> ptr_test2 = std::move(ptr_test);	// ptr_testは空っぽになる
+	//return object3d;
+	//return std::unique_ptr<Object3d>(object3d);
+
+	// ユニークポインタを作成してreturn
+	return std::unique_ptr<Object3d>(object3d);
 }
 
 void Object3d::SetEye(XMFLOAT3 eye)
@@ -294,6 +302,13 @@ void Object3d::UpdateViewMatrix()
 	// ビュー行列の更新
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 }
+
+//Object3d::~Object3d()
+//{
+//	// デストラクタを使って動作の確認
+//	static int a = 0;
+//	a++;
+//}
 
 bool Object3d::Initialize()
 {

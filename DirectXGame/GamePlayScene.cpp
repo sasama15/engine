@@ -13,14 +13,24 @@ void GamePlayScene::Initialize()
     model_3 = Model::LoadFromOBJ("sphere");
 
     // 3Dオブジェクト生成
+   /* object3d_1 = Object3d::Create();
+    object3d_2 = Object3d::Create();
+    object3d_3 = Object3d::Create();*/
+    // 古いやり方
+    /*object3d_1.reset(Object3d::Create());
+    object3d_2.reset(Object3d::Create());
+    object3d_3.reset(Object3d::Create());*/
     object3d_1 = Object3d::Create();
     object3d_2 = Object3d::Create();
     object3d_3 = Object3d::Create();
 
+    //C++11以降の方法    newを置き換える場合のみ使用可能
+    //object3d_1 = std::make_unique<Object3d>();
+
     // オブジェクトにモデルをひも付ける
-    object3d_1->SetModel(model_1);
-    object3d_2->SetModel(model_2);
-    object3d_3->SetModel(model_2);
+    object3d_1->SetModel(model_1.get());
+    object3d_2->SetModel(model_2.get());
+    object3d_3->SetModel(model_2.get());
 
     // 3Dオブジェクトの位置を指定
     object3d_2->SetPosition({ -5, 0, -5 });
@@ -39,16 +49,16 @@ void GamePlayScene::Initialize()
 void GamePlayScene::Finalize()
 {
     // スプライト個別解放
-    delete sprite;
+    //delete sprite;
 
      // 3Dモデル解放
-    delete model_1;
+    /*delete model_1;
     delete model_2;
-    delete model_3;
+    delete model_3;*/
     // 3Dオブジェクト解放
-    delete object3d_1;
+    /*delete object3d_1;
     delete object3d_2;
-    delete object3d_3;
+    delete object3d_3;*/
 }
 
 void GamePlayScene::Update()
@@ -79,12 +89,12 @@ void GamePlayScene::Update()
     float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 
     if (input->PushKey(DIK_SPACE)) {
-        object3d_2->SetModel(model_3);
-        object3d_3->SetModel(model_3);
+        object3d_2->SetModel(model_3.get());
+        object3d_3->SetModel(model_3.get());
     }
     else {
-        object3d_2->SetModel(model_2);
-        object3d_3->SetModel(model_2);
+        object3d_2->SetModel(model_2.get());
+        object3d_3->SetModel(model_2.get());
     }
 
     if (input->TriggerKey(DIK_P)) {

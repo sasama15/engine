@@ -27,8 +27,9 @@ void SampleGame::Initialize()
 
 #pragma region シーン初期化処理
     // シーンマネージャーを生成し、マネージャーにセット
-    sceneFactory_ = new SceneFactory();
-    SceneManager::GetInstance()->SetSceneFactory(sceneFactory_);
+    //sceneFactory_ = new SceneFactory();
+    sceneFactory_ = std::make_unique<SceneFactory>();
+    SceneManager::GetInstance()->SetSceneFactory(sceneFactory_.get());
 
     // シーンマネージャーに最初のシーンをセット
     SceneManager::GetInstance()->ChangeScene("TITLE");

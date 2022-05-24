@@ -65,7 +65,8 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	static Object3d* Create();
+	//static Object3d* Create();
+	static std::unique_ptr<Object3d> Create();
 
 	/// <summary>
 	/// 視点座標の取得
@@ -153,6 +154,9 @@ private:// 静的メンバ関数
 	static void UpdateViewMatrix();
 
 public: // メンバ関数
+	// 動作確認用
+	//~Object3d();
+
 	bool Initialize();
 	/// <summary>
 	/// 毎フレーム処理
