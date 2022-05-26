@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "Object3d.h"
 #include "Audio.h"
+#include "ObjectManager.h"
 
 #include <memory>
 
@@ -49,12 +50,27 @@ private:
     Object3d* object3d_2 = nullptr;
     Object3d* object3d_3 = nullptr;*/
 
-    //ユニークポインタ
+    //ユニークポインタ(一つだけのため)
     // nullptrは勝手に入るため必要ない
-    std::unique_ptr<Object3d> object3d_1;
+    /*std::unique_ptr<Object3d> object3d_1;
     std::unique_ptr<Object3d> object3d_2;
-    std::unique_ptr<Object3d> object3d_3;
+    std::unique_ptr<Object3d> object3d_3;*/
+
+    // shared_ptr使う場合
+    std::shared_ptr<Object3d> object3d_1;
+    std::shared_ptr<Object3d> object3d_2;
+    std::shared_ptr<Object3d> object3d_3;
+
+    // weak_ptr使う場合
+    /*std::weak_ptr<Object3d> object3d_1;
+    std::weak_ptr<Object3d> object3d_2;
+    std::weak_ptr<Object3d> object3d_3;*/
+
+    // shared_ptr(共有するときに使う)
+    // weak_ptr(追尾弾に使う)
 
     Audio::SoundData soundData1;
+
+    std::unique_ptr<ObjectManager> objectManager_;
 };
 

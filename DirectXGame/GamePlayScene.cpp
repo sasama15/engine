@@ -12,6 +12,9 @@ void GamePlayScene::Initialize()
     model_2 = Model::LoadFromOBJ("triangle_mat");
     model_3 = Model::LoadFromOBJ("sphere");
 
+    // オブジェクトマネージャ生成
+    objectManager_ = std::make_unique<ObjectManager>();
+
     // 3Dオブジェクト生成
    /* object3d_1 = Object3d::Create();
     object3d_2 = Object3d::Create();
@@ -20,20 +23,52 @@ void GamePlayScene::Initialize()
     /*object3d_1.reset(Object3d::Create());
     object3d_2.reset(Object3d::Create());
     object3d_3.reset(Object3d::Create());*/
-    object3d_1 = Object3d::Create();
-    object3d_2 = Object3d::Create();
-    object3d_3 = Object3d::Create();
+
+    // weak_ptr使うときの残骸
+    //std::shared_ptr<Object3d> object3d_1 = Object3d::Create();
+    //std::shared_ptr<Object3d> object3d_2 = Object3d::Create();
+    //std::shared_ptr<Object3d> object3d_3 = Object3d::Create();
+
+    // weak_ptr使う場合
+    /*object3d_1 = objectManager_->AddObject(Object3d::Create(model_1.get()));
+    object3d_2 = objectManager_->AddObject(Object3d::Create(model_2.get()));
+    object3d_3 = objectManager_->AddObject(Object3d::Create(model_3.get()));*/
+
+    // shared_ptr使う場合
+    std::weak_ptr<Object3d> objectWp1 = objectManager_->AddObject(Object3d::Create(model_1.get()));
+    std::weak_ptr<Object3d> objectWp2 = objectManager_->AddObject(Object3d::Create(model_2.get()));
+    std::weak_ptr<Object3d> objectWp3 = objectManager_->AddObject(Object3d::Create(model_3.get()));
+    // オブジェクトの参照カウントを増加
+    object3d_1 = objectWp1.lock();
+    object3d_2 = objectWp2.lock();
+    object3d_3 = objectWp3.lock();
 
     //C++11以降の方法    newを置き換える場合のみ使用可能
     //object3d_1 = std::make_unique<Object3d>();
 
     // オブジェクトにモデルをひも付ける
-    object3d_1->SetModel(model_1.get());
+    /*object3d_1->SetModel(model_1.get());
     object3d_2->SetModel(model_2.get());
-    object3d_3->SetModel(model_2.get());
+    object3d_3->SetModel(model_2.get());*/
 
     // 3Dオブジェクトの位置を指定
+    /*object3d_2->SetPosition({ -5, 0, -5 });
+    object3d_3->SetPosition({ +5, 0, +5 });*/
+
+    // weak_ptr使う場合
+   /* if (std::shared_ptr<Object3d> object3d_2Sp = object3d_2.lock()) {
+        DirectX::XMFLOAT3 pos = object3d_2Sp->GetPosition();
+        object3d_2Sp->SetPosition({ -5, 0, -5 });
+    }
+    if (std::shared_ptr<Object3d> object3d_3Sp = object3d_3.lock()) {
+        DirectX::XMFLOAT3 pos = object3d_3Sp->GetPosition();
+        object3d_3Sp->SetPosition({ +5, 0, +5 });
+    }*/
+
+    // shared_ptr使う場合
+    DirectX::XMFLOAT3 pos = object3d_2->GetPosition();
     object3d_2->SetPosition({ -5, 0, -5 });
+    DirectX::XMFLOAT3 pos2 = object3d_3->GetPosition();
     object3d_3->SetPosition({ +5, 0, +5 });
 
     // スプライト共通テクスチャ読み込み
@@ -67,9 +102,10 @@ void GamePlayScene::Update()
     // DirectX毎フレーム処理　ここから
 
     // 3Dオブジェクト更新
-    object3d_1->Update();
+    /*object3d_1->Update();
     object3d_2->Update();
-    object3d_3->Update();
+    object3d_3->Update();*/
+    objectManager_->Update();
 
     // スプライト更新
     sprite->Update();
@@ -88,12 +124,44 @@ void GamePlayScene::Update()
 
     float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 
-    if (input->PushKey(DIK_SPACE)) {
+    if (input->PushKey(DIK_X)) {
+        /*object3d_2->SetModel(model_3.get());
+        object3d_3->SetModel(model_3.get());*/
+
+        // weak_ptrからshare_ptrを取り出す weak_ptr使う場合
+       /* if (std::shared_ptr<Object3d> object3d_2Sp = object3d_2.lock()) {
+            DirectX::XMFLOAT3 pos = object3d_2Sp->GetPosition();
+            object3d_2Sp->SetModel(model_3.get());
+        }
+        if (std::shared_ptr<Object3d> object3d_3Sp = object3d_3.lock()) {
+            DirectX::XMFLOAT3 pos = object3d_3Sp->GetPosition();
+            object3d_3Sp->SetModel(model_3.get());
+        }*/
+
+        // shared_ptr使う場合
+        DirectX::XMFLOAT3 pos = object3d_2->GetPosition();
         object3d_2->SetModel(model_3.get());
+        DirectX::XMFLOAT3 pos2 = object3d_3->GetPosition();
         object3d_3->SetModel(model_3.get());
     }
     else {
+       /* object3d_2->SetModel(model_2.get());
+        object3d_3->SetModel(model_2.get());*/
+
+        // weak_ptr使う場合
+        /*if (std::shared_ptr<Object3d> object3d_2Sp = object3d_2.lock()) {
+            DirectX::XMFLOAT3 pos = object3d_2Sp->GetPosition();
+            object3d_2Sp->SetModel(model_2.get());
+        }
+        if (std::shared_ptr<Object3d> object3d_3Sp = object3d_3.lock()) {
+            DirectX::XMFLOAT3 pos = object3d_3Sp->GetPosition();
+            object3d_3Sp->SetModel(model_2.get());
+        }*/
+
+        //shared_ptr使う場合
+        DirectX::XMFLOAT3 pos = object3d_2->GetPosition();
         object3d_2->SetModel(model_2.get());
+        DirectX::XMFLOAT3 pos2 = object3d_3->GetPosition();
         object3d_3->SetModel(model_2.get());
     }
 
@@ -135,9 +203,10 @@ void GamePlayScene::Draw()
     Object3d::PreDraw();
 
     // 3Dオブジェクトの描画
-    object3d_1->Draw();
+    /*object3d_1->Draw();
     object3d_2->Draw();
-    object3d_3->Draw();
+    object3d_3->Draw();*/
+    objectManager_->Draw();
 
 
     // 3Dオブジェクト描画後処理

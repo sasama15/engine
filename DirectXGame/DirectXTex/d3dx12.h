@@ -3308,7 +3308,7 @@ inline bool operator==( const D3D12_RENDER_PASS_DEPTH_STENCIL_DESC &a, const D3D
 //================================================================================================
 // D3DX12 State Object Creation Helpers
 //
-// Helper classes for creating new style state objects out of an arbitrary set of subobjects.
+// Helper classes for creating new style state objects_ out of an arbitrary set of subobjects.
 // Uses STL
 //
 // Start by instantiating CD3DX12_STATE_OBJECT_DESC (see it's public methods).
