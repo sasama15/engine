@@ -45,7 +45,8 @@ public:	// インナークラス
 
 public:	// 静的メンバ関数
 	// OBJファイルから3Dモデルを読み込む
-	static Model* LoadFromOBJ(const std::string& modelname);
+	//static Model* LoadFromOBJ(const std::string& modelname);
+	static std::unique_ptr<Model> LoadFromOBJ(const std::string& modelname);
 
 	// setter
 	static void SetDevice(ID3D12Device* device) { Model::device = device; }

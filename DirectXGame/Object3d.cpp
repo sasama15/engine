@@ -64,25 +64,41 @@ void Object3d::PostDraw()
 {
 }
 
-Object3d * Object3d::Create()
+//Object3d * Object3d::Create()
+//std::unique_ptr<Object3d> Object3d::Create()
+std::shared_ptr<Object3d> Object3d::Create(Model* model)
 {
 	// 3Dオブジェクトのインスタンスを生成
-	Object3d* object3d = new Object3d();
+	// newをするならmakeした方がいい
+	std::shared_ptr<Object3d> object3d = std::make_shared<Object3d>();
+	//Object3d* object3d = new Object3d();
 	if (object3d == nullptr) {
 		return nullptr;
 	}
 
 	// 初期化
 	if (!object3d->Initialize()) {
-		delete object3d;
+		//delete object3d;
 		assert(0);
 		return nullptr;
 	}
+
+	object3d->SetModel(model);
 
 	// スケールをセット
 	float scale_val = 20;
 	object3d->scale = { scale_val, scale_val, scale_val };
 
+	//std::unique_ptr<Object3d> ptr_test(object3d);
+
+	//std::unique_ptr<Object3d> ptr_test2 = std::move(ptr_test);	// ptr_testは空っぽになる
+	//return object3d;
+	//return std::unique_ptr<Object3d>(object3d);
+
+	// ユニークポインタを作成してreturn
+	//return std::unique_ptr<Object3d>(object3d);
+
+	// シェアドポインタを作成してreturn
 	return object3d;
 }
 
@@ -293,6 +309,13 @@ void Object3d::UpdateViewMatrix()
 {
 	// ビュー行列の更新
 	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+}
+
+Object3d::~Object3d()
+{
+	// デストラクタを使って動作の確認
+	static int a = 0;
+	a++;
 }
 
 bool Object3d::Initialize()

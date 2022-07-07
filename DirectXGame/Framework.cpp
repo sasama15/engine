@@ -64,7 +64,9 @@ void Framework::Initialize()
 void Framework::Finalize()
 {
     // シーンファクトリ解放
-    delete sceneFactory_;
+    //delete sceneFactory_;
+    //意図的に開放したい場合は引数なしで開放
+    //sceneFactory_.reset();
 
     // 音声データ解放
     Audio::SoundUnload(&soundData1);

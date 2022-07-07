@@ -11,6 +11,8 @@
 #include "SceneManager.h"
 #include "AbstractSceneFactory.h"
 
+#include <memory>
+
 /// <summary>
 /// フレームワーク
 /// </summary>
@@ -59,6 +61,9 @@ protected:
     DebugText* debugText = nullptr;
     SpriteCommon* spriteCommon = nullptr;
     Audio::SoundData soundData1;
-    AbstractSceneFactory* sceneFactory_ = nullptr;
+
+    // 所有者(管理者)
+    //AbstractSceneFactory* sceneFactory_ = nullptr;
+    std::unique_ptr<AbstractSceneFactory> sceneFactory_;
 };
 

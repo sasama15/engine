@@ -32,7 +32,7 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
 
-	// WindowsAPI
+	// WindowsAPI 借りてきた
 	WinApp* winApp = nullptr;
 
 	// バックバッファ

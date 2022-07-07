@@ -15,7 +15,8 @@ using namespace DirectX;
 // 静的メンバ変数の実体
 ID3D12Device* Model::device = nullptr;
 
-Model* Model::LoadFromOBJ(const std::string& modelname)
+//Model* Model::LoadFromOBJ(const std::string& modelname)
+std::unique_ptr<Model> Model::LoadFromOBJ(const std::string& modelname)
 {
 	// 新たなModel型のインスタンスのメモリを確保
 	Model* model = new Model();
@@ -29,7 +30,8 @@ Model* Model::LoadFromOBJ(const std::string& modelname)
 	// バッファ生成
 	model->CreateBuffers();
 
-	return model;
+	//return model;
+	return std::unique_ptr<Model>(model);
 }
 
 void Model::LoadFromOBJInternal(const std::string& modelname)

@@ -45,13 +45,13 @@ public:
 	/// </summary>
 	/// <param name ="KeyNumber">キー番号(DIK_0 等)</param>
 	/// <returns>押されているか</returns>
-	bool PushKey(BYTE keyNumber);
+	bool PushKey(const BYTE& keyNumber);
 
 	/// <summary>
 	/// キーの押し下をチェック
 	/// </summary>
 	/// <param name ="KeyNumber">キー番号(DIK_0 等)</param>
 	/// <returns>トリガーか</returns>
-	bool TriggerKey(BYTE keyNumber);
+	bool TriggerKey(const BYTE& keyNumber);
 };
 
