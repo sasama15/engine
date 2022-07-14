@@ -78,5 +78,10 @@ public:	// ƒƒ“ƒoŠÖ”
 	void PreDraw();
 	// •`‰æŒãˆ—
 	void PostDraw();
+
+public:
+	static DirectXcommon* GetInstance();
+
+	~DirectXcommon();
 };
 

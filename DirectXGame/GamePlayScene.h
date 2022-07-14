@@ -5,6 +5,9 @@
 #include "Object3d.h"
 #include "Audio.h"
 #include "ObjectManager.h"
+#include "FbxObject3d.h"
+#include "DirectXCommon.h"
+#include "DebugCamera.h"
 
 #include <memory>
 
@@ -72,5 +75,10 @@ private:
     Audio::SoundData soundData1;
 
     std::unique_ptr<ObjectManager> objectManager_;
+
+    FbxModel* fbxModel1 = nullptr;
+    FbxObject3d* fbxObject1 = nullptr;
+
+    DebugCamera* camera;
 };
 

@@ -14,6 +14,12 @@ public:
 	// namespace省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+	struct MouseMove {
+		LONG IX;
+		LONG IY;
+		LONG IZ;
+	};
+
 public:		// メンバ関数
 
 	static Input* GetInstance();
@@ -26,6 +32,7 @@ public:		// メンバ関数
 private:	// メンバ変数
 	// キーボードのデバイス
 	ComPtr<IDirectInputDevice8> devkeyboard;
+	// マウス
 
 	// 前回の全キーの状態
 	BYTE keyPre[256] = {};
@@ -35,6 +42,10 @@ private:	// メンバ変数
 
 	// DirectInputのインスタンス
 	ComPtr<IDirectInput8> dinput;
+
+	// マウス
+	ComPtr<IDirectInputDevice8> devMouse;
+	DIMOUSESTATE2 mouseState = {};
 
 	// WindowsAPI
 	WinApp* winApp = nullptr;
@@ -53,5 +64,23 @@ public:
 	/// <param name ="KeyNumber">キー番号(DIK_0 等)</param>
 	/// <returns>トリガーか</returns>
 	bool TriggerKey(const BYTE& keyNumber);
+
+	/// <summary>
+	/// キーの左ボタン押下をチェック
+	/// </summary>
+	/// <returns>押されているか</returns>
+	bool isMouseLeft();
+
+	/// <summary>
+	/// キーの中ボタン押下をチェック
+	/// </summary>
+	/// <returns>押されているか</returns>
+	bool isMouseMiddle();
+
+	/// <summary>
+	/// マウス移動量を取得
+	/// </summary>
+	/// <returns>マウス移動量</returns>
+	MouseMove GetMouseMove();
 };
 

@@ -30,7 +30,8 @@ void Framework::Initialize()
     winApp->Initialize();
 
     // DirectXの初期化
-    dxCommon = new DirectXcommon();
+    //dxCommon = new DirectXcommon();
+    dxCommon = DirectXcommon::GetInstance();
     dxCommon->Initialize(winApp);
 
     // スプライト共通部分の初期化
@@ -59,6 +60,12 @@ void Framework::Initialize()
 
     // 3Dオブジェクト静的初期化
     Object3d::StaticInitialize(dxCommon->GetDev(), dxCommon->GetCmdList(), WinApp::window_width, WinApp::window_height);
+
+    // Fbx関係
+    FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
+
+    // デバイスをセット
+    FbxObject3d::SetDevice(dxCommon->GetDev());
 }
 
 void Framework::Finalize()
@@ -74,12 +81,15 @@ void Framework::Finalize()
     Audio::Finalize();
 
     // DirectX解放
-    delete dxCommon;
+    //delete dxCommon;
 
     // WindowsAPIの終了処理
     winApp->Finalize();
     // WindowsAPI解放
     delete winApp;
+
+    // Fbx関係
+    FbxLoader::GetInstance()->Finalize();
 }
 
 void Framework::Update()

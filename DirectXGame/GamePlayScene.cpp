@@ -2,10 +2,24 @@
 #include "Input.h"
 #include "DebugText.h"
 #include "SceneManager.h"
+#include "FbxLoader.h"
+#include "FbxObject3d.h"
 
 void GamePlayScene::Initialize()
 {
+    Input* input = Input::GetInstance();
 #pragma region シーン初期化処理
+    // モデル名を指定してファイル読み込み
+    //FbxLoader::GetInstance()->LoadModelFromFile("cube");
+    fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+
+    // グラフィックスパイプライン生成
+    FbxObject3d::CreateGraphicsPipeline();
+
+    // 3Dオブジェクト生成とモデルのセット
+    fbxObject1 = new FbxObject3d;
+    fbxObject1->Initialize();
+    fbxObject1->SetModel(fbxModel1);
 
     // OBJからモデルデータを読み込む
     model_1 = Model::LoadFromOBJ("ground");
@@ -79,6 +93,15 @@ void GamePlayScene::Initialize()
 
     // 音声読み込み
     soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
+
+    camera = new DebugCamera(WinApp::window_width, WinApp::window_height, input);
+
+    // カメラをセット
+    FbxObject3d::SetCamera(camera);
+
+    // カメラ注視点をセット
+    camera->SetTarget({ 0, 20, 10 });
+    camera->SetDistance(100.0f);
 }
 
 void GamePlayScene::Finalize()
@@ -94,6 +117,11 @@ void GamePlayScene::Finalize()
     /*delete object3d_1;
     delete object3d_2;
     delete object3d_3;*/
+
+    // FBXオブジェクト、モデル解放
+    delete fbxObject1;
+    delete fbxModel1;
+    delete camera;
 }
 
 void GamePlayScene::Update()
@@ -109,6 +137,11 @@ void GamePlayScene::Update()
 
     // スプライト更新
     sprite->Update();
+
+    // FBXオブジェクト更新
+    fbxObject1->Update();
+
+    camera->Update();
 
     Input* input = Input::GetInstance();
 
@@ -206,8 +239,16 @@ void GamePlayScene::Draw()
     /*object3d_1->Draw();
     object3d_2->Draw();
     object3d_3->Draw();*/
-    objectManager_->Draw();
+    //objectManager_->Draw();
 
+#pragma region 3D描画
+    DirectXcommon* dxCommon = DirectXcommon::GetInstance();
+    // 3Dオブジェクトの描画
+    fbxObject1->Draw(dxCommon->GetCmdList());
+
+    // パーティクルの描画
+    //particleMan->Draw(dxCommon->GetCmdList());
+#pragma endregion
 
     // 3Dオブジェクト描画後処理
     Object3d::PostDraw();

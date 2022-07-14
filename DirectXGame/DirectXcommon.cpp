@@ -292,3 +292,38 @@ void DirectXcommon::PostDraw()
         // バッファをフリップ（裏表の入替え）
     swapchain->Present(1, 0);
 }
+
+DirectXcommon* DirectXcommon::GetInstance()
+{
+    static DirectXcommon Instance;
+    return &Instance;
+}
+
+DirectXcommon::~DirectXcommon()
+{
+    static int a = 0;
+    a++;
+
+    backBuffers.clear();
+
+    dev.Reset();
+    // DXGIファクトリ
+    dxgiFactory.Reset();
+
+    swapchain.Reset();
+
+    cmdAllocator.Reset();
+
+   cmdList.Reset();
+
+    cmdQueue.Reset();
+
+    rtvHeaps.Reset();
+
+    depthBuffer.Reset();
+
+    dsvHeap.Reset();
+
+    fence.Reset();
+
+}

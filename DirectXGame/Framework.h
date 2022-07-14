@@ -10,6 +10,8 @@
 #include "DebugText.h"
 #include "SceneManager.h"
 #include "AbstractSceneFactory.h"
+#include "FbxLoader.h"
+#include "FbxObject3d.h"
 
 #include <memory>
 
@@ -51,6 +53,7 @@ public:
     /// <returns></returns>
     virtual bool IsEndRequst() { return endRequst_; }
 
+    const DirectXcommon* GetCommon() { return dxCommon; }
 //private:
 protected:
     bool endRequst_ = false;
