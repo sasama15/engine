@@ -11,7 +11,9 @@ void GamePlayScene::Initialize()
 #pragma region シーン初期化処理
     // モデル名を指定してファイル読み込み
     //FbxLoader::GetInstance()->LoadModelFromFile("cube");
+    //FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
     fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+    fbxModel2 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
     // グラフィックスパイプライン生成
     FbxObject3d::CreateGraphicsPipeline();
@@ -20,6 +22,9 @@ void GamePlayScene::Initialize()
     fbxObject1 = new FbxObject3d;
     fbxObject1->Initialize();
     fbxObject1->SetModel(fbxModel1);
+    fbxObject2 = new FbxObject3d;
+    fbxObject2->Initialize();
+    fbxObject2->SetModel(fbxModel2);
 
     // OBJからモデルデータを読み込む
     model_1 = Model::LoadFromOBJ("ground");
@@ -101,7 +106,7 @@ void GamePlayScene::Initialize()
 
     // カメラ注視点をセット
     camera->SetTarget({ 0, 20, 10 });
-    camera->SetDistance(100.0f);
+    camera->SetDistance(10.0f);
 }
 
 void GamePlayScene::Finalize()
@@ -120,7 +125,9 @@ void GamePlayScene::Finalize()
 
     // FBXオブジェクト、モデル解放
     delete fbxObject1;
+    delete fbxObject2;
     delete fbxModel1;
+    delete fbxModel2;
     delete camera;
 }
 
@@ -140,7 +147,9 @@ void GamePlayScene::Update()
 
     // FBXオブジェクト更新
     fbxObject1->Update();
+    fbxObject2->Update();
 
+    camera->SetTarget(fbxObject2->GetPosition());
     camera->Update();
 
     Input* input = Input::GetInstance();
@@ -244,7 +253,8 @@ void GamePlayScene::Draw()
 #pragma region 3D描画
     DirectXcommon* dxCommon = DirectXcommon::GetInstance();
     // 3Dオブジェクトの描画
-    fbxObject1->Draw(dxCommon->GetCmdList());
+    //fbxObject1->Draw(dxCommon->GetCmdList());
+    fbxObject2->Draw(dxCommon->GetCmdList());
 
     // パーティクルの描画
     //particleMan->Draw(dxCommon->GetCmdList());

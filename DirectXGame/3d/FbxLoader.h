@@ -48,6 +48,8 @@ private:
 	void LoadTexture(FbxModel* fbxModel, const std::string& fullpath);
 	// ディレクトリを含んだファイルパスからファイル名を抽出する
 	string ExtractFileName(const string& path);
+	// スキニング情報の読み取り
+	void ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh);
 
 public:
 	/// <summary>
@@ -81,6 +83,13 @@ public:
 	/// <param name="fbxModel">読み込み先モデルオブジェクト</param>
 	/// <param name="fbxNode">解析対象のノード</param>
 	void ParseMesh(FbxModel* fbxModel, FbxNode* fbxNode);
+
+	/// <summary>
+	/// FBXの行列をXMMatrixに変換
+	/// </summary>
+	/// <param name="dst">書き込み先</param>
+	/// <param name="src">元となるFBX行列</param>
+	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
 
 private:
 	// D3D12デバイス

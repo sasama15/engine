@@ -2,6 +2,7 @@
 
 #include "FbxModel.h"
 #include "Camera.h"
+#include "FbxLoader.h"
 
 #include <Windows.h>
 #include <wrl.h>
@@ -26,6 +27,11 @@ public:	// 静的メンバ関数
 	static void SetDevice(ID3D12Device* device) { FbxObject3d::device = device; }
 	static void SetCamera(Camera* camera) { FbxObject3d::camera = camera; }
 	void SetModel(FbxModel* fbxModel) { this->fbxModel = fbxModel; }
+	const XMFLOAT3& GetPosition() { return position; }
+
+public:	// 定数
+	// ボーンの最大数
+	static const int MAX_BONES = 32;
 
 private:	// 静的メンバ変数
 	// デバイス
@@ -36,6 +42,8 @@ private:	// 静的メンバ変数
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr <ID3D12PipelineState> pipelinestate;
+	// 定数バッファ(スキン)
+	ComPtr <ID3D12Resource> constBuffSkin;
 
 public:	// サブクラス
 	// 定数バッファ用データ構造体(座標変換行列用)
@@ -43,6 +51,11 @@ public:	// サブクラス
 		XMMATRIX viewproj;	// ビュープロジェクション行列
 		XMMATRIX world;		// ワールド行列
 		XMFLOAT3 cameraPos;	// カメラ座標(ワールド座標)
+	};
+
+	// 定数バッファ用構造体(スキニング)
+	struct ConstBufferDataSkin {
+		XMMATRIX bones[MAX_BONES];
 	};
 
 public:	// メンバ関数

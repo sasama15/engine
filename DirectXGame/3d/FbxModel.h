@@ -7,6 +7,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
+#include <fbxsdk.h>
 
 // ノード
 struct Node {
@@ -32,18 +33,38 @@ public:
 	// フレンドクラス
 	friend class FbxLoader;
 
-private:
-	// モデル名
-	std::string name;
-	// ノード配列
-	std::vector<Node> nodes;
+public:	//	定数
+	// ボーンインデックスの最大数
+	static const int MAX_BONE_INDICES = 4;
 
 public:	// サブクラス
-	// 頂点データ構造体
-	struct VertexPosNormalUv {
-		DirectX::XMFLOAT3 pos;		// xyz座標
-		DirectX::XMFLOAT3 normal;	// 法線ベクトル
-		DirectX::XMFLOAT3 uv;		// uv座標
+	// 頂点データ構造体		ボーン分けしていない
+	//struct VertexPosNormalUv {
+	//	DirectX::XMFLOAT3 pos;		// xyz座標
+	//	DirectX::XMFLOAT3 normal;	// 法線ベクトル
+	//	DirectX::XMFLOAT3 uv;		// uv座標
+	//};
+
+	struct VertexPosNormalUvSkin {
+		DirectX::XMFLOAT3 pos;					// xyz座標
+		DirectX::XMFLOAT3 normal;				// 法線ベクトル
+		DirectX::XMFLOAT3 uv;					// uv座標
+		UINT boneIndex[MAX_BONE_INDICES];		// ボーン　番号
+		float boneWheight[MAX_BONE_INDICES];	// ボーン　重み
+	};
+
+	// ボーン構造体
+	struct Bone {
+		// 名前
+		std::string name;
+		// 初期姿勢の逆行列
+		DirectX::XMMATRIX invInitialPose;
+		// クラスター(FBX側のボーン情報)
+		FbxCluster* fbxCluster;
+		// コンストラクタ
+		Bone(const std::string& name) {
+			this->name = name;
+		}
 	};
 
 	// アンビエント係数
@@ -55,13 +76,28 @@ public:	// サブクラス
 	// スクラッチイメージ
 	DirectX::ScratchImage scratchImg = {};
 
+	// geter
+	std::vector<Bone>& GetBones() { return bones; }
+
+	//FBXシーン
+	FbxScene* fbxScene = nullptr;
+
 private:
+	// モデル名
+	std::string name;
+	// ノード配列
+	std::vector<Node> nodes;
 	// メッシュを持つノード
 	Node* meshNode = nullptr;
 	// 頂点データ配列
-	std::vector<VertexPosNormalUv> vertices;
+	std::vector<VertexPosNormalUvSkin> vertices;
 	// 頂点インデックス配列
 	std::vector<unsigned short> indices;
+	// ボーン配列
+	std::vector<Bone> bones;
+
+	// getter
+	FbxScene* GetFbxScene() { return fbxScene; }
 
 private:	// エイリアス
 	// Microsoft::WRL::を省略
@@ -98,6 +134,8 @@ public:
 	void CreateBuffers(ID3D12Device* device);
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	// デストラクタ
+	~FbxModel();
 
 public:
 	// モデルの変形行列取得

@@ -77,7 +77,9 @@ private:
     std::unique_ptr<ObjectManager> objectManager_;
 
     FbxModel* fbxModel1 = nullptr;
+    FbxModel* fbxModel2 = nullptr;
     FbxObject3d* fbxObject1 = nullptr;
+    FbxObject3d* fbxObject2 = nullptr;
 
     DebugCamera* camera;
 };
