@@ -208,6 +208,12 @@ void FbxLoader::ParseSkin(FbxModel* fbxModel, FbxMesh* fbxMesh)
             FbxDeformer::eSkin));
     // スキニング情報がなければ終了
     if (fbxSkin == nullptr) {
+        // 各頂点について処理
+        for (int i = 0; i < fbxModel->vertices.size(); i++) {
+            // 最初のボーン(単位行列)の影響100%にする
+            fbxModel->vertices[i].boneIndex[0] = 0;
+            fbxModel->vertices[i].boneWheight[0] = 1.0f;
+        }
         return;
     }
     // ボーン配列の参照

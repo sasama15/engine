@@ -107,6 +107,8 @@ void GamePlayScene::Initialize()
     // カメラ注視点をセット
     camera->SetTarget({ 0, 20, 10 });
     camera->SetDistance(10.0f);
+
+    fbxObject2->PlayAnimation();
 }
 
 void GamePlayScene::Finalize()
@@ -253,7 +255,7 @@ void GamePlayScene::Draw()
 #pragma region 3D描画
     DirectXcommon* dxCommon = DirectXcommon::GetInstance();
     // 3Dオブジェクトの描画
-    //fbxObject1->Draw(dxCommon->GetCmdList());
+    fbxObject1->Draw(dxCommon->GetCmdList());
     fbxObject2->Draw(dxCommon->GetCmdList());
 
     // パーティクルの描画

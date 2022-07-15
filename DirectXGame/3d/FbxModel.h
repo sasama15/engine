@@ -82,6 +82,9 @@ public:	// サブクラス
 	//FBXシーン
 	FbxScene* fbxScene = nullptr;
 
+	// getter
+	FbxScene* GetFbxScene() { return fbxScene; }
+
 private:
 	// モデル名
 	std::string name;
@@ -95,9 +98,6 @@ private:
 	std::vector<unsigned short> indices;
 	// ボーン配列
 	std::vector<Bone> bones;
-
-	// getter
-	FbxScene* GetFbxScene() { return fbxScene; }
 
 private:	// エイリアス
 	// Microsoft::WRL::を省略

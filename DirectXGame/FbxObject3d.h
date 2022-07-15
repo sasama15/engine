@@ -44,6 +44,16 @@ private:	// 静的メンバ変数
 	static ComPtr <ID3D12PipelineState> pipelinestate;
 	// 定数バッファ(スキン)
 	ComPtr <ID3D12Resource> constBuffSkin;
+	// 1フレームの時間
+	FbxTime frameTime;
+	// アニメーション開始時間
+	FbxTime startTime;
+	// アニメーション終了時間
+	FbxTime endTime;
+	// 現在時間(アニメーション)
+	FbxTime currentTime;
+	// アニメーション再生中
+	bool isPlay = false;
 
 public:	// サブクラス
 	// 定数バッファ用データ構造体(座標変換行列用)
@@ -79,6 +89,11 @@ public:	// メンバ関数
 	/// </summary>
 	/// <param name="cmdList"></param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	void PlayAnimation();
 
 protected:	// メンバ変数
 	// 定数バッファ
