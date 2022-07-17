@@ -28,6 +28,7 @@ public:	// 静的メンバ関数
 	static void SetCamera(Camera* camera) { FbxObject3d::camera = camera; }
 	void SetModel(FbxModel* fbxModel) { this->fbxModel = fbxModel; }
 	const XMFLOAT3& GetPosition() { return position; }
+	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 
 public:	// 定数
 	// ボーンの最大数

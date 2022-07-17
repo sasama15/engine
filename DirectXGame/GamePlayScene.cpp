@@ -105,8 +105,11 @@ void GamePlayScene::Initialize()
     FbxObject3d::SetCamera(camera);
 
     // カメラ注視点をセット
-    camera->SetTarget({ 0, 20, 10 });
-    camera->SetDistance(10.0f);
+    /*camera->SetTarget({ 0, 20, 10 });
+    camera->SetDistance(10.0f);*/
+    camera->SetTarget({ 0, 2.5f, 10 });
+    camera->SetDistance(8.0f);
+    fbxObject2->SetRotation({ 0, 90, 0 });
 
     fbxObject2->PlayAnimation();
 }
@@ -241,7 +244,7 @@ void GamePlayScene::Draw()
     // スプライト共通コマンド
     SpriteCommon::GetInstance()->PreDrow();
     // スプライト描画
-    sprite->Draw();
+    //sprite->Draw();
 
     // 3Dオブジェクト描画前処理
     Object3d::PreDraw();

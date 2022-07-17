@@ -66,6 +66,26 @@ void Framework::Initialize()
 
     // デバイスをセット
     FbxObject3d::SetDevice(dxCommon->GetDev());
+    PostSprite::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+    // ポストエフェクト用テクスチャの読み込み
+    //PostSprite::LoadTexture(100, L"Resources/white.png");
+    // ポストエフェクトの初期化
+    postEffect = new PostEffect();
+    postEffect->Initialize();
+
+    MultiRenderTarget::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+    // ポストエフェクト用テクスチャの読み込み
+    //PostSprite::LoadTexture(100, L"Resources/white.png");
+    // ポストエフェクトの初期化
+    postEffect2 = new MultiRenderTarget();
+    postEffect2->Initialize();
+
+    MultiTexture::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+    // ポストエフェクト用テクスチャの読み込み
+    //PostSprite::LoadTexture(100, L"Resources/white.png");
+    // ポストエフェクトの初期化
+    postEffect3 = new MultiTexture();
+    postEffect3->Initialize();
 }
 
 void Framework::Finalize()
@@ -83,13 +103,18 @@ void Framework::Finalize()
     // DirectX解放
     //delete dxCommon;
 
+    // Fbx関係
+    FbxLoader::GetInstance()->Finalize();
+
+    // PostEffect解放
+    delete postEffect;
+    delete postEffect2;
+    delete postEffect3;
+
     // WindowsAPIの終了処理
     winApp->Finalize();
     // WindowsAPI解放
     delete winApp;
-
-    // Fbx関係
-    FbxLoader::GetInstance()->Finalize();
 }
 
 void Framework::Update()
@@ -112,14 +137,31 @@ void Framework::Update()
 
 void Framework::Draw()
 {
+    // レンダーテクスチャへの描画
+    /*postEffect->PreDrawScene(dxCommon->GetCmdList());
+    SceneManager::GetInstance()->Draw();
+    postEffect->PostDrawScene(dxCommon->GetCmdList());*/
+
+    /*postEffect2->PreDrawScene(dxCommon->GetCmdList());
+    SceneManager::GetInstance()->Draw();
+    postEffect2->PostDrawScene(dxCommon->GetCmdList());*/
+
+    postEffect3->PreDrawScene(dxCommon->GetCmdList());
+    SceneManager::GetInstance()->Draw();
+    postEffect3->PostDrawScene(dxCommon->GetCmdList());
+    
     // 描画前処理
     dxCommon->PreDraw();
+    // ポストエフェクトの描画
+    //postEffect->Draw(dxCommon->GetCmdList());
+    //postEffect2->Draw(dxCommon->GetCmdList());
+    postEffect3->Draw(dxCommon->GetCmdList());
 
     // シーン描画
-    SceneManager::GetInstance()->Draw();
+    //SceneManager::GetInstance()->Draw();
 
     // デバッグテキスト描画
-    debugText->DrawAll();
+    //debugText->DrawAll();
 
     // 描画後処理
     dxCommon->PostDraw();

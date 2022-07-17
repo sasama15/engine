@@ -10,7 +10,7 @@ const std::string FbxLoader::baseDirectory = "Resources/";
 /// <summary>
 /// テクスチャ読み込み
 /// </summary>
-const std::string FbxLoader::defaultTextureFileMane = "white1x1.png";
+const std::string FbxLoader::defaultTextureFileMane = "white.png";
 
 FbxLoader* FbxLoader::GetInstance()
 {

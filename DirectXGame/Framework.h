@@ -12,6 +12,9 @@
 #include "AbstractSceneFactory.h"
 #include "FbxLoader.h"
 #include "FbxObject3d.h"
+#include "2d/PostEffect.h"
+#include "2d/MultiRenderTarget.h"
+#include "2d/MultiTexture.h"
 
 #include <memory>
 
@@ -64,6 +67,9 @@ protected:
     DebugText* debugText = nullptr;
     SpriteCommon* spriteCommon = nullptr;
     Audio::SoundData soundData1;
+    PostEffect* postEffect = nullptr;
+    MultiRenderTarget* postEffect2 = nullptr;
+    MultiTexture* postEffect3 = nullptr;
 
     // èäóLé“(ä«óùé“)
     //AbstractSceneFactory* sceneFactory_ = nullptr;
