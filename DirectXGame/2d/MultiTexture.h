@@ -1,5 +1,5 @@
 #pragma once
-#include "../PostSprite.h"
+#include "PostSprite.h"
 class MultiTexture :
     public PostSprite
 {

@@ -1,6 +1,6 @@
 #include "MultiRenderTarget.h"
-#include "../WinApp.h"
-#include "../Input.h"
+#include "WinApp.h"
+#include "Input.h"
 
 #include <d3dx12.h>
 #include<d3dcompiler.h>

@@ -12,9 +12,9 @@
 #include "AbstractSceneFactory.h"
 #include "FbxLoader.h"
 #include "FbxObject3d.h"
-#include "2d/PostEffect.h"
-#include "2d/MultiRenderTarget.h"
-#include "2d/MultiTexture.h"
+#include "PostEffect.h"
+#include "MultiRenderTarget.h"
+#include "MultiTexture.h"
 
 #include <memory>
 

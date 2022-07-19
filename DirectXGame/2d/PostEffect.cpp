@@ -1,5 +1,5 @@
 #include "PostEffect.h"
-#include "../WinApp.h"
+#include "WinApp.h"
 
 #include <d3dx12.h>
 #include<d3dcompiler.h>
