@@ -29,6 +29,7 @@ public:	// 静的メンバ関数
 	void SetModel(FbxModel* fbxModel) { this->fbxModel = fbxModel; }
 	const XMFLOAT3& GetPosition() { return position; }
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
+	void SetPosition(XMFLOAT3 position) { this->position = position; }
 
 public:	// 定数
 	// ボーンの最大数

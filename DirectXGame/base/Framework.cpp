@@ -51,6 +51,7 @@ void Framework::Initialize()
     // 入力の初期化
     input = Input::GetInstance();
     input->Initialize(winApp);
+    input->ControllerInitialize(0);
 
     // サウンド
     Audio::Initialize();
@@ -130,6 +131,7 @@ void Framework::Update()
 
     // 入力の更新
     input->Update();
+    input->ControllerUpdate(0);
 
     // シーンの更新
     SceneManager::GetInstance()->Update();
@@ -146,16 +148,18 @@ void Framework::Draw()
     SceneManager::GetInstance()->Draw();
     postEffect2->PostDrawScene(dxCommon->GetCmdList());*/
 
-    postEffect3->PreDrawScene(dxCommon->GetCmdList());
+    dxCommon->PreDraw();
+
+    /*postEffect3->PreDrawScene(dxCommon->GetCmdList());*/
     SceneManager::GetInstance()->Draw();
-    postEffect3->PostDrawScene(dxCommon->GetCmdList());
+    /*postEffect3->PostDrawScene(dxCommon->GetCmdList());*/
     
     // 描画前処理
-    dxCommon->PreDraw();
+    //dxCommon->PreDraw();
     // ポストエフェクトの描画
     //postEffect->Draw(dxCommon->GetCmdList());
     //postEffect2->Draw(dxCommon->GetCmdList());
-    postEffect3->Draw(dxCommon->GetCmdList());
+    //postEffect3->Draw(dxCommon->GetCmdList());
 
     // シーン描画
     //SceneManager::GetInstance()->Draw();

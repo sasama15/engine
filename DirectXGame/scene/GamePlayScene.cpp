@@ -112,6 +112,8 @@ void GamePlayScene::Initialize()
     fbxObject2->SetRotation({ 0, 90, 0 });
 
     fbxObject2->PlayAnimation();
+
+    fbxObject2->SetPosition({ 0, 0, 50 });
 }
 
 void GamePlayScene::Finalize()
@@ -154,7 +156,7 @@ void GamePlayScene::Update()
     fbxObject1->Update();
     fbxObject2->Update();
 
-    camera->SetTarget(fbxObject2->GetPosition());
+    //camera->SetTarget(fbxObject2->GetPosition());
     camera->Update();
 
     Input* input = Input::GetInstance();
@@ -164,14 +166,14 @@ void GamePlayScene::Update()
         OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
     }
 
-    if (input->TriggerKey(DIK_SPACE)) {
+    if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(static_cast<int>(Button::BACK))) {
         //シーン切り替え
         SceneManager::GetInstance()->ChangeScene("TITLE");
     }
 
     float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 
-    if (input->PushKey(DIK_X)) {
+    if (input->PushKey(DIK_X) || input->TriggerButton(static_cast<int>(Button::X))) {
         /*object3d_2->SetModel(model_3.get());
         object3d_3->SetModel(model_3.get());*/
 
@@ -218,12 +220,23 @@ void GamePlayScene::Update()
     }
 
     // カメラ移動
-    if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+    /*if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
     {
         if (input->PushKey(DIK_W)) { Object3d::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
         else if (input->PushKey(DIK_S)) { Object3d::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
         if (input->PushKey(DIK_D)) { Object3d::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
         else if (input->PushKey(DIK_A)) { Object3d::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
+    }*/
+
+    // プレイヤー移動
+    if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A) ||
+        input->PushButton(static_cast<int>(Button::UP)) || input->PushButton(static_cast<int>(Button::DOWN)) ||
+        input->PushButton(static_cast<int>(Button::RIGHT)) || input->PushButton(static_cast<int>(Button::LEFT))) {
+        if (input->PushKey(DIK_W) || input->PushButton(static_cast<int>(Button::UP))) { PlayerPos.z++; }
+        if (input->PushKey(DIK_S) || input->PushButton(static_cast<int>(Button::DOWN))) { PlayerPos.z--; }
+        if (input->PushKey(DIK_D) || input->PushButton(static_cast<int>(Button::RIGHT))) { PlayerPos.x++; }
+        if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x--; }
+        object3d_2->SetPosition(PlayerPos);
     }
 
     // 各オブジェクトの半径
@@ -244,16 +257,16 @@ void GamePlayScene::Draw()
     // スプライト共通コマンド
     SpriteCommon::GetInstance()->PreDrow();
     // スプライト描画
-    //sprite->Draw();
+    sprite->Draw();
 
     // 3Dオブジェクト描画前処理
     Object3d::PreDraw();
 
     // 3Dオブジェクトの描画
-    /*object3d_1->Draw();
+    object3d_1->Draw();
     object3d_2->Draw();
-    object3d_3->Draw();*/
-    //objectManager_->Draw();
+    object3d_3->Draw();
+    objectManager_->Draw();
 
 #pragma region 3D描画
     DirectXcommon* dxCommon = DirectXcommon::GetInstance();

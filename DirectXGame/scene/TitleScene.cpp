@@ -35,7 +35,7 @@ void TitleScene::Update()
 
     float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // Â‚Á‚Û‚¢F
 
-    if (input->TriggerKey(DIK_RETURN)){
+    if (input->TriggerKey(DIK_RETURN) || input->TriggerButton(static_cast<int>(Button::BACK))){
         //ƒV[ƒ“Ø‚è‘Ö‚¦
         SceneManager::GetInstance()->ChangeScene("GAMEPLAY");
     }

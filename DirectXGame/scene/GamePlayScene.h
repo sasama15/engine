@@ -82,5 +82,7 @@ private:
     FbxObject3d* fbxObject2 = nullptr;
 
     DebugCamera* camera;
+
+    XMFLOAT3 PlayerPos;
 };
 
