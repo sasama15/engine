@@ -12,8 +12,9 @@ void GamePlayScene::Initialize()
     // モデル名を指定してファイル読み込み
     //FbxLoader::GetInstance()->LoadModelFromFile("cube");
     //FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-    fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
-    fbxModel2 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
+    fbxModel1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // 敵核持ち
+    fbxModel2 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // プレイヤー
+    fbxModel3 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // ノーマル敵
 
     // グラフィックスパイプライン生成
     FbxObject3d::CreateGraphicsPipeline();
@@ -25,6 +26,12 @@ void GamePlayScene::Initialize()
     fbxObject2 = new FbxObject3d;
     fbxObject2->Initialize();
     fbxObject2->SetModel(fbxModel2);
+    fbxObject3 = new FbxObject3d;
+    fbxObject3->Initialize();
+    fbxObject3->SetModel(fbxModel3);
+    fbxObject4 = new FbxObject3d;
+    fbxObject4->Initialize();
+    fbxObject4->SetModel(fbxModel3);
 
     // OBJからモデルデータを読み込む
     model_1 = Model::LoadFromOBJ("ground");
@@ -113,7 +120,16 @@ void GamePlayScene::Initialize()
 
     fbxObject2->PlayAnimation();
 
-    fbxObject2->SetPosition({ 0, 0, 50 });
+    PlayerPos = { 0,0,50 };
+    EnemyPos = { 0.2, 0, 53 };
+    EnemyPos2 = { 5, 1, 60 };
+    EnemyPos3 = { 100, 2, 40 };
+    EnemyJump2 = true;
+    EnemyJump3 = true;
+    fbxObject2->SetPosition({ PlayerPos });
+    fbxObject1->SetPosition({ EnemyPos });
+    fbxObject3->SetPosition({ EnemyPos2 });
+    fbxObject4->SetPosition({ EnemyPos3 });
 }
 
 void GamePlayScene::Finalize()
@@ -133,8 +149,11 @@ void GamePlayScene::Finalize()
     // FBXオブジェクト、モデル解放
     delete fbxObject1;
     delete fbxObject2;
+    delete fbxObject3;
+    delete fbxObject4;
     delete fbxModel1;
     delete fbxModel2;
+    delete fbxModel3;
     delete camera;
 }
 
@@ -143,21 +162,10 @@ void GamePlayScene::Update()
 #pragma region DirectX毎フレーム処理
     // DirectX毎フレーム処理　ここから
 
-    // 3Dオブジェクト更新
-    /*object3d_1->Update();
-    object3d_2->Update();
-    object3d_3->Update();*/
-    objectManager_->Update();
 
-    // スプライト更新
-    sprite->Update();
-
-    // FBXオブジェクト更新
-    fbxObject1->Update();
-    fbxObject2->Update();
-
-    //camera->SetTarget(fbxObject2->GetPosition());
-    camera->Update();
+    /*OldEnemyPos = EnemyPos;
+    OldEnemyPos2 = EnemyPos2;
+    OldEnemyPos3 = EnemyPos3;*/
 
     Input* input = Input::GetInstance();
 
@@ -236,8 +244,157 @@ void GamePlayScene::Update()
         if (input->PushKey(DIK_S) || input->PushButton(static_cast<int>(Button::DOWN))) { PlayerPos.z--; }
         if (input->PushKey(DIK_D) || input->PushButton(static_cast<int>(Button::RIGHT))) { PlayerPos.x++; }
         if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x--; }
-        object3d_2->SetPosition(PlayerPos);
+        fbxObject2->SetPosition(PlayerPos);
     }
+
+    // 敵移動
+    if (fbxObject2->GetPosition().x <= EnemyPos.x) {
+        EnemyPos.x = EnemyPos.x - 0.01;
+    }
+    if (fbxObject2->GetPosition().x >= EnemyPos.x) {
+        EnemyPos.x = EnemyPos.x + 0.01;
+    }
+
+    if (fbxObject2->GetPosition().z <= EnemyPos.z) {
+        EnemyPos.z = EnemyPos.z - 0.01;
+    }
+    if (fbxObject2->GetPosition().z >= EnemyPos.z) {
+        EnemyPos.z = EnemyPos.z + 0.01;
+    }
+
+    EnemyPos.y -= Gravity;
+    fbxObject1->SetPosition({ EnemyPos });
+    if (EnemyPos.y <= 20 && EnemyJump == true) {
+        EnemyPos.y += 0.2;
+        Gravity += 0.005f;
+        fbxObject1->SetPosition({ EnemyPos });
+    }
+    if (EnemyPos.y >= 20) {
+        EnemyJump = false;
+    }
+    if (EnemyPos.y <= 0) {
+        Gravity = 0.1f;
+        EnemyPos.y = 0;
+        EnemyJump = true;
+        fbxObject1->SetPosition({ EnemyPos });
+    }
+
+    if (fbxObject2->GetPosition().x <= EnemyPos2.x) {
+        EnemyPos2.x = EnemyPos2.x - 0.03;
+    }
+    if (fbxObject2->GetPosition().x >= EnemyPos2.x) {
+        EnemyPos2.x = EnemyPos2.x + 0.03;
+    }
+
+    if (fbxObject2->GetPosition().z <= EnemyPos2.z) {
+        EnemyPos2.z = EnemyPos2.z - 0.03;
+    }
+    if (fbxObject2->GetPosition().z >= EnemyPos2.z) {
+        EnemyPos2.z = EnemyPos2.z + 0.03;
+    }
+
+    EnemyPos2.y -= Gravity2;
+    fbxObject3->SetPosition({ EnemyPos2 });
+    if (EnemyPos2.y <= 20 && EnemyJump2 == true) {
+        EnemyPos2.y += 0.2;
+        Gravity2 += 0.005f;
+        fbxObject3->SetPosition({ EnemyPos2 });
+    }
+    if (EnemyPos2.y >= 20) {
+        EnemyJump2 = false;
+    }
+    if (EnemyPos2.y <= 0) {
+        Gravity2 = 0.1f;
+        EnemyPos2.y = 0;
+        EnemyJump2 = true;
+        fbxObject3->SetPosition({ EnemyPos2 });
+    }
+
+    if (fbxObject2->GetPosition().x <= EnemyPos3.x) {
+        EnemyPos3.x = EnemyPos3.x - 0.08;
+    }
+    if (fbxObject2->GetPosition().x >= EnemyPos3.x) {
+        EnemyPos3.x = EnemyPos3.x + 0.08;
+    }
+
+    if (fbxObject3->GetPosition().z <= EnemyPos3.z) {
+        EnemyPos3.z = EnemyPos3.z - 0.08;
+    }
+    if (fbxObject3->GetPosition().z >= EnemyPos3.z) {
+        EnemyPos3.z = EnemyPos3.z + 0.08;
+    }
+
+    EnemyPos3.y -= Gravity3;
+    fbxObject4->SetPosition({ EnemyPos3 });
+    if (EnemyPos3.y <= 20 && EnemyJump3 == true) {
+        EnemyPos3.y += 0.2;
+        Gravity3 += 0.005f;
+        fbxObject4->SetPosition({ EnemyPos3 });
+    }
+    if (EnemyPos3.y >= 20) {
+        EnemyJump3 = false;
+    }
+    if (EnemyPos3.y <= 0) {
+        Gravity3 = 0.1f;
+        EnemyPos3.y = 0;
+        EnemyJump3 = true;
+        fbxObject4->SetPosition({ EnemyPos3 });
+    }
+
+    /*for (int i = 0; i < 5; i++) {
+
+    }*/
+
+    // 当たり判定
+    //spherePlayer.center = { object3d_2->GetPosition().x, object3d_2->GetPosition().y, object3d_2->GetPosition().z, 1 };
+    //sphereEnemy.center = { object3d_3->GetPosition().x, object3d_3->GetPosition().y, object3d_3->GetPosition().z, 1 };
+    //spherePlayer.radius = 2;
+    //sphereEnemy.radius = 2;
+
+    //if (SphereCollision(spherePlayer, sphereEnemy) == true) {
+    //    flag = true;
+    //}
+    
+    // プレイヤーと敵の距離感
+    /*Ax = object3d_2->GetPosition().x - object3d_3->GetPosition().x;
+    Az = object3d_2->GetPosition().z - object3d_3->GetPosition().z;
+    Angle += (Ax - Az < 0.0f) ? +XM_PI / 180 * 8 : -XM_PI / 180 * 8;
+    EnemyPos.x += (cosf(Angle) * 6.0f);
+    EnemyPos.z += (sinf(Angle) * 6.0f);
+    object3d_3->SetPosition(EnemyPos);*/
+
+    if (OnCollisionCircle(fbxObject2, fbxObject1, 2, 2) == true) {
+        if (input->PushKey(DIK_K) || input->PushButton(static_cast<int>(Button::B))) {
+            flag2 = true;
+        }
+    }
+    if (OnCollisionCircle(fbxObject2, fbxObject3, 2, 2) == true) {
+        if (input->PushKey(DIK_K) || input->PushButton(static_cast<int>(Button::B))) {
+            flag3 = true;
+        }
+    }
+    // Dラクエ
+    //if (OnCollisionCircle(fbxObject1, fbxObject3, 1, 1) == true) {
+    //   /* EnemyPos.x = OldEnemyPos.x;
+    //    EnemyPos.z = OldEnemyPos.z;*/
+    //    EnemyPos2.x = OldEnemyPos2.x;
+    //    EnemyPos2.z = OldEnemyPos2.z;
+    //}
+    //if (OnCollisionCircle(fbxObject1, fbxObject4, 1, 1) == true) {
+    //    /*EnemyPos.x = OldEnemyPos.x;
+    //    EnemyPos.z = OldEnemyPos.z;*/
+    //    EnemyPos3.x = OldEnemyPos3.x;
+    //    EnemyPos3.z = OldEnemyPos3.z;
+    //}
+    //if (OnCollisionCircle(fbxObject3, fbxObject4, 1, 1) == true) {
+    //    /*EnemyPos2.x = OldEnemyPos2.x;
+    //    EnemyPos2.z = OldEnemyPos2.z;*/
+    //    EnemyPos3.x = OldEnemyPos3.x;
+    //    EnemyPos3.z = OldEnemyPos3.z;
+    //}
+
+    camera->SetTarget(fbxObject2->GetPosition());
+    camera->SetDistance(20);
 
     // 各オブジェクトの半径
     const float radius1 = 3.0f;
@@ -248,8 +405,41 @@ void GamePlayScene::Update()
     // X座標,Y座標,縮尺を指定して表示
     DebugText::GetInstance()->Print("Nihon Kogakuin", 200, 200, 2.0f);
 
+    // 3Dオブジェクト更新
+    /*object3d_1->Update();
+    object3d_2->Update();
+    object3d_3->Update();*/
+    objectManager_->Update();
+
+    // スプライト更新
+    sprite->Update();
+
+    // FBXオブジェクト更新
+    fbxObject1->Update();
+    fbxObject2->Update();
+    fbxObject3->Update();
+    fbxObject4->Update();
+
+    camera->Update();
+
     // DirectX毎フレーム処理　ここまで
 #pragma endregion DirectX毎フレーム処理
+}
+
+bool GamePlayScene::OnCollisionCircle(FbxObject3d* playerCircle, FbxObject3d* enemyCircle1, float playerR1, float enemyR1)
+{
+    float x = playerCircle->GetPosition().x - enemyCircle1->GetPosition().x;
+    float y = playerCircle->GetPosition().y - enemyCircle1->GetPosition().y;
+    float z = playerCircle->GetPosition().z - enemyCircle1->GetPosition().z;
+
+    float c = sqrt(x * x + y * y + z * z);
+    float sum_radius = playerR1 + enemyR1;
+
+    if (c <= sum_radius)
+    {
+        return true;
+    }
+    return false;
 }
 
 void GamePlayScene::Draw()
@@ -263,16 +453,26 @@ void GamePlayScene::Draw()
     Object3d::PreDraw();
 
     // 3Dオブジェクトの描画
-    object3d_1->Draw();
+    /*object3d_1->Draw();
     object3d_2->Draw();
-    object3d_3->Draw();
-    objectManager_->Draw();
-
+    object3d_3->Draw();*/
+   
 #pragma region 3D描画
     DirectXcommon* dxCommon = DirectXcommon::GetInstance();
     // 3Dオブジェクトの描画
-    fbxObject1->Draw(dxCommon->GetCmdList());
+    
     fbxObject2->Draw(dxCommon->GetCmdList());
+    if (flag == false) {
+        //objectManager_->Draw();
+        fbxObject1->Draw(dxCommon->GetCmdList());
+    }
+    if (flag2 == true) {
+        fbxObject3->Draw(dxCommon->GetCmdList());
+    }
+    if (flag3 == true) {
+        fbxObject4->Draw(dxCommon->GetCmdList());
+    }
+
 
     // パーティクルの描画
     //particleMan->Draw(dxCommon->GetCmdList());

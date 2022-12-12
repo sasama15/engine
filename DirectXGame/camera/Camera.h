@@ -49,7 +49,7 @@ protected:
 	bool viewDirty = false;
 	bool projectionDirty = false;
 
-	XMFLOAT3 eye = { 0, 0, -30 };
+	XMFLOAT3 eye = { 0, -30, 0 };
 	XMFLOAT3 target = { 0, 0, 0 };
 	XMFLOAT3 up = { 0, 1, 0 };
 

@@ -58,6 +58,9 @@
     <Filter Include="ソース ファイル\camera">
       <UniqueIdentifier>{a50d0565-e18d-485d-8826-6663adf15a4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\collision">
+      <UniqueIdentifier>{c88c858a-8c4a-4484-b2aa-cac0d9cad35f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -238,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="scene\TitleScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Collision.h">
+      <Filter>ヘッダー ファイル\collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
