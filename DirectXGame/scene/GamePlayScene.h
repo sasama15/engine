@@ -8,6 +8,7 @@
 #include "FbxObject3d.h"
 #include "DirectXCommon.h"
 #include "DebugCamera.h"
+//#include "../LigthGroup.h"
 
 #include <memory>
 
@@ -49,6 +50,7 @@ public:
 
 private:
     Sprite* sprite = nullptr;
+    Sprite* end = nullptr;
     //std::unique_ptr<Sprite> sprite;
 
    /* Model* model_1 = nullptr;
@@ -58,6 +60,7 @@ private:
     std::unique_ptr<Model> model_1;
     std::unique_ptr<Model> model_2;
     std::unique_ptr<Model> model_3;
+    std::unique_ptr<Model> model_universe;
 
     /*Object3d* object3d_1 = nullptr;
     Object3d* object3d_2 = nullptr;
@@ -73,6 +76,7 @@ private:
     std::shared_ptr<Object3d> object3d_1;
     std::shared_ptr<Object3d> object3d_2;
     std::shared_ptr<Object3d> object3d_3;
+    std::shared_ptr<Object3d> object3d_universe;
 
     // weak_ptrégÇ§èÍçá
     /*std::weak_ptr<Object3d> object3d_1;
@@ -86,51 +90,58 @@ private:
 
     std::unique_ptr<ObjectManager> objectManager_;
 
-    FbxModel* fbxModel1 = nullptr;
-    FbxModel* fbxModel2 = nullptr;
-    FbxModel* fbxModel3 = nullptr;
-    FbxObject3d* fbxObject1 = nullptr;
-    FbxObject3d* fbxObject2 = nullptr;
-    FbxObject3d* fbxObject3 = nullptr;
-    FbxObject3d* fbxObject4 = nullptr;
+    FbxModel* nucleusFbxModel = nullptr;
+    FbxModel* playerFbxModel = nullptr;
+    FbxModel* enemyFbxModel = nullptr;
+    FbxObject3d* nucleusFbxObject = nullptr;
+    FbxObject3d* playerFbxObject = nullptr;
+    FbxObject3d* enemyFbxObject = nullptr;
+    FbxObject3d* enemyFbxObject2 = nullptr;
 
     DebugCamera* camera;
 
     XMFLOAT3 PlayerPos;
+    XMFLOAT3 NucleusPos;
     XMFLOAT3 EnemyPos;
     XMFLOAT3 EnemyPos2;
-    XMFLOAT3 EnemyPos3;
 
     XMFLOAT3 OldEnemyPos;
     XMFLOAT3 OldEnemyPos2;
     XMFLOAT3 OldEnemyPos3;
 
     // ìG1
-    bool EnemyJump;
-    float Gravity;
-    float Angle;
+    bool NucleusJump;
+    float NucleusGravity;
+    /*float Angle;
     float Ax;
-    float Az;
+    float Az;*/
 
     // ìG2
-    bool EnemyJump2;
-    float Gravity2;
-    float Angle2;
+    bool EnemyJump;
+    float EnemyGravity;
+    /*float Angle2;
     float Ax2;
-    float Az2;
+    float Az2;*/
 
     // ìG3
-    bool EnemyJump3;
-    float Gravity3;
-    float Angle3;
+    bool EnemyJump2;
+    float EnemyGravity2;
+    /*float Angle3;
     float Ax3;
-    float Az3;
+    float Az3;*/
 
     // ìñÇΩÇËîªíË
     //Sphere spherePlayer;
     //Sphere sphereEnemy;
-    bool flag;
-    bool flag2;
-    bool flag3;
+    bool playerFlag = false;
+    bool nucleusFlag;
+    bool enemyFlag;
+    bool enemyFlag2;
+    bool endFlag;
+
+    // ì_åıåπ
+    float pointLightPos[3] = { 0, 0, 0 };
+    float pointLightColor[3] = { 1, 1, 1 };
+    float pointLightAtten[3] = { 0.3f, 0.1f, 0.1f };
 };
 
