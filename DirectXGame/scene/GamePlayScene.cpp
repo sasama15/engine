@@ -15,21 +15,33 @@ void GamePlayScene::Initialize()
     //FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
     nucleusFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // ìGäjéùÇø
     playerFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // ÉvÉåÉCÉÑÅ[
-    enemyFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // ÉmÅ[É}ÉãìG
+    enemyFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("mountain");    // ÉmÅ[É}ÉãìG
 
     // ÉOÉâÉtÉBÉbÉNÉXÉpÉCÉvÉâÉCÉìê∂ê¨
     FbxObject3d::CreateGraphicsPipeline();
 
     // 3DÉIÉuÉWÉFÉNÉgê∂ê¨Ç∆ÉÇÉfÉãÇÃÉZÉbÉg
     // äjéùÇøìG
-    nucleusFbxObject = new FbxObject3d;
-    nucleusFbxObject->Initialize();
-    nucleusFbxObject->SetModel(nucleusFbxModel);
+    for (int i = 0; i < nucleusMax; i++) {
+        nucleusFbxObject[i] = new FbxObject3d;
+        nucleusFbxObject[i]->Initialize();
+        nucleusFbxObject[i]->SetModel(nucleusFbxModel);
+    }
 
-    // äjéùÇøìG2
-    nucleusFbxObject2 = new FbxObject3d;
-    nucleusFbxObject2->Initialize();
-    nucleusFbxObject2->SetModel(nucleusFbxModel);
+    //// äjéùÇøìG
+    //nucleusFbxObject = new FbxObject3d;
+    //nucleusFbxObject->Initialize();
+    //nucleusFbxObject->SetModel(nucleusFbxModel);
+
+    //// äjéùÇøìG2
+    //nucleusFbxObject2 = new FbxObject3d;
+    //nucleusFbxObject2->Initialize();
+    //nucleusFbxObject2->SetModel(nucleusFbxModel);
+
+    //// äjéùÇøìG3
+    //nucleusFbxObject3 = new FbxObject3d;
+    //nucleusFbxObject3->Initialize();
+    //nucleusFbxObject3->SetModel(nucleusFbxModel);
 
     // ÉvÉåÉCÉÑÅ[
     playerFbxObject = new FbxObject3d;
@@ -37,19 +49,26 @@ void GamePlayScene::Initialize()
     playerFbxObject->SetModel(playerFbxModel);
 
     // ìG
-    enemyFbxObject = new FbxObject3d;
-    enemyFbxObject->Initialize();
-    enemyFbxObject->SetModel(enemyFbxModel);
+    for (int i = 0; i < enemyMax; i++) {
+        enemyFbxObject[i] = new FbxObject3d;
+        enemyFbxObject[i]->Initialize();
+        enemyFbxObject[i]->SetModel(enemyFbxModel);
+    }
 
-    // ìG2
-    enemyFbxObject2 = new FbxObject3d;
-    enemyFbxObject2->Initialize();
-    enemyFbxObject2->SetModel(enemyFbxModel);
+    //// ìG
+    //enemyFbxObject = new FbxObject3d;
+    //enemyFbxObject->Initialize();
+    //enemyFbxObject->SetModel(enemyFbxModel);
 
-    // ìG3
-    enemyFbxObject3 = new FbxObject3d;
-    enemyFbxObject3->Initialize();
-    enemyFbxObject3->SetModel(enemyFbxModel);
+    //// ìG2
+    //enemyFbxObject2 = new FbxObject3d;
+    //enemyFbxObject2->Initialize();
+    //enemyFbxObject2->SetModel(enemyFbxModel);
+
+    //// ìG3
+    //enemyFbxObject3 = new FbxObject3d;
+    //enemyFbxObject3->Initialize();
+    //enemyFbxObject3->SetModel(enemyFbxModel);
 
     // OBJÇ©ÇÁÉÇÉfÉãÉfÅ[É^Çì«Ç›çûÇﬁ
     model_1 = Model::LoadFromOBJ("ground");
@@ -121,6 +140,7 @@ void GamePlayScene::Initialize()
     // ÉXÉvÉâÉCÉgã§í ÉeÉNÉXÉ`ÉÉì«Ç›çûÇ›
     SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/gamePlay.jpg");
     SpriteCommon::GetInstance()->LoadTexture(2, L"Resources/gameend.png");
+    SpriteCommon::GetInstance()->LoadTexture(3, L"Resources/wasd.png");
     
     // ÉXÉvÉâÉCÉgÇÃê∂ê¨
     sprite = Sprite::Create(1, { 0,0 }, false, false);
@@ -143,22 +163,41 @@ void GamePlayScene::Initialize()
     camera->SetDistance(8.0f);
     playerFbxObject->SetRotation({ 0, 90, 0 });
     playerFbxObject->PlayAnimation();
+    enemyFbxObject[0]->SetScale({0.01f, 0.01f, 0.01f });
+    enemyFbxObject[1]->SetScale({ 0.01f, 0.01f, 0.01f });
+    enemyFbxObject[2]->SetScale({ 0.01f, 0.01f, 0.01f });
 
     PlayerPos = { 0,0,50 };
+
     NucleusPos = { 10, 0, 53 };
     NucleusPos2 = { -10, 0, 53 };
+    NucleusPos3 = { 5, 0, 53 };
+
     EnemyPos = { 5, 1, 60 };
     EnemyPos2 = { 50, 2, 40 };
     EnemyPos3 = { -5, 0, -10 };
+
     EnemyJump = true;
     EnemyJump2 = true;
     EnemyJump3 = true;
+
     playerFbxObject->SetPosition({ PlayerPos });
-    nucleusFbxObject->SetPosition({ NucleusPos });
+
+    nucleusFbxObject[0]->SetPosition({NucleusPos});
+    nucleusFbxObject[1]->SetPosition({ NucleusPos2 });
+    nucleusFbxObject[2]->SetPosition({ NucleusPos3 });
+
+    /*nucleusFbxObject->SetPosition({ NucleusPos });
     nucleusFbxObject2->SetPosition({ NucleusPos2 });
-    enemyFbxObject->SetPosition({ EnemyPos });
+    nucleusFbxObject3->SetPosition({ NucleusPos3 });*/
+
+    enemyFbxObject[0]->SetPosition({EnemyPos});
+    enemyFbxObject[1]->SetPosition({ EnemyPos2 });
+    enemyFbxObject[2]->SetPosition({ EnemyPos3 });
+
+    /*enemyFbxObject->SetPosition({ EnemyPos });
     enemyFbxObject2->SetPosition({ EnemyPos2 });
-    enemyFbxObject3->SetPosition({ EnemyPos3 });
+    enemyFbxObject3->SetPosition({ EnemyPos3 });*/
 
     object3d_universe->SetScale({ 30, 30, 30 });
 
@@ -172,6 +211,7 @@ void GamePlayScene::Initialize()
     pointLightPos[2] = 0.0f;*/
 
     nucleusFlag2 = true;
+    nucleusFlag3 = true;
     enemyFlag = true;
     enemyFlag2 = true;
     enemyFlag3 = true;
@@ -192,12 +232,23 @@ void GamePlayScene::Finalize()
     delete object3d_3;*/
 
     // FBXÉIÉuÉWÉFÉNÉgÅAÉÇÉfÉãâï˙
-    delete nucleusFbxObject;
-    delete nucleusFbxObject2;
     delete playerFbxObject;
-    delete enemyFbxObject;
+
+    delete nucleusFbxObject[0];
+    delete nucleusFbxObject[1];
+    delete nucleusFbxObject[2];
+
+    /*delete nucleusFbxObject;
+    delete nucleusFbxObject2;
+    delete nucleusFbxObject3;*/
+
+    delete enemyFbxObject[0];
+    delete enemyFbxObject[1];
+    delete enemyFbxObject[2];
+
+    /*delete enemyFbxObject;
     delete enemyFbxObject2;
-    delete enemyFbxObject3;
+    delete enemyFbxObject3;*/
 
     delete nucleusFbxModel;
     delete playerFbxModel;
@@ -320,14 +371,13 @@ void GamePlayScene::Update()
         if (playerFbxObject->GetPosition().z >= NucleusPos.z) {
             NucleusPos.z = NucleusPos.z + 0.01;
         }
-
         //ÉWÉÉÉìÉv
         NucleusPos.y -= NucleusGravity;
-        nucleusFbxObject->SetPosition({ NucleusPos });
+        nucleusFbxObject[0]->SetPosition({NucleusPos});
         if (NucleusPos.y <= 20 && NucleusJump == true) {
             NucleusPos.y += 0.2;
             NucleusGravity += 0.005f;
-            nucleusFbxObject->SetPosition({ NucleusPos });
+            nucleusFbxObject[0]->SetPosition({NucleusPos});
         }
         if (NucleusPos.y >= 20) {
             NucleusJump = false;
@@ -336,8 +386,26 @@ void GamePlayScene::Update()
             NucleusGravity = 0.1f;
             NucleusPos.y = 0;
             NucleusJump = true;
-            nucleusFbxObject->SetPosition({ NucleusPos });
+            nucleusFbxObject[0]->SetPosition({NucleusPos});
         }
+
+        ////ÉWÉÉÉìÉv
+        //NucleusPos.y -= NucleusGravity;
+        //nucleusFbxObject->SetPosition({ NucleusPos });
+        //if (NucleusPos.y <= 20 && NucleusJump == true) {
+        //    NucleusPos.y += 0.2;
+        //    NucleusGravity += 0.005f;
+        //    nucleusFbxObject->SetPosition({ NucleusPos });
+        //}
+        //if (NucleusPos.y >= 20) {
+        //    NucleusJump = false;
+        //}
+        //if (NucleusPos.y <= 0) {
+        //    NucleusGravity = 0.1f;
+        //    NucleusPos.y = 0;
+        //    NucleusJump = true;
+        //    nucleusFbxObject->SetPosition({ NucleusPos });
+        //}
     }
 
     // äjéùÇøìG2èàóù
@@ -359,11 +427,11 @@ void GamePlayScene::Update()
 
         //ÉWÉÉÉìÉv
         NucleusPos2.y -= NucleusGravity2;
-        nucleusFbxObject2->SetPosition({ NucleusPos2 });
+        nucleusFbxObject[1]->SetPosition({ NucleusPos2 });
         if (NucleusPos2.y <= 20 && NucleusJump2 == true) {
             NucleusPos2.y += 0.2;
             NucleusGravity2 += 0.005f;
-            nucleusFbxObject2->SetPosition({ NucleusPos2 });
+            nucleusFbxObject[1]->SetPosition({ NucleusPos2 });
         }
         if (NucleusPos2.y >= 20) {
             NucleusJump2 = false;
@@ -372,8 +440,80 @@ void GamePlayScene::Update()
             NucleusGravity2 = 0.1f;
             NucleusPos2.y = 0;
             NucleusJump2 = true;
-            nucleusFbxObject2->SetPosition({ NucleusPos2 });
+            nucleusFbxObject[1]->SetPosition({ NucleusPos2 });
         }
+
+        ////ÉWÉÉÉìÉv
+        //NucleusPos2.y -= NucleusGravity2;
+        //nucleusFbxObject2->SetPosition({ NucleusPos2 });
+        //if (NucleusPos2.y <= 20 && NucleusJump2 == true) {
+        //    NucleusPos2.y += 0.2;
+        //    NucleusGravity2 += 0.005f;
+        //    nucleusFbxObject2->SetPosition({ NucleusPos2 });
+        //}
+        //if (NucleusPos2.y >= 20) {
+        //    NucleusJump2 = false;
+        //}
+        //if (NucleusPos2.y <= 0) {
+        //    NucleusGravity2 = 0.1f;
+        //    NucleusPos2.y = 0;
+        //    NucleusJump2 = true;
+        //    nucleusFbxObject2->SetPosition({ NucleusPos2 });
+        //}
+    }
+    
+    // äjéùÇøìG3èàóù
+    if (nucleusFlag3 == false)
+    {
+        //à⁄ìÆ
+        if (playerFbxObject->GetPosition().x <= NucleusPos3.x) {
+            NucleusPos3.x = NucleusPos3.x - 0.01;
+        }
+        if (playerFbxObject->GetPosition().x >= NucleusPos3.x) {
+            NucleusPos3.x = NucleusPos3.x + 0.01;
+        }
+        if (playerFbxObject->GetPosition().z <= NucleusPos3.z) {
+            NucleusPos3.z = NucleusPos3.z - 0.01;
+        }
+        if (playerFbxObject->GetPosition().z >= NucleusPos3.z) {
+            NucleusPos3.z = NucleusPos3.z + 0.01;
+        }
+
+        //ÉWÉÉÉìÉv
+        NucleusPos3.y -= NucleusGravity3;
+        nucleusFbxObject[2]->SetPosition({ NucleusPos3 });
+        if (NucleusPos3.y <= 20 && NucleusJump3 == true) {
+            NucleusPos3.y += 0.2;
+            NucleusGravity3 += 0.005f;
+            nucleusFbxObject[2]->SetPosition({ NucleusPos3 });
+        }
+        if (NucleusPos3.y >= 20) {
+            NucleusJump3 = false;
+        }
+        if (NucleusPos3.y <= 0) {
+            NucleusGravity3 = 0.1f;
+            NucleusPos3.y = 0;
+            NucleusJump3 = true;
+            nucleusFbxObject[2]->SetPosition({ NucleusPos3 });
+        }
+
+        ////ÉWÉÉÉìÉv
+        //NucleusPos3.y -= NucleusGravity3;
+        //nucleusFbxObject3->SetPosition({ NucleusPos3 });
+        //if (NucleusPos3.y <= 20 && NucleusJump3 == true) {
+        //    NucleusPos3.y += 0.2;
+        //    NucleusGravity3 += 0.005f;
+        //    nucleusFbxObject3->SetPosition({ NucleusPos3 });
+        //}
+        //if (NucleusPos3.y >= 20) {
+        //    NucleusJump3 = false;
+        //}
+        //if (NucleusPos3.y <= 0) {
+        //    NucleusGravity3 = 0.1f;
+        //    NucleusPos3.y = 0;
+        //    NucleusJump3 = true;
+        //    nucleusFbxObject3->SetPosition({ NucleusPos3 });
+        //}
     }
 
     //ìGèàóù
@@ -395,11 +535,11 @@ void GamePlayScene::Update()
 
         // ÉWÉÉÉìÉv
         EnemyPos.y -= EnemyGravity;
-        enemyFbxObject->SetPosition({ EnemyPos });
+        enemyFbxObject[0]->SetPosition({EnemyPos});
         if (EnemyPos.y <= 20 && EnemyJump == true) {
             EnemyPos.y += 0.2;
             EnemyGravity += 0.005f;
-            enemyFbxObject->SetPosition({ EnemyPos });
+            enemyFbxObject[0]->SetPosition({EnemyPos});
         }
         if (EnemyPos.y >= 20) {
             EnemyJump = false;
@@ -408,8 +548,26 @@ void GamePlayScene::Update()
             EnemyGravity = 0.1f;
             EnemyPos.y = 0;
             EnemyJump = true;
-            enemyFbxObject->SetPosition({ EnemyPos });
+            enemyFbxObject[0]->SetPosition({EnemyPos});
         }
+
+        //// ÉWÉÉÉìÉv
+        //EnemyPos.y -= EnemyGravity;
+        //enemyFbxObject->SetPosition({ EnemyPos });
+        //if (EnemyPos.y <= 20 && EnemyJump == true) {
+        //    EnemyPos.y += 0.2;
+        //    EnemyGravity += 0.005f;
+        //    enemyFbxObject->SetPosition({ EnemyPos });
+        //}
+        //if (EnemyPos.y >= 20) {
+        //    EnemyJump = false;
+        //}
+        //if (EnemyPos.y <= 0) {
+        //    EnemyGravity = 0.1f;
+        //    EnemyPos.y = 0;
+        //    EnemyJump = true;
+        //    enemyFbxObject->SetPosition({ EnemyPos });
+        //}
     }
 
     //ìG2èàóù
@@ -431,11 +589,11 @@ void GamePlayScene::Update()
 
         // ÉWÉÉÉìÉv
         EnemyPos2.y -= EnemyGravity2;
-        enemyFbxObject2->SetPosition({ EnemyPos2 });
+        enemyFbxObject[1]->SetPosition({ EnemyPos2 });
         if (EnemyPos2.y <= 20 && EnemyJump2 == true) {
             EnemyPos2.y += 0.2;
             EnemyGravity2 += 0.005f;
-            enemyFbxObject2->SetPosition({ EnemyPos2 });
+            enemyFbxObject[1]->SetPosition({ EnemyPos2 });
         }
         if (EnemyPos2.y >= 20) {
             EnemyJump2 = false;
@@ -444,8 +602,26 @@ void GamePlayScene::Update()
             EnemyGravity2 = 0.1f;
             EnemyPos2.y = 0;
             EnemyJump2 = true;
-            enemyFbxObject2->SetPosition({ EnemyPos2 });
+            enemyFbxObject[1]->SetPosition({ EnemyPos2 });
         }
+
+        //// ÉWÉÉÉìÉv
+        //EnemyPos2.y -= EnemyGravity2;
+        //enemyFbxObject2->SetPosition({ EnemyPos2 });
+        //if (EnemyPos2.y <= 20 && EnemyJump2 == true) {
+        //    EnemyPos2.y += 0.2;
+        //    EnemyGravity2 += 0.005f;
+        //    enemyFbxObject2->SetPosition({ EnemyPos2 });
+        //}
+        //if (EnemyPos2.y >= 20) {
+        //    EnemyJump2 = false;
+        //}
+        //if (EnemyPos2.y <= 0) {
+        //    EnemyGravity2 = 0.1f;
+        //    EnemyPos2.y = 0;
+        //    EnemyJump2 = true;
+        //    enemyFbxObject2->SetPosition({ EnemyPos2 });
+        //}
     }
 
     //ìG3èàóù
@@ -467,11 +643,11 @@ void GamePlayScene::Update()
 
         // ÉWÉÉÉìÉv
         EnemyPos3.y -= EnemyGravity3;
-        enemyFbxObject3->SetPosition({ EnemyPos3 });
+        enemyFbxObject[2]->SetPosition({ EnemyPos3 });
         if (EnemyPos3.y <= 20 && EnemyJump2 == true) {
             EnemyPos3.y += 0.2;
             EnemyGravity3 += 0.005f;
-            enemyFbxObject3->SetPosition({ EnemyPos3 });
+            enemyFbxObject[2]->SetPosition({ EnemyPos3 });
         }
         if (EnemyPos3.y >= 20) {
             EnemyJump3 = false;
@@ -480,8 +656,26 @@ void GamePlayScene::Update()
             EnemyGravity3 = 0.1f;
             EnemyPos3.y = 0;
             EnemyJump3 = true;
-            enemyFbxObject3->SetPosition({ EnemyPos3 });
+            enemyFbxObject[2]->SetPosition({ EnemyPos3 });
         }
+
+        //// ÉWÉÉÉìÉv
+        //EnemyPos3.y -= EnemyGravity3;
+        //enemyFbxObject3->SetPosition({ EnemyPos3 });
+        //if (EnemyPos3.y <= 20 && EnemyJump2 == true) {
+        //    EnemyPos3.y += 0.2;
+        //    EnemyGravity3 += 0.005f;
+        //    enemyFbxObject3->SetPosition({ EnemyPos3 });
+        //}
+        //if (EnemyPos3.y >= 20) {
+        //    EnemyJump3 = false;
+        //}
+        //if (EnemyPos3.y <= 0) {
+        //    EnemyGravity3 = 0.1f;
+        //    EnemyPos3.y = 0;
+        //    EnemyJump3 = true;
+        //    enemyFbxObject3->SetPosition({ EnemyPos3 });
+        //}
     }
 
     /*for (int i = 0; i < 5; i++) {
@@ -506,38 +700,43 @@ void GamePlayScene::Update()
     EnemyPos.z += (sinf(Angle) * 6.0f);
     object3d_3->SetPosition(EnemyPos);*/
 
-    // äjéùÇøìGÇçUåÇÇµÇΩÇÁìGÇ∆ìG2Ç™ï`âÊÇ≥ÇÍÇÈ
-    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject, 2, 2) == true) {
-        if (input->PushKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+    // äjéùÇøìGÇçUåÇÇµÇΩÇÁìGÇ∆äjéùÇøìG2Ç™ï`âÊÇ≥ÇÍÇÈ
+    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[0], 2, 2) == true) {
+        if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
             // ìG
             enemyFlag = false;
-            // ìG2
-            enemyFlag2 = false;
+            // äjéùÇøìG2
+            nucleusFlag2 = false;
 
             // äjéùÇøìG
             nucleusFlag = true;
         }
     }
-    // ìGÇçUåÇÇµÇΩÇÁìG3Ç∆äjéùÇøìG2Ç™ï`âÊÇ≥ÇÍÇÈ
-    if (OnCollisionCircle(playerFbxObject, enemyFbxObject, 2, 2) == true) {
-        if (input->PushKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+    // äjéùÇøìG2ÇçUåÇÇµÇΩÇÁìG2Ç∆ìG3Ç∆äjéùÇøìG3Ç™ï`âÊÇ≥ÇÍÇÈ
+    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[1], 2, 2) == true) {
+        if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+            // ìG2
+            enemyFlag2 = false;
             // ìG3
             enemyFlag3 = false;
-            // äjéùÇøìG2
-            nucleusFlag2 = false;
+            // äjéùÇøìG3
+            nucleusFlag3 = false;
 
-            // ìG
-            enemyFlag = true;
+            // äjéùÇøìG2
+            nucleusFlag2 = true;
         }
     }
-    // äjéùÇøìG2ÇçUåÇÇµÇΩÇÁÉQÅ[ÉÄÉNÉäÉA
-    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject2, 2, 2) == true) {
-        if (input->PushKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
-            //ÉVÅ[ÉìêÿÇËë÷Ç¶
-            SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
+    // äjéùÇøìG3ÇçUåÇÇµÇΩÇÁÉQÅ[ÉÄÉNÉäÉA
+    if (nucleusFlag2 == true) {
+        if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 2, 2) == true) {
+            if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+                //ÉVÅ[ÉìêÿÇËë÷Ç¶
+                SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
+            }
         }
     }
-    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject, 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject, 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject2, 0.2, 0.2) == true) {
+    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[0], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, nucleusFbxObject[1], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 0.2, 0.2) == true || 
+        OnCollisionCircle(playerFbxObject, enemyFbxObject[0], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject[1], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject[2], 0.2, 0.2) == true) {
         playerFlag = true;
         endFlag = true;
     }
@@ -584,12 +783,23 @@ void GamePlayScene::Update()
     end->Update();
 
     // FBXÉIÉuÉWÉFÉNÉgçXêV
-    nucleusFbxObject->Update();
-    nucleusFbxObject2->Update();
     playerFbxObject->Update();
-    enemyFbxObject->Update();
+
+    nucleusFbxObject[0]->Update();
+    nucleusFbxObject[1]->Update();
+    nucleusFbxObject[2]->Update();
+
+    /*nucleusFbxObject->Update();
+    nucleusFbxObject2->Update();
+    nucleusFbxObject3->Update();*/
+
+    enemyFbxObject[0]->Update();
+    enemyFbxObject[1]->Update();
+    enemyFbxObject[2]->Update();
+
+    /*enemyFbxObject->Update();
     enemyFbxObject2->Update();
-    enemyFbxObject3->Update();
+    enemyFbxObject3->Update();*/
 
     camera->Update();
 
@@ -640,25 +850,56 @@ void GamePlayScene::Draw()
     // äjéùÇøìGÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
     if (nucleusFlag == false) {
         //objectManager_->Draw();
-        nucleusFbxObject->Draw(dxCommon->GetCmdList());
+        nucleusFbxObject[0]->Draw(dxCommon->GetCmdList());
     }
     // äjéùÇøìG2ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
     if (nucleusFlag2 == false) {
-        //objectManager_->Draw();
-        nucleusFbxObject2->Draw(dxCommon->GetCmdList());
+        nucleusFbxObject[1]->Draw(dxCommon->GetCmdList());
     }
+    // äjéùÇøìG3ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
+    if (nucleusFlag3 == false) {
+        nucleusFbxObject[2]->Draw(dxCommon->GetCmdList());
+    }
+
+    //// äjéùÇøìGÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
+    //if (nucleusFlag == false) {
+    //    //objectManager_->Draw();
+    //    nucleusFbxObject->Draw(dxCommon->GetCmdList());
+    //}
+    //// äjéùÇøìG2ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
+    //if (nucleusFlag2 == false) {
+    //    nucleusFbxObject2->Draw(dxCommon->GetCmdList());
+    //}
+    //// äjéùÇøìG3ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
+    //if (nucleusFlag3 == false) {
+    //    nucleusFbxObject3->Draw(dxCommon->GetCmdList());
+    //}
+
     // ìGÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
     if (enemyFlag == false) {
-        enemyFbxObject->Draw(dxCommon->GetCmdList());
+        enemyFbxObject[0]->Draw(dxCommon->GetCmdList());
     }
     // ìG2ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
     if (enemyFlag2 == false) {
-        enemyFbxObject2->Draw(dxCommon->GetCmdList());
+        enemyFbxObject[1]->Draw(dxCommon->GetCmdList());
     }
     // ìG3ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
     if (enemyFlag3 == false) {
-        enemyFbxObject3->Draw(dxCommon->GetCmdList());
+        enemyFbxObject[2]->Draw(dxCommon->GetCmdList());
     }
+
+    //// ìGÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
+    //if (enemyFlag == false) {
+    //    enemyFbxObject->Draw(dxCommon->GetCmdList());
+    //}
+    //// ìG2ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
+    //if (enemyFlag2 == false) {
+    //    enemyFbxObject2->Draw(dxCommon->GetCmdList());
+    //}
+    //// ìG3ÇÃÉtÉâÉOÇ™ÇΩÇ¡ÇƒÇ»Ç©Ç¡ÇΩÇÁï`âÊ
+    //if (enemyFlag3 == false) {
+    //    enemyFbxObject3->Draw(dxCommon->GetCmdList());
+    //}
 
 
     // ÉpÅ[ÉeÉBÉNÉãÇÃï`âÊ

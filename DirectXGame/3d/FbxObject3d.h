@@ -97,6 +97,12 @@ public:	// メンバ関数
 	/// </summary>
 	void PlayAnimation();
 
+	/// <summary>
+	/// サイズセット
+	/// </summary>
+	/// <param name="scale"></param>
+	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+
 protected:	// メンバ変数
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuffTransform;

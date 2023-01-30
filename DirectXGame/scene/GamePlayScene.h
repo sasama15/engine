@@ -51,6 +51,7 @@ public:
 private:
     Sprite* sprite = nullptr;
     Sprite* end = nullptr;
+    Sprite* wasd = nullptr;
     //std::unique_ptr<Sprite> sprite;
 
    /* Model* model_1 = nullptr;
@@ -94,18 +95,29 @@ private:
     FbxModel* playerFbxModel = nullptr;
     FbxModel* enemyFbxModel = nullptr;
 
-    FbxObject3d* nucleusFbxObject = nullptr;
-    FbxObject3d* nucleusFbxObject2 = nullptr;
     FbxObject3d* playerFbxObject = nullptr;
-    FbxObject3d* enemyFbxObject = nullptr;
+
+    FbxObject3d* nucleusFbxObject[3];
+
+    /*FbxObject3d* nucleusFbxObject = nullptr;
+    FbxObject3d* nucleusFbxObject2 = nullptr;
+    FbxObject3d* nucleusFbxObject3 = nullptr;*/
+
+    FbxObject3d* enemyFbxObject[3];
+
+   /* FbxObject3d* enemyFbxObject = nullptr;
     FbxObject3d* enemyFbxObject2 = nullptr;
-    FbxObject3d* enemyFbxObject3 = nullptr;
+    FbxObject3d* enemyFbxObject3 = nullptr;*/
 
     DebugCamera* camera;
 
+
     XMFLOAT3 PlayerPos;
+
     XMFLOAT3 NucleusPos;
     XMFLOAT3 NucleusPos2;
+    XMFLOAT3 NucleusPos3;
+
     XMFLOAT3 EnemyPos;
     XMFLOAT3 EnemyPos2;
     XMFLOAT3 EnemyPos3;
@@ -114,6 +126,12 @@ private:
     XMFLOAT3 OldEnemyPos2;
     XMFLOAT3 OldEnemyPos3;
 
+    // äjéùÇøìGÇÃç≈ëÂêî
+    const int nucleusMax = 3;
+    // ìGÇÃç≈ëÂêî
+    const int enemyMax = 3;
+
+
     // äjéùÇøìG
     bool NucleusJump;
     float NucleusGravity;
@@ -121,9 +139,13 @@ private:
     float Ax;
     float Az;*/
 
-    // äjéùÇøìG
+    // äjéùÇøìG2
     bool NucleusJump2;
     float NucleusGravity2;
+
+    // äjéùÇøìG3
+    bool NucleusJump3;
+    float NucleusGravity3;
 
     // ìG2
     bool EnemyJump;
@@ -147,11 +169,15 @@ private:
     //Sphere spherePlayer;
     //Sphere sphereEnemy;
     bool playerFlag = false;
+
     bool nucleusFlag;
     bool nucleusFlag2;
+    bool nucleusFlag3;
+
     bool enemyFlag;
     bool enemyFlag2;
     bool enemyFlag3;
+
     bool endFlag;
 
     // ì_åıåπ
