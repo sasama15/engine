@@ -93,28 +93,37 @@ private:
     FbxModel* nucleusFbxModel = nullptr;
     FbxModel* playerFbxModel = nullptr;
     FbxModel* enemyFbxModel = nullptr;
+
     FbxObject3d* nucleusFbxObject = nullptr;
+    FbxObject3d* nucleusFbxObject2 = nullptr;
     FbxObject3d* playerFbxObject = nullptr;
     FbxObject3d* enemyFbxObject = nullptr;
     FbxObject3d* enemyFbxObject2 = nullptr;
+    FbxObject3d* enemyFbxObject3 = nullptr;
 
     DebugCamera* camera;
 
     XMFLOAT3 PlayerPos;
     XMFLOAT3 NucleusPos;
+    XMFLOAT3 NucleusPos2;
     XMFLOAT3 EnemyPos;
     XMFLOAT3 EnemyPos2;
+    XMFLOAT3 EnemyPos3;
 
     XMFLOAT3 OldEnemyPos;
     XMFLOAT3 OldEnemyPos2;
     XMFLOAT3 OldEnemyPos3;
 
-    // ìG1
+    // äjéùÇøìG
     bool NucleusJump;
     float NucleusGravity;
     /*float Angle;
     float Ax;
     float Az;*/
+
+    // äjéùÇøìG
+    bool NucleusJump2;
+    float NucleusGravity2;
 
     // ìG2
     bool EnemyJump;
@@ -130,13 +139,19 @@ private:
     float Ax3;
     float Az3;*/
 
+    // ìG4
+    bool EnemyJump3;
+    float EnemyGravity3;
+
     // ìñÇΩÇËîªíË
     //Sphere spherePlayer;
     //Sphere sphereEnemy;
     bool playerFlag = false;
     bool nucleusFlag;
+    bool nucleusFlag2;
     bool enemyFlag;
     bool enemyFlag2;
+    bool enemyFlag3;
     bool endFlag;
 
     // ì_åıåπ
