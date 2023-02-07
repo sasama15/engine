@@ -13,9 +13,10 @@ void GamePlayScene::Initialize()
     // ƒ‚ƒfƒ‹–¼‚ðŽw’è‚µ‚Äƒtƒ@ƒCƒ‹“Ç‚Ýž‚Ý
     //FbxLoader::GetInstance()->LoadModelFromFile("cube");
     //FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
-    nucleusFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // “GŠjŽ‚¿
-    playerFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");    // ƒvƒŒƒCƒ„[
-    enemyFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("mountain");    // ƒm[ƒ}ƒ‹“G
+    nucleusFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("redMountain");   // “GŠjŽ‚¿
+    playerFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("player");         // ƒvƒŒƒCƒ„[
+    enemyFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("blueMountain");    // ƒm[ƒ}ƒ‹“G
+    universeFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("universe");     // ”wŒi
 
     // ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“¶¬
     FbxObject3d::CreateGraphicsPipeline();
@@ -54,6 +55,11 @@ void GamePlayScene::Initialize()
         enemyFbxObject[i]->Initialize();
         enemyFbxObject[i]->SetModel(enemyFbxModel);
     }
+
+    // ”wŒi‰F’ˆ
+    universeFbxObject = new FbxObject3d;
+    universeFbxObject->Initialize();
+    universeFbxObject->SetModel(universeFbxModel);
 
     //// “G
     //enemyFbxObject = new FbxObject3d;
@@ -138,13 +144,16 @@ void GamePlayScene::Initialize()
     object3d_3->SetPosition({ +5, 0, +5 });
 
     // ƒXƒvƒ‰ƒCƒg‹¤’ÊƒeƒNƒXƒ`ƒƒ“Ç‚Ýž‚Ý
-    SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/gamePlay.jpg");
+    //SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/gamePlay.jpg");
     SpriteCommon::GetInstance()->LoadTexture(2, L"Resources/gameend.png");
     SpriteCommon::GetInstance()->LoadTexture(3, L"Resources/wasd.png");
+    SpriteCommon::GetInstance()->LoadTexture(4, L"Resources/enter.png");
     
     // ƒXƒvƒ‰ƒCƒg‚Ì¶¬
-    sprite = Sprite::Create(1, { 0,0 }, false, false);
+    //sprite = Sprite::Create(1, { 0,0 }, false, false);
     end = Sprite::Create(2, { 0, 0 }, false, false);
+    wasd = Sprite::Create(3, { 0, 0 }, false, false);
+    enter = Sprite::Create(4, { 0, -1 }, false, false);
 
     endFlag = false;
 
@@ -161,21 +170,42 @@ void GamePlayScene::Initialize()
     camera->SetDistance(10.0f);*/
     camera->SetTarget({ 0, 2.5f, 10 });
     camera->SetDistance(8.0f);
-    playerFbxObject->SetRotation({ 0, 90, 0 });
-    playerFbxObject->PlayAnimation();
-    enemyFbxObject[0]->SetScale({0.01f, 0.01f, 0.01f });
-    enemyFbxObject[1]->SetScale({ 0.01f, 0.01f, 0.01f });
-    enemyFbxObject[2]->SetScale({ 0.01f, 0.01f, 0.01f });
+    playerFbxObject->SetRotation({ 0, 180, 0 });
+
+    nucleusFbxObject[0]->SetRotation({ 0, 90, 0 });
+    nucleusFbxObject[1]->SetRotation({ 0, 90, 0 });
+    nucleusFbxObject[2]->SetRotation({ 0, 90, 0 });
+
+    enemyFbxObject[0]->SetRotation({ 0, 90, 0 });
+    enemyFbxObject[0]->SetRotation({ 0, 90, 0 });
+    enemyFbxObject[0]->SetRotation({ 0, 90, 0 });
+
+    universeFbxObject->SetRotation({ 0, 90, 0 });
+    //playerFbxObject->PlayAnimation();
+    playerFbxObject->SetScale({ 0.0001f, 0.0001f, 0.0001f });
+    //playerFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
+
+    nucleusFbxObject[0]->SetScale({ 0.015f, 0.015f, 0.015f });
+    nucleusFbxObject[1]->SetScale({ 0.01f, 0.01f, 0.01f });
+    nucleusFbxObject[2]->SetScale({ 0.005f, 0.005f, 0.005f });
+
+    enemyFbxObject[0]->SetScale({ 0.01f, 0.01f, 0.01f });
+    enemyFbxObject[1]->SetScale({ 0.005f, 0.005f, 0.005f });
+    enemyFbxObject[2]->SetScale({ 0.005f, 0.005f, 0.005f });
+
+    universeFbxObject->SetScale({ 10.0f, 10.0f, 10.0f });
 
     PlayerPos = { 0,0,50 };
 
     NucleusPos = { 10, 0, 53 };
-    NucleusPos2 = { -10, 0, 53 };
-    NucleusPos3 = { 5, 0, 53 };
+    NucleusPos2 = { 10, 0, 53 };
+    NucleusPos3 = { 10, 0, 53 };
 
-    EnemyPos = { 5, 1, 60 };
-    EnemyPos2 = { 50, 2, 40 };
-    EnemyPos3 = { -5, 0, -10 };
+    EnemyPos = { 10, 0, 53 };
+    EnemyPos2 = { 10, 0, 53 };
+    EnemyPos3 = { 10, 0, 53 };
+
+    UniversePos = { 0, 0, -100 };
 
     EnemyJump = true;
     EnemyJump2 = true;
@@ -194,6 +224,8 @@ void GamePlayScene::Initialize()
     enemyFbxObject[0]->SetPosition({EnemyPos});
     enemyFbxObject[1]->SetPosition({ EnemyPos2 });
     enemyFbxObject[2]->SetPosition({ EnemyPos3 });
+
+    universeFbxObject->SetPosition({ UniversePos });
 
     /*enemyFbxObject->SetPosition({ EnemyPos });
     enemyFbxObject2->SetPosition({ EnemyPos2 });
@@ -215,6 +247,22 @@ void GamePlayScene::Initialize()
     enemyFlag = true;
     enemyFlag2 = true;
     enemyFlag3 = true;
+
+    nucleusMoveFlag = false;
+    nucleusMoveFlag2 = false;
+
+    enemyMoveFlag = false;
+    enemyMoveFlag2 = false;
+    enemyMoveFlag3 = false;
+
+    timer1 = 0;
+
+    nucleusMoveTime = 0;
+    nucleusMoveTime2 = 0;
+
+    enemyMoveTime = 0;
+    enemyMoveTime2 = 0;
+    enemyMoveTime3 = 0;
 }
 
 void GamePlayScene::Finalize()
@@ -246,10 +294,13 @@ void GamePlayScene::Finalize()
     delete enemyFbxObject[1];
     delete enemyFbxObject[2];
 
+    delete universeFbxObject;
+
     /*delete enemyFbxObject;
     delete enemyFbxObject2;
     delete enemyFbxObject3;*/
 
+    delete universeFbxModel;
     delete nucleusFbxModel;
     delete playerFbxModel;
     delete enemyFbxModel;
@@ -355,6 +406,23 @@ void GamePlayScene::Update()
         playerFbxObject->SetPosition(PlayerPos);
     }
 
+    // ‚»‚ê‚¼‚ê‚Ì“G‚Ì¶¬êŠ
+    if (nucleusFlag2 == true) {
+        NucleusPos2 = { NucleusPos.x, 0, NucleusPos.z };
+    }
+    if (nucleusFlag3 == true) {
+        NucleusPos3 = { NucleusPos2.x, 0, NucleusPos2.z };
+    }
+    if (enemyFlag == true) {
+        EnemyPos = { NucleusPos.x, 0, NucleusPos.z };
+    }
+    if (enemyFlag2 == true) {
+        EnemyPos2 = { NucleusPos2.x, 0, NucleusPos2.z };
+    }
+    if (enemyFlag3 == true) {
+        EnemyPos3 = { NucleusPos2.x, 0, NucleusPos2.z };
+    }
+
     // ŠjŽ‚¿“Gˆ—
     if (nucleusFlag == false)
     {
@@ -409,8 +477,16 @@ void GamePlayScene::Update()
     }
 
     // ŠjŽ‚¿“G2ˆ—
-    if (nucleusFlag2 == false)
-    {
+    if (nucleusFlag2 == false){
+        if (nucleusMoveFlag == false) {
+            nucleusMoveTime++;
+            NucleusPos2.x += 0.5;
+            //NucleusPos2.z += 0.2;
+            NucleusPos2.y += 0.1;
+            if (nucleusMoveTime > 60) {
+                nucleusMoveFlag = true;
+            }
+        }
         //ˆÚ“®
         if (playerFbxObject->GetPosition().x <= NucleusPos2.x) {
             NucleusPos2.x = NucleusPos2.x - 0.01;
@@ -426,11 +502,12 @@ void GamePlayScene::Update()
         }
 
         //ƒWƒƒƒ“ƒv
+
+        NucleusGravity2 += 0.005f;
         NucleusPos2.y -= NucleusGravity2;
         nucleusFbxObject[1]->SetPosition({ NucleusPos2 });
         if (NucleusPos2.y <= 20 && NucleusJump2 == true) {
             NucleusPos2.y += 0.2;
-            NucleusGravity2 += 0.005f;
             nucleusFbxObject[1]->SetPosition({ NucleusPos2 });
         }
         if (NucleusPos2.y >= 20) {
@@ -463,8 +540,18 @@ void GamePlayScene::Update()
     }
     
     // ŠjŽ‚¿“G3ˆ—
-    if (nucleusFlag3 == false)
-    {
+    if (nucleusFlag3 == false){
+
+        if (nucleusMoveFlag2 == false) {
+            nucleusMoveTime2++;
+            NucleusPos3.x -= 0.5;
+            NucleusPos3.z -= 0.2;
+            NucleusPos3.y += 0.1;
+            if (nucleusMoveTime2 > 60) {
+                nucleusMoveFlag2 = true;
+            }
+        }
+
         //ˆÚ“®
         if (playerFbxObject->GetPosition().x <= NucleusPos3.x) {
             NucleusPos3.x = NucleusPos3.x - 0.01;
@@ -480,11 +567,11 @@ void GamePlayScene::Update()
         }
 
         //ƒWƒƒƒ“ƒv
+        NucleusGravity3 += 0.005f;
         NucleusPos3.y -= NucleusGravity3;
         nucleusFbxObject[2]->SetPosition({ NucleusPos3 });
         if (NucleusPos3.y <= 20 && NucleusJump3 == true) {
             NucleusPos3.y += 0.2;
-            NucleusGravity3 += 0.005f;
             nucleusFbxObject[2]->SetPosition({ NucleusPos3 });
         }
         if (NucleusPos3.y >= 20) {
@@ -517,8 +604,16 @@ void GamePlayScene::Update()
     }
 
     //“Gˆ—
-    if (enemyFlag == false)
-    {
+    if (enemyFlag == false){
+        if (enemyMoveFlag == false) {
+            enemyMoveTime++;
+            EnemyPos.x += 0.2;
+            EnemyPos.y += 0.1;
+            if (enemyMoveTime > 60) {
+                enemyMoveFlag = true;
+            }
+        }
+        
         // ˆÚ“®
         if (playerFbxObject->GetPosition().x <= EnemyPos.x) {
             EnemyPos.x = EnemyPos.x - 0.03;
@@ -571,8 +666,16 @@ void GamePlayScene::Update()
     }
 
     //“G2ˆ—
-    if (enemyFlag2 == false)
-    {
+    if (enemyFlag2 == false){
+        if (enemyMoveFlag2 == false) {
+            enemyMoveTime2++;
+            EnemyPos2.x -= 0.2;
+            EnemyPos2.y += 0.1;
+            if (enemyMoveTime2 > 60) {
+                enemyMoveFlag2 = true;
+            }
+        }
+
         // ˆÚ“®
         if (playerFbxObject->GetPosition().x <= EnemyPos2.x) {
             EnemyPos2.x = EnemyPos2.x - 0.08;
@@ -625,8 +728,15 @@ void GamePlayScene::Update()
     }
 
     //“G3ˆ—
-    if (enemyFlag3 == false)
-    {
+    if (enemyFlag3 == false){
+        if (enemyMoveFlag3 == false) {
+            enemyMoveTime3++;
+            EnemyPos3.x += 0.4;
+            EnemyPos3.y += 0.1;
+            if (enemyMoveTime3 > 60) {
+                enemyMoveFlag3 = true;
+            }
+        }
         // ˆÚ“®
         if (playerFbxObject->GetPosition().x <= EnemyPos3.x) {
             EnemyPos3.x = EnemyPos3.x - 0.08;
@@ -700,8 +810,11 @@ void GamePlayScene::Update()
     EnemyPos.z += (sinf(Angle) * 6.0f);
     object3d_3->SetPosition(EnemyPos);*/
 
+    if (nucleusFlag == true) {
+        timer1++;
+    }
     // ŠjŽ‚¿“G‚ðUŒ‚‚µ‚½‚ç“G‚ÆŠjŽ‚¿“G2‚ª•`‰æ‚³‚ê‚é
-    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[0], 2, 2) == true) {
+    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[0], 5, 5) == true) {
         if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
             // “G
             enemyFlag = false;
@@ -712,8 +825,15 @@ void GamePlayScene::Update()
             nucleusFlag = true;
         }
     }
+    // “G1‚ðUŒ‚‚µ‚½‚çÁ‚¦‚é
+    if (OnCollisionCircle(playerFbxObject, enemyFbxObject[0], 2, 2) == true && timer1 > 60) {
+        if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+            // “G
+            enemyFlag = true;
+        }
+    }
     // ŠjŽ‚¿“G2‚ðUŒ‚‚µ‚½‚ç“G2‚Æ“G3‚ÆŠjŽ‚¿“G3‚ª•`‰æ‚³‚ê‚é
-    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[1], 2, 2) == true) {
+    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[1], 2, 2) == true && timer1 > 60) {
         if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
             // “G2
             enemyFlag2 = false;
@@ -726,15 +846,27 @@ void GamePlayScene::Update()
             nucleusFlag2 = true;
         }
     }
+    // “G2‚ªÁ‚¦‚é
+    if (OnCollisionCircle(playerFbxObject, enemyFbxObject[1], 1.5f, 1.5f) == true && timer1 > 120) {
+        if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+            // “G
+            enemyFlag2 = true;
+        }
+    }
+    // “G3‚ªÁ‚¦‚é
+    if (OnCollisionCircle(playerFbxObject, enemyFbxObject[2], 1.5f, 1.5f) == true && timer1 > 120) {
+        if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+            // “G
+            enemyFlag3 = true;
+        }
+    }
     // ŠjŽ‚¿“G3‚ðUŒ‚‚µ‚½‚çƒQ[ƒ€ƒNƒŠƒA
-    if (nucleusFlag2 == true) {
-        if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 2, 2) == true) {
+        if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 1.5f, 1.5f) == true && timer1 > 120) {
             if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
                 //ƒV[ƒ“Ø‚è‘Ö‚¦
                 SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
             }
         }
-    }
     if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[0], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, nucleusFbxObject[1], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 0.2, 0.2) == true || 
         OnCollisionCircle(playerFbxObject, enemyFbxObject[0], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject[1], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject[2], 0.2, 0.2) == true) {
         playerFlag = true;
@@ -779,8 +911,10 @@ void GamePlayScene::Update()
     objectManager_->Update();
 
     // ƒXƒvƒ‰ƒCƒgXV
-    sprite->Update();
+    //sprite->Update();
     end->Update();
+    wasd->Update();
+    enter->Update();
 
     // FBXƒIƒuƒWƒFƒNƒgXV
     playerFbxObject->Update();
@@ -796,6 +930,8 @@ void GamePlayScene::Update()
     enemyFbxObject[0]->Update();
     enemyFbxObject[1]->Update();
     enemyFbxObject[2]->Update();
+
+    universeFbxObject->Update();
 
     /*enemyFbxObject->Update();
     enemyFbxObject2->Update();
@@ -828,7 +964,7 @@ void GamePlayScene::Draw()
     // ƒXƒvƒ‰ƒCƒg‹¤’ÊƒRƒ}ƒ“ƒh
     SpriteCommon::GetInstance()->PreDrow();
     // ƒXƒvƒ‰ƒCƒg•`‰æ
-    sprite->Draw();
+    //sprite->Draw();
 
     // 3DƒIƒuƒWƒFƒNƒg•`‰æ‘Oˆ—
     Object3d::PreDraw();
@@ -901,6 +1037,8 @@ void GamePlayScene::Draw()
     //    enemyFbxObject3->Draw(dxCommon->GetCmdList());
     //}
 
+    //universeFbxObject->Draw(dxCommon->GetCmdList());
+
 
     // ƒp[ƒeƒBƒNƒ‹‚Ì•`‰æ
     //particleMan->Draw(dxCommon->GetCmdList());
@@ -914,5 +1052,10 @@ void GamePlayScene::Draw()
 
     if (endFlag == true) {
         end->Draw();
+    }
+    else {
+        wasd->Draw();
+        enter->Draw();
+
     }
 }

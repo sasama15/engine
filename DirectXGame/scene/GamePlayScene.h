@@ -52,6 +52,7 @@ private:
     Sprite* sprite = nullptr;
     Sprite* end = nullptr;
     Sprite* wasd = nullptr;
+    Sprite* enter = nullptr;
     //std::unique_ptr<Sprite> sprite;
 
    /* Model* model_1 = nullptr;
@@ -94,6 +95,7 @@ private:
     FbxModel* nucleusFbxModel = nullptr;
     FbxModel* playerFbxModel = nullptr;
     FbxModel* enemyFbxModel = nullptr;
+    FbxModel* universeFbxModel = nullptr;
 
     FbxObject3d* playerFbxObject = nullptr;
 
@@ -104,6 +106,8 @@ private:
     FbxObject3d* nucleusFbxObject3 = nullptr;*/
 
     FbxObject3d* enemyFbxObject[3];
+
+    FbxObject3d* universeFbxObject;
 
    /* FbxObject3d* enemyFbxObject = nullptr;
     FbxObject3d* enemyFbxObject2 = nullptr;
@@ -125,6 +129,8 @@ private:
     XMFLOAT3 OldEnemyPos;
     XMFLOAT3 OldEnemyPos2;
     XMFLOAT3 OldEnemyPos3;
+
+    XMFLOAT3 UniversePos;
 
     // äjéùÇøìGÇÃç≈ëÂêî
     const int nucleusMax = 3;
@@ -180,9 +186,18 @@ private:
 
     bool endFlag;
 
-    // ì_åıåπ
-    float pointLightPos[3] = { 0, 0, 0 };
-    float pointLightColor[3] = { 1, 1, 1 };
-    float pointLightAtten[3] = { 0.3f, 0.1f, 0.1f };
+    bool nucleusMoveFlag;
+    bool nucleusMoveFlag2;
+
+    bool enemyMoveFlag;
+    bool enemyMoveFlag2;
+    bool enemyMoveFlag3;
+
+    int timer1;
+    int nucleusMoveTime;
+    int nucleusMoveTime2;
+    int enemyMoveTime;
+    int enemyMoveTime2;
+    int enemyMoveTime3;
 };
 
