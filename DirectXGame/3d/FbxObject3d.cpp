@@ -267,6 +267,7 @@ void FbxObject3d::Update()
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 		// 合成してスキニング行列に
 		constMapSkin->bones[i] = bones[i].invInitialPose * matCurrentPose;
+		//constMapSkin->bones[i] = bones[i].invInitialPose* matCurrentPose;
 	}
 	constBuffSkin->Unmap(0, nullptr);
 
@@ -303,11 +304,11 @@ void FbxObject3d::Draw(ID3D12GraphicsCommandList* cmdList)
 	fbxModel->Draw(cmdList);
 }
 
-void FbxObject3d::PlayAnimation()
+void FbxObject3d::PlayAnimation(const int& AnimationNum)
 {
 	FbxScene* fbxScene = fbxModel->GetFbxScene();
 	// 0番のアニメーション取得
-	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(AnimationNum);
 	// アニメーションの名前取得
 	const char* animstackname = animstack->GetName();
 	// アニメーションの時間情報

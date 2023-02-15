@@ -3,10 +3,12 @@
 #include "Object3d.h"
 #include "Audio.h"
 
+#pragma once
+
 /// <summary>
-/// ゲームクリアシーン
+/// 説明文
 /// </summary>
-class GameClear : public BaseScene
+class Operation : public BaseScene
 {
 public:
     /// <summary>
@@ -31,7 +33,11 @@ public:
 
 private:
     Sprite* sprite1 = nullptr;
+    Sprite* sprite2 = nullptr;
 
+    bool clearConditionFrag;
+
+    int nextTimer;
     //Audio::SoundData soundData1;
 };
 

@@ -144,13 +144,13 @@ void GamePlayScene::Initialize()
     object3d_3->SetPosition({ +5, 0, +5 });
 
     // スプライト共通テクスチャ読み込み
-    //SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/gamePlay.jpg");
+    SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/title1.png");
     SpriteCommon::GetInstance()->LoadTexture(2, L"Resources/gameend.png");
     SpriteCommon::GetInstance()->LoadTexture(3, L"Resources/wasd.png");
     SpriteCommon::GetInstance()->LoadTexture(4, L"Resources/enter.png");
     
     // スプライトの生成
-    //sprite = Sprite::Create(1, { 0,0 }, false, false);
+    sprite = Sprite::Create(1, { 0,0 }, false, false);
     end = Sprite::Create(2, { 0, 0 }, false, false);
     wasd = Sprite::Create(3, { 0, 0 }, false, false);
     enter = Sprite::Create(4, { 0, -1 }, false, false);
@@ -168,8 +168,7 @@ void GamePlayScene::Initialize()
     // カメラ注視点をセット
     /*camera->SetTarget({ 0, 20, 10 });
     camera->SetDistance(10.0f);*/
-    camera->SetTarget({ 0, 2.5f, 10 });
-    camera->SetDistance(8.0f);
+    
     playerFbxObject->SetRotation({ 0, 180, 0 });
 
     nucleusFbxObject[0]->SetRotation({ 0, 90, 0 });
@@ -181,9 +180,9 @@ void GamePlayScene::Initialize()
     enemyFbxObject[0]->SetRotation({ 0, 90, 0 });
 
     universeFbxObject->SetRotation({ 0, 90, 0 });
-    //playerFbxObject->PlayAnimation();
-    playerFbxObject->SetScale({ 0.0001f, 0.0001f, 0.0001f });
-    //playerFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
+    playerFbxObject->PlayAnimation(1);
+    //playerFbxObject->SetScale({ 0.0001f, 0.0001f, 0.0001f });
+    playerFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
 
     nucleusFbxObject[0]->SetScale({ 0.015f, 0.015f, 0.015f });
     nucleusFbxObject[1]->SetScale({ 0.01f, 0.01f, 0.01f });
@@ -263,6 +262,9 @@ void GamePlayScene::Initialize()
     enemyMoveTime = 0;
     enemyMoveTime2 = 0;
     enemyMoveTime3 = 0;
+
+    camera->SetTarget(playerFbxObject->GetPosition());
+    camera->SetDistance(50);
 }
 
 void GamePlayScene::Finalize()
@@ -861,12 +863,13 @@ void GamePlayScene::Update()
         }
     }
     // 核持ち敵3を攻撃したらゲームクリア
-        if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 1.5f, 1.5f) == true && timer1 > 120) {
-            if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
-                //シーン切り替え
-                SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
-            }
+    if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 1.5f, 1.5f) == true && timer1 > 120) {
+        if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+            //シーン切り替え
+            SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
         }
+    }
+    // 敵と当たったらゲームオーバー
     if (OnCollisionCircle(playerFbxObject, nucleusFbxObject[0], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, nucleusFbxObject[1], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, nucleusFbxObject[2], 0.2, 0.2) == true || 
         OnCollisionCircle(playerFbxObject, enemyFbxObject[0], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject[1], 0.2, 0.2) == true || OnCollisionCircle(playerFbxObject, enemyFbxObject[2], 0.2, 0.2) == true) {
         playerFlag = true;
@@ -892,8 +895,8 @@ void GamePlayScene::Update()
     //    EnemyPos3.z = OldEnemyPos3.z;
     //}
 
-    camera->SetTarget(playerFbxObject->GetPosition());
-    camera->SetDistance(20);
+   /* camera->SetTarget(playerFbxObject->GetPosition());
+    camera->SetDistance(20);*/
 
     // 各オブジェクトの半径
     const float radius1 = 3.0f;
@@ -964,7 +967,7 @@ void GamePlayScene::Draw()
     // スプライト共通コマンド
     SpriteCommon::GetInstance()->PreDrow();
     // スプライト描画
-    //sprite->Draw();
+    sprite->Draw();
 
     // 3Dオブジェクト描画前処理
     Object3d::PreDraw();
@@ -1053,9 +1056,9 @@ void GamePlayScene::Draw()
     if (endFlag == true) {
         end->Draw();
     }
-    else {
+   /* else {
         wasd->Draw();
         enter->Draw();
 
-    }
+    }*/
 }

@@ -17,7 +17,7 @@ DebugCamera::DebugCamera(int winWidth, int winHeight, Input* input)
 void DebugCamera::Update()
 {
 	bool dirty = false;
-	float angleX = 0;
+	float angleX = -1;
 	float angleY = 0;
 
 	// ƒ}ƒEƒX‚Ì“ü—Í‚ğæ“¾

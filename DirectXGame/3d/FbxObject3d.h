@@ -95,7 +95,7 @@ public:	// メンバ関数
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>
-	void PlayAnimation();
+	void PlayAnimation(const int &AnimationNum);
 
 	/// <summary>
 	/// サイズセット

@@ -48,7 +48,7 @@ public:	// サブクラス
 	struct VertexPosNormalUvSkin {
 		DirectX::XMFLOAT3 pos;					// xyz座標
 		DirectX::XMFLOAT3 normal;				// 法線ベクトル
-		DirectX::XMFLOAT3 uv;					// uv座標
+		DirectX::XMFLOAT2 uv;					// uv座標
 		UINT boneIndex[MAX_BONE_INDICES];		// ボーン　番号
 		float boneWheight[MAX_BONE_INDICES];	// ボーン　重み
 	};
