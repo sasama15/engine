@@ -98,6 +98,7 @@ void TitleScene::Update()
         //ƒV[ƒ“Ø‚è‘Ö‚¦
         //SceneManager::GetInstance()->ChangeScene("OPERATION");
         SceneManager::GetInstance()->ChangeScene("GAMEPLAY2");
+        //SceneManager::GetInstance()->ChangeScene("STAGESELECT");
     }
 
     Timer++;

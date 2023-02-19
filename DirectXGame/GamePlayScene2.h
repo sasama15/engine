@@ -10,6 +10,7 @@
 #include "DebugCamera.h"
 
 #include <memory>
+#include <math.h>
 
 class GamePlayScene2 : public BaseScene
 { 
@@ -59,16 +60,30 @@ private:
     FbxModel* playerFbxModel = nullptr;
     // イエティ
     FbxModel* yetiFbxModel = nullptr;
+    // 弾
+    FbxModel* bulletFbxModel = nullptr;
 
     // プレイヤー
     FbxObject3d* playerFbxObject = nullptr;
     // イエティ
     FbxObject3d* yetiFbxObject = nullptr;
+    // 弾
+    FbxObject3d* bulletFbxObject = nullptr;
+
+    // 弾
+    //FbxObject3d* bulletFbxObject[5];
 
     // プレイヤーポジション
     XMFLOAT3 PlayerPos;
     // イエティポジション
     XMFLOAT3 YetiPos;
+    // 弾
+    XMFLOAT3 BulletPos;
+    // プレイヤーポジション
+    XMFLOAT3 oldPlayerPos;
+
+    // 弾の最大数
+    const int iceMax = 3;
 
     // プレイヤーフラグ
     bool playerFlag = false;
@@ -76,6 +91,21 @@ private:
     bool yetiFlag = false;
     // エンドフラグ
     bool endFlag = false;
+    // 弾フラグ
+    bool bulletFlag = false;
+    // 弾撃つ
+    bool shootFlag = false;
+    // 突撃
+    bool onrushFlag = false;
+
+    // 弾をジャンプ
+    bool BulletJump;
+
+    int bulletSpeed;
+    int iceBulletTimer;
+
+    float BulletGravity;
+    float BulletJampPower;
 
     DebugCamera* camera;
 };

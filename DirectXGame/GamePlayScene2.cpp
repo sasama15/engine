@@ -12,6 +12,7 @@ void GamePlayScene2::Initialize()
 	// モデル名を指定してファイル読み込み
 	playerFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("player");         // プレイヤー
 	yetiFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("blueMountain");		// イエティ
+	bulletFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("iceBullet");		// 弾
 
 	// グラフィックスパイプライン生成
 	FbxObject3d::CreateGraphicsPipeline();
@@ -26,6 +27,18 @@ void GamePlayScene2::Initialize()
 	yetiFbxObject = new FbxObject3d;
 	yetiFbxObject->Initialize();
 	yetiFbxObject->SetModel(yetiFbxModel);
+
+	// 弾
+	bulletFbxObject = new FbxObject3d;
+	bulletFbxObject->Initialize();
+	bulletFbxObject->SetModel(bulletFbxModel);
+
+	// 弾がプレイヤーに飛ぶ
+	/*for (int i = 0; i < iceMax; i++) {
+	bulletFbxObject[i] = new FbxObject3d;
+	bulletFbxObject[i]->Initialize();
+	bulletFbxObject[i]->SetModel(bulletFbxModel);
+	}*/
 	
     // スプライト共通テクスチャ読み込み
 	SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/title1.png");
@@ -51,9 +64,6 @@ void GamePlayScene2::Initialize()
 	// カメラをセット
 	FbxObject3d::SetCamera(camera);
 
-	camera->SetTarget(playerFbxObject->GetPosition());
-	camera->SetDistance(50);
-
 	// プレイヤーの向き
 	playerFbxObject->SetRotation({ 0, 180, 0 });
 	// イエティの向き
@@ -64,28 +74,59 @@ void GamePlayScene2::Initialize()
 	// イエティアニメーション
 	//yetiFbxObject->PlayAnimation(1);
 
-	hp->SetSize({ 10, 10 });
+	// HP表示大きさ
+	hp->SetSize({ 100, 100 });
+	hp2->SetSize({ 250, 250 });
+	hp3->SetSize({ 100, 100 });
 
 	// プレイヤーの大きさ
 	playerFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
 	// イエティの大きさ
-	yetiFbxObject->SetScale({ 0.1f, 0.1f, 0.1f });
+	yetiFbxObject->SetScale({ 0.05f, 0.05f, 0.05f });
+	// 弾の大きさ
+	bulletFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
+	//bulletFbxObject[0]->SetScale({0.025f, 0.025f, 0.025f});
+	/*bulletFbxObject[1]->SetScale({ 0.025f, 0.025f, 0.025f });
+	bulletFbxObject[2]->SetScale({ 0.025f, 0.025f, 0.025f });
+	bulletFbxObject[3]->SetScale({ 0.025f, 0.025f, 0.025f });
+	bulletFbxObject[4]->SetScale({ 0.025f, 0.025f, 0.025f });*/
 
 	// プレイヤーのポジション
-	PlayerPos = { 0,0,50 };
+	PlayerPos = { 0,0,25 };
 	playerFbxObject->SetPosition({ PlayerPos });
 
 	// イエティのポジション
-	YetiPos = { 15, 0, 100 };
+	YetiPos = { 0, 0, 70 };
 	yetiFbxObject->SetPosition({ YetiPos });
+
+	// 弾のポジション
+	BulletPos = { 0, 0, 70 };
+	bulletFbxObject->SetPosition({ BulletPos });
+	//bulletFbxObject[0]->SetPosition({BulletPos});
+	/*bulletFbxObject[1]->SetPosition({ BulletPos });
+	bulletFbxObject[2]->SetPosition({ BulletPos });
+	bulletFbxObject[3]->SetPosition({ BulletPos });
+	bulletFbxObject[4]->SetPosition({ BulletPos });*/
+
+	hp2->SetPosition({ 515, 300.5f, 0});
+
+	camera->SetTarget({ playerFbxObject->GetPosition().x, playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z + 20 });
+	camera->SetDistance(50);
+
+	bulletFlag = false;
+	BulletJampPower = 0.3f;
 }
 
 void GamePlayScene2::Finalize()
 {
 	// FBXオブジェクト、モデル解放
 	delete playerFbxObject;
+	delete yetiFbxObject;
+	delete bulletFbxObject;
 
 	delete playerFbxModel;
+	delete yetiFbxModel;
+	delete bulletFbxModel;
 
 	delete camera;
 }
@@ -105,6 +146,86 @@ void GamePlayScene2::Update()
 	if ((input->TriggerKey(DIK_SPACE) || input->TriggerButton(static_cast<int>(Button::BACK)))) {
 		//シーン切り替え
 		SceneManager::GetInstance()->ChangeScene("TITLE");
+	}
+
+	//if (bulletFlag == false){
+	//	BulletPos = { 0,0,0 };
+	//	bulletFbxObject->SetPosition(yetiFbxObject->GetPosition());
+	//	bulletFlag = true;
+	//}
+	//if (bulletFbxObject->GetPosition().z < playerFbxObject->GetPosition().z) {
+	//	bulletFlag = false;
+	//}
+
+	//if (bulletFlag == true){
+	//	BulletPos.z += 0.4f;
+	//	//bulletFbxObject->SetPosition({YetiPos.x - BulletPos.x,YetiPos.y - BulletPos.y,YetiPos.z - BulletPos.z});
+
+	//	//ジャンプ
+	//	BulletPos.y -= BulletGravity;
+	//	bulletFbxObject->SetPosition({ BulletPos });
+	//	if (BulletPos.y <= 20 && BulletJump == true) {
+	//		BulletPos.y += 0.2;
+	//		BulletGravity += 0.005f;
+	//		bulletFbxObject->SetPosition({ YetiPos.x - BulletPos.x,YetiPos.y - BulletPos.y,YetiPos.z - BulletPos.z });
+	//	}
+	//	if (BulletPos.y >= 20) {
+	//		BulletJump = false;
+	//	}
+	//	if (BulletPos.y <= 0) {
+	//		BulletGravity = 0.1f;
+	//		BulletPos.y = 0;
+	//		BulletJump = true;
+	//		bulletFbxObject->SetPosition({ YetiPos.x - BulletPos.x,YetiPos.y - BulletPos.y,YetiPos.z - BulletPos.z });
+	//	}
+	//}
+
+	//弾が飛びながら飛ぶ
+	if (shootFlag == false) {
+		if (bulletFlag == false) {
+
+			oldPlayerPos = playerFbxObject->GetPosition();
+
+			//移動
+			BulletGravity = 0;
+			BulletPos.x = 0;
+			BulletPos.y = 0;
+			BulletPos.z = 0;
+			bulletFbxObject->SetPosition(yetiFbxObject->GetPosition());
+			bulletFlag = true;
+		}
+		if (bulletFbxObject->GetPosition().y < -10) {
+			bulletFlag = false;
+		}
+
+		if (bulletFlag == true) {
+			if (oldPlayerPos.z < bulletFbxObject->GetPosition().z) {
+				BulletPos.z += 0.4f;
+			}
+			if (oldPlayerPos.x <= bulletFbxObject->GetPosition().x) {
+				BulletPos.x = BulletPos.x + BulletJampPower;
+			}
+			if (oldPlayerPos.x >= bulletFbxObject->GetPosition().x) {
+				BulletPos.x = BulletPos.x - BulletJampPower;
+			}
+			BulletGravity += 0.005f;
+			BulletPos.y = BulletPos.y - BulletJampPower;
+			BulletPos.y += BulletGravity;
+			bulletFbxObject->SetPosition({ YetiPos.x - BulletPos.x, YetiPos.y - BulletPos.y, YetiPos.z - BulletPos.z });
+		}
+		//if(bulletFlag == false){
+		//	
+		//	/*if (playerFbxObject->GetPosition().z <= bulletFbxObject->GetPosition().z) {
+		//		BulletPos.z = BulletPos.z + BulletJampPower;
+		//	}
+		//	if (playerFbxObject->GetPosition().z >= bulletFbxObject->GetPosition().z) {
+		//		BulletPos.z = BulletPos.z - BulletJampPower;
+		//	}*/
+		//}
+	}
+
+	if (onrushFlag == true) {
+		shootFlag = true;
 	}
 
 	float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
@@ -139,6 +260,11 @@ void GamePlayScene2::Update()
 	// FBXオブジェクト更新
 	playerFbxObject->Update();
 	yetiFbxObject->Update();
+	bulletFbxObject->Update();
+	/*bulletFbxObject[1]->Update();
+	bulletFbxObject[2]->Update();
+	bulletFbxObject[3]->Update();
+	bulletFbxObject[4]->Update();*/
 
 	camera->Update();
 
@@ -164,13 +290,16 @@ bool GamePlayScene2::OnCollisionCircle(FbxObject3d* playerCircle, FbxObject3d* e
 
 void GamePlayScene2::Draw()
 {
+	// 3Dオブジェクト描画前処理
+	Object3d::PreDraw();
+
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
 	// スプライト描画
 	title->Draw();
 	hp->Draw();
-	hp2->Draw();
-	hp3->Draw();
+	//hp2->Draw();
+	//hp3->Draw();
 
 
 #pragma region 3D描画
@@ -180,7 +309,15 @@ void GamePlayScene2::Draw()
 	playerFbxObject->Draw(dxCommon->GetCmdList());
 	// イエティ描画
 	yetiFbxObject->Draw(dxCommon->GetCmdList());
-	
+	// 弾描画
+	bulletFbxObject->Draw(dxCommon->GetCmdList());
+	/*bulletFbxObject[1]->Draw(dxCommon->GetCmdList());
+	bulletFbxObject[2]->Draw(dxCommon->GetCmdList());
+	bulletFbxObject[3]->Draw(dxCommon->GetCmdList());
+	bulletFbxObject[4]->Draw(dxCommon->GetCmdList());*/
+
+	// 3Dオブジェクト描画後処理
+	Object3d::PostDraw();
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
 

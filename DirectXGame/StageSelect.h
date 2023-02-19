@@ -32,6 +32,10 @@ public:
     void Draw() override;
 
 private:
+    XMFLOAT3 SelectPos;
+    XMFLOAT3 SelectPos2;
+    XMFLOAT3 SelectPos3;
+
     Sprite* sprite1 = nullptr;
     Sprite* sprite2 = nullptr;
     Sprite* sprite3 = nullptr;
@@ -40,8 +44,9 @@ private:
     Sprite* sprite6 = nullptr;
     Sprite* sprite7 = nullptr;
     Sprite* sprite8 = nullptr;
+    Sprite* sprite9 = nullptr;
 
-    bool miniOperationFrag;
+    bool OperationFrag;
     bool select1Frag;
     bool select2Frag;
     bool select3Frag;
