@@ -115,6 +115,8 @@ void GamePlayScene2::Initialize()
 
 	bulletFlag = false;
 	BulletJampPower = 0.3f;
+
+	rollingFlag = false;
 }
 
 void GamePlayScene2::Finalize()
@@ -184,23 +186,29 @@ void GamePlayScene2::Update()
 	if (shootFlag == false) {
 		if (bulletFlag == false) {
 
-			oldPlayerPos = playerFbxObject->GetPosition();
-
 			//ˆÚ“®
 			BulletGravity = 0;
 			BulletPos.x = 0;
 			BulletPos.y = 0;
 			BulletPos.z = 0;
 			bulletFbxObject->SetPosition(yetiFbxObject->GetPosition());
-			bulletFlag = true;
+			if (rollingFlag == false) {
+				oldPlayerPos = playerFbxObject->GetPosition();
+				bulletFlag = true;
+			}
 		}
 		if (bulletFbxObject->GetPosition().y < -10) {
 			bulletFlag = false;
+			oldPlayerPos = playerFbxObject->GetPosition();
+			rollingFlag = true;
 		}
 
 		if (bulletFlag == true) {
 			if (oldPlayerPos.z < bulletFbxObject->GetPosition().z) {
 				BulletPos.z += 0.4f;
+			}
+			if (oldPlayerPos.z > bulletFbxObject->GetPosition().z) {
+				BulletPos.z -= 0.4f;
 			}
 			if (oldPlayerPos.x <= bulletFbxObject->GetPosition().x) {
 				BulletPos.x = BulletPos.x + BulletJampPower;
@@ -222,6 +230,26 @@ void GamePlayScene2::Update()
 		//		BulletPos.z = BulletPos.z - BulletJampPower;
 		//	}*/
 		//}
+	}
+
+	if (rollingFlag == true) {
+		if (oldPlayerPos.z < yetiFbxObject->GetPosition().z) {
+			YetiPos.z -= 0.4f;
+		}
+		if (oldPlayerPos.z > yetiFbxObject->GetPosition().z) {
+			YetiPos.z += 0.4f;
+		}
+		if (oldPlayerPos.x <= yetiFbxObject->GetPosition().x) {
+			YetiPos.x = YetiPos.x - 0.4f;
+		}
+		if (oldPlayerPos.x >= yetiFbxObject->GetPosition().x) {
+			YetiPos.x = YetiPos.x + 0.4f;
+		}
+		if (yetiFbxObject->GetPosition().x <= oldPlayerPos.x + 0.4f && yetiFbxObject->GetPosition().x >= oldPlayerPos.x - 0.4f &&
+			yetiFbxObject->GetPosition().z <= oldPlayerPos.z + 0.4f && yetiFbxObject->GetPosition().z >= oldPlayerPos.z - 0.4f) {
+			rollingFlag = false;
+		}
+		yetiFbxObject->SetPosition({ YetiPos.x, YetiPos.y, YetiPos.z });
 	}
 
 	if (onrushFlag == true) {

@@ -97,7 +97,8 @@ private:
     bool shootFlag = false;
     // “ËŒ‚
     bool onrushFlag = false;
-
+    //“G“]‚ª‚é
+    bool rollingFlag = false;
     // ’e‚ðƒWƒƒƒ“ƒv
     bool BulletJump;
 
