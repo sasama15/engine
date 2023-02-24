@@ -125,12 +125,16 @@ void GamePlayScene2::Initialize()
 	camera->SetTarget({ playerFbxObject->GetPosition().x, playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z + 20 });
 	camera->SetDistance(50);
 
+	playerFlag = true;
+	yetiFlag = true;
+
 	for (int i = 0; i < 5; i++) {
 		bulletFlag[i] = false;
 	}
 	BulletJampPower = 0.4f;
 
 	rollingFlag = false;
+	endFlag = false;
 
 	iceBulletTimer = 0;
 }
@@ -206,7 +210,6 @@ void GamePlayScene2::Update()
 		iceBulletTimer++;
 		for (int i = 0; i < 5; i++) {
 			if (bulletFlag[i] == false) {
-
 				//移動
 				BulletGravity[i] = 0;
 				BulletPos[i] = { 0, 0, 0 };
@@ -217,8 +220,6 @@ void GamePlayScene2::Update()
 					bulletFlag[i] = true;
 					iceBulletTimer = 0;
 				}
-
-			
 				break;
 			}
 		}
@@ -236,7 +237,6 @@ void GamePlayScene2::Update()
 					bulletFbxObject[s]->SetPosition(yetiFbxObject->GetPosition());
 					bulletFlag[s] = false;
 				}
-
 				rollingFlag = true;
 			}
 			if (bulletFlag[i] == true) {
@@ -260,9 +260,9 @@ void GamePlayScene2::Update()
 		}
 
 	// 突進
-		if (rollingFlag == false) {
-			oldPlayerPos2 = playerFbxObject->GetPosition();
-		}
+	if (rollingFlag == false) {
+		oldPlayerPos2 = playerFbxObject->GetPosition();
+	}
 	if (rollingFlag == true) {
 		iceBulletTimer = 0;
 		if (oldPlayerPos2.z < yetiFbxObject->GetPosition().z) {
@@ -304,6 +304,25 @@ void GamePlayScene2::Update()
 		if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x--; }
 		playerFbxObject->SetPosition(PlayerPos);
 	}
+
+	
+	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 6) == true) {
+		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+			// イエティ
+			yetiFlag = false;
+			//シーン切り替え
+			SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
+		}
+	}
+
+	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true ||(playerFbxObject, bulletFbxObject[0], 5, 5) == true || (playerFbxObject, bulletFbxObject[1], 5, 5) == true ||
+		(playerFbxObject, bulletFbxObject[2], 5, 5) == true || (playerFbxObject, bulletFbxObject[3], 5, 5) == true ||
+		(playerFbxObject, bulletFbxObject[4], 5, 5) == true) {
+		// プレイヤー
+		playerFlag = false;
+		endFlag = true;
+	}
+	
 
 	// 各オブジェクトの半径
 	const float radius1 = 3.0f;
@@ -375,12 +394,17 @@ void GamePlayScene2::Draw()
 	DirectXcommon* dxCommon = DirectXcommon::GetInstance();
 	// 3Dオブジェクトの描画
 	// プレイヤー描画
-	playerFbxObject->Draw(dxCommon->GetCmdList());
-	// イエティ描画
-	yetiFbxObject->Draw(dxCommon->GetCmdList());
+	if (playerFlag == true) {
+		playerFbxObject->Draw(dxCommon->GetCmdList());
+	}
+	
 	// 弾描画
 	for (int i = 0; i < 5; i++) {
-		bulletFbxObject[i]->Draw(dxCommon->GetCmdList());
+		if (yetiFlag == true) {
+			// イエティ描画
+			yetiFbxObject->Draw(dxCommon->GetCmdList());
+			bulletFbxObject[i]->Draw(dxCommon->GetCmdList());
+		}
 	}
 	//bulletFbxObject->Draw(dxCommon->GetCmdList());
 	/*bulletFbxObject[0]->Draw(dxCommon->GetCmdList());
