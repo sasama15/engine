@@ -28,10 +28,16 @@ void GamePlayScene2::Initialize()
 	yetiFbxObject->Initialize();
 	yetiFbxObject->SetModel(yetiFbxModel);
 
+
+	for (int i = 0; i < iceMax; i++) {
+		bulletFbxObject[i] = new FbxObject3d;
+		bulletFbxObject[i]->Initialize();
+		bulletFbxObject[i]->SetModel(bulletFbxModel);
+	}
 	// 弾
-	bulletFbxObject = new FbxObject3d;
+	/*bulletFbxObject = new FbxObject3d;
 	bulletFbxObject->Initialize();
-	bulletFbxObject->SetModel(bulletFbxModel);
+	bulletFbxObject->SetModel(bulletFbxModel);*/
 
 	// 弾がプレイヤーに飛ぶ
 	/*for (int i = 0; i < iceMax; i++) {
@@ -84,10 +90,13 @@ void GamePlayScene2::Initialize()
 	// イエティの大きさ
 	yetiFbxObject->SetScale({ 0.05f, 0.05f, 0.05f });
 	// 弾の大きさ
-	bulletFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
-	//bulletFbxObject[0]->SetScale({0.025f, 0.025f, 0.025f});
-	/*bulletFbxObject[1]->SetScale({ 0.025f, 0.025f, 0.025f });
-	bulletFbxObject[2]->SetScale({ 0.025f, 0.025f, 0.025f });
+	for (int i = 0; i < 5; i++) {
+		bulletFbxObject[i]->SetScale({ 0.01f, 0.01f, 0.01f });
+	}
+	//bulletFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
+	/*bulletFbxObject[0]->SetScale({ 0.01f, 0.01f, 0.01f });
+	bulletFbxObject[1]->SetScale({ 0.01f, 0.01f, 0.01f });*/
+	/*bulletFbxObject[2]->SetScale({0.025f, 0.025f, 0.025f});
 	bulletFbxObject[3]->SetScale({ 0.025f, 0.025f, 0.025f });
 	bulletFbxObject[4]->SetScale({ 0.025f, 0.025f, 0.025f });*/
 
@@ -100,11 +109,14 @@ void GamePlayScene2::Initialize()
 	yetiFbxObject->SetPosition({ YetiPos });
 
 	// 弾のポジション
-	BulletPos = { 0, 0, 70 };
-	bulletFbxObject->SetPosition({ BulletPos });
-	//bulletFbxObject[0]->SetPosition({BulletPos});
-	/*bulletFbxObject[1]->SetPosition({ BulletPos });
-	bulletFbxObject[2]->SetPosition({ BulletPos });
+	for (int i = 0; i < 5; i++) {
+		BulletPos[i] = { 0, 0, 70 };
+		bulletFbxObject[i]->SetPosition({ BulletPos[i] });
+	}
+	//bulletFbxObject->SetPosition({ BulletPos });
+	/*bulletFbxObject[0]->SetPosition({BulletPos[0]});
+	bulletFbxObject[1]->SetPosition({ BulletPos[1]});*/
+	/*bulletFbxObject[2]->SetPosition({ BulletPos });
 	bulletFbxObject[3]->SetPosition({ BulletPos });
 	bulletFbxObject[4]->SetPosition({ BulletPos });*/
 
@@ -113,10 +125,14 @@ void GamePlayScene2::Initialize()
 	camera->SetTarget({ playerFbxObject->GetPosition().x, playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z + 20 });
 	camera->SetDistance(50);
 
-	bulletFlag = false;
-	BulletJampPower = 0.3f;
+	for (int i = 0; i < 5; i++) {
+		bulletFlag[i] = false;
+	}
+	BulletJampPower = 0.4f;
 
 	rollingFlag = false;
+
+	iceBulletTimer = 0;
 }
 
 void GamePlayScene2::Finalize()
@@ -124,7 +140,10 @@ void GamePlayScene2::Finalize()
 	// FBXオブジェクト、モデル解放
 	delete playerFbxObject;
 	delete yetiFbxObject;
-	delete bulletFbxObject;
+	/*delete bulletFbxObject;*/
+	for (int i = 0; i < 5; i++) {
+		delete bulletFbxObject[i];
+	}
 
 	delete playerFbxModel;
 	delete yetiFbxModel;
@@ -183,78 +202,95 @@ void GamePlayScene2::Update()
 	//}
 
 	//弾が飛びながら飛ぶ
-	if (shootFlag == false) {
-		if (bulletFlag == false) {
 
-			//移動
-			BulletGravity = 0;
-			BulletPos.x = 0;
-			BulletPos.y = 0;
-			BulletPos.z = 0;
-			bulletFbxObject->SetPosition(yetiFbxObject->GetPosition());
-			if (rollingFlag == false) {
-				oldPlayerPos = playerFbxObject->GetPosition();
-				bulletFlag = true;
+		iceBulletTimer++;
+		for (int i = 0; i < 5; i++) {
+			if (bulletFlag[i] == false) {
+
+				//移動
+				BulletGravity[i] = 0;
+				BulletPos[i] = { 0, 0, 0 };
+				bulletFbxObject[i]->SetPosition(yetiFbxObject->GetPosition());
+				oldPlayerPos[i] = playerFbxObject->GetPosition();
+				if (iceBulletTimer >= 60) {
+					
+					bulletFlag[i] = true;
+					iceBulletTimer = 0;
+				}
+
+			
+				break;
 			}
 		}
-		if (bulletFbxObject->GetPosition().y < -10) {
-			bulletFlag = false;
-			oldPlayerPos = playerFbxObject->GetPosition();
-			rollingFlag = true;
+
+		for (int i = 0; i < 5; i++) {
+			/*if (bulletFbxObject[i]->GetPosition().y < -10 && i <= 3) {
+				bulletFlag[i] = false;
+			}*/
+			if (bulletFbxObject[4]->GetPosition().y < -10) {
+				iceBulletTimer = 0;
+				//oldPlayerPos[i] = playerFbxObject->GetPosition();
+				for (int s = 0; s < 5; s++) {
+					BulletGravity[s] = 0;
+					BulletPos[s] = { 0, 0, 0 };
+					bulletFbxObject[s]->SetPosition(yetiFbxObject->GetPosition());
+					bulletFlag[s] = false;
+				}
+
+				rollingFlag = true;
+			}
+			if (bulletFlag[i] == true) {
+				if (oldPlayerPos[i].z < bulletFbxObject[i]->GetPosition().z) {
+					BulletPos[i].z += 0.4f;
+				}
+				if (oldPlayerPos[i].z > bulletFbxObject[i]->GetPosition().z) {
+					BulletPos[i].z -= 0.4f;
+				}
+				if (oldPlayerPos[i].x <= bulletFbxObject[i]->GetPosition().x) {
+					BulletPos[i].x = BulletPos[i].x + BulletJampPower;
+				}
+				if (oldPlayerPos[i].x >= bulletFbxObject[i]->GetPosition().x) {
+					BulletPos[i].x = BulletPos[i].x - BulletJampPower;
+				}
+				BulletGravity[i] += 0.005f;
+				BulletPos[i].y = BulletPos[i].y - BulletJampPower;
+				BulletPos[i].y += BulletGravity[i];
+				bulletFbxObject[i]->SetPosition({ YetiPos.x - BulletPos[i].x, YetiPos.y - BulletPos[i].y, YetiPos.z - BulletPos[i].z });
+			}
 		}
 
-		if (bulletFlag == true) {
-			if (oldPlayerPos.z < bulletFbxObject->GetPosition().z) {
-				BulletPos.z += 0.4f;
-			}
-			if (oldPlayerPos.z > bulletFbxObject->GetPosition().z) {
-				BulletPos.z -= 0.4f;
-			}
-			if (oldPlayerPos.x <= bulletFbxObject->GetPosition().x) {
-				BulletPos.x = BulletPos.x + BulletJampPower;
-			}
-			if (oldPlayerPos.x >= bulletFbxObject->GetPosition().x) {
-				BulletPos.x = BulletPos.x - BulletJampPower;
-			}
-			BulletGravity += 0.005f;
-			BulletPos.y = BulletPos.y - BulletJampPower;
-			BulletPos.y += BulletGravity;
-			bulletFbxObject->SetPosition({ YetiPos.x - BulletPos.x, YetiPos.y - BulletPos.y, YetiPos.z - BulletPos.z });
+	// 突進
+		if (rollingFlag == false) {
+			oldPlayerPos2 = playerFbxObject->GetPosition();
 		}
-		//if(bulletFlag == false){
-		//	
-		//	/*if (playerFbxObject->GetPosition().z <= bulletFbxObject->GetPosition().z) {
-		//		BulletPos.z = BulletPos.z + BulletJampPower;
-		//	}
-		//	if (playerFbxObject->GetPosition().z >= bulletFbxObject->GetPosition().z) {
-		//		BulletPos.z = BulletPos.z - BulletJampPower;
-		//	}*/
-		//}
-	}
-
 	if (rollingFlag == true) {
-		if (oldPlayerPos.z < yetiFbxObject->GetPosition().z) {
+		iceBulletTimer = 0;
+		if (oldPlayerPos2.z < yetiFbxObject->GetPosition().z) {
 			YetiPos.z -= 0.4f;
 		}
-		if (oldPlayerPos.z > yetiFbxObject->GetPosition().z) {
+		if (oldPlayerPos2.z > yetiFbxObject->GetPosition().z) {
 			YetiPos.z += 0.4f;
 		}
-		if (oldPlayerPos.x <= yetiFbxObject->GetPosition().x) {
+		if (oldPlayerPos2.x <= yetiFbxObject->GetPosition().x) {
 			YetiPos.x = YetiPos.x - 0.4f;
 		}
-		if (oldPlayerPos.x >= yetiFbxObject->GetPosition().x) {
+		if (oldPlayerPos2.x >= yetiFbxObject->GetPosition().x) {
 			YetiPos.x = YetiPos.x + 0.4f;
 		}
-		if (yetiFbxObject->GetPosition().x <= oldPlayerPos.x + 0.4f && yetiFbxObject->GetPosition().x >= oldPlayerPos.x - 0.4f &&
-			yetiFbxObject->GetPosition().z <= oldPlayerPos.z + 0.4f && yetiFbxObject->GetPosition().z >= oldPlayerPos.z - 0.4f) {
+		if (yetiFbxObject->GetPosition().x <= oldPlayerPos2.x + 0.4f && yetiFbxObject->GetPosition().x >= oldPlayerPos2.x - 0.4f &&
+			yetiFbxObject->GetPosition().z <= oldPlayerPos2.z + 0.4f && yetiFbxObject->GetPosition().z >= oldPlayerPos2.z - 0.4f) {
 			rollingFlag = false;
+		}
+
+		for (int i = 0; i < 5; i++) {
+			bulletFbxObject[i]->SetPosition(yetiFbxObject->GetPosition());
 		}
 		yetiFbxObject->SetPosition({ YetiPos.x, YetiPos.y, YetiPos.z });
 	}
 
-	if (onrushFlag == true) {
-		shootFlag = true;
-	}
+	//if (onrushFlag == true) {
+	//	shootFlag = true;
+	//}
 
 	float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 
@@ -288,9 +324,14 @@ void GamePlayScene2::Update()
 	// FBXオブジェクト更新
 	playerFbxObject->Update();
 	yetiFbxObject->Update();
-	bulletFbxObject->Update();
-	/*bulletFbxObject[1]->Update();
-	bulletFbxObject[2]->Update();
+	//bulletFbxObject->Update();
+
+	for (int i = 0; i < 5; i++) {
+		bulletFbxObject[i]->Update();
+	}
+	/*bulletFbxObject[0]->Update();
+	bulletFbxObject[1]->Update();*/
+	/*bulletFbxObject[2]->Update();
 	bulletFbxObject[3]->Update();
 	bulletFbxObject[4]->Update();*/
 
@@ -338,9 +379,13 @@ void GamePlayScene2::Draw()
 	// イエティ描画
 	yetiFbxObject->Draw(dxCommon->GetCmdList());
 	// 弾描画
-	bulletFbxObject->Draw(dxCommon->GetCmdList());
-	/*bulletFbxObject[1]->Draw(dxCommon->GetCmdList());
-	bulletFbxObject[2]->Draw(dxCommon->GetCmdList());
+	for (int i = 0; i < 5; i++) {
+		bulletFbxObject[i]->Draw(dxCommon->GetCmdList());
+	}
+	//bulletFbxObject->Draw(dxCommon->GetCmdList());
+	/*bulletFbxObject[0]->Draw(dxCommon->GetCmdList());
+	bulletFbxObject[1]->Draw(dxCommon->GetCmdList());*/
+	/*bulletFbxObject[2]->Draw(dxCommon->GetCmdList());
 	bulletFbxObject[3]->Draw(dxCommon->GetCmdList());
 	bulletFbxObject[4]->Draw(dxCommon->GetCmdList());*/
 

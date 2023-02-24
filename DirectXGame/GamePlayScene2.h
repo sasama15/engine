@@ -68,22 +68,25 @@ private:
     // イエティ
     FbxObject3d* yetiFbxObject = nullptr;
     // 弾
-    FbxObject3d* bulletFbxObject = nullptr;
+    //FbxObject3d* bulletFbxObject = nullptr;
 
     // 弾
-    //FbxObject3d* bulletFbxObject[5];
+    FbxObject3d* bulletFbxObject[5];
 
     // プレイヤーポジション
     XMFLOAT3 PlayerPos;
     // イエティポジション
     XMFLOAT3 YetiPos;
     // 弾
-    XMFLOAT3 BulletPos;
-    // プレイヤーポジション
-    XMFLOAT3 oldPlayerPos;
+    //XMFLOAT3 BulletPos;
+    // プレイヤーポジション(プレイヤーが居た場所)
+    XMFLOAT3 oldPlayerPos[5];
+    XMFLOAT3 oldPlayerPos2;
+    // 弾
+    XMFLOAT3 BulletPos[5];
 
     // 弾の最大数
-    const int iceMax = 3;
+    const int iceMax = 5;
 
     // プレイヤーフラグ
     bool playerFlag = false;
@@ -92,20 +95,36 @@ private:
     // エンドフラグ
     bool endFlag = false;
     // 弾フラグ
-    bool bulletFlag = false;
+    /*bool bulletFlag = false;
+    bool bulletFlag2 = false;
+    bool bulletFlag3 = false;
+    bool bulletFlag4 = false;
+    bool bulletFlag5 = false;*/
+
+    bool bulletFlag[5];
     // 弾撃つ
     bool shootFlag = false;
+    /*bool shootFlag2 = false;
+    bool shootFlag3 = false;
+    bool shootFlag4 = false;
+    bool shootFlag5 = false;*/
+
+
     // 突撃
-    bool onrushFlag = false;
+    //bool onrushFlag = false;
     //敵転がる
     bool rollingFlag = false;
     // 弾をジャンプ
     bool BulletJump;
+    bool BulletJump2;
+    bool BulletJump3;
+    bool BulletJump4;
+    bool BulletJump5;
 
     int bulletSpeed;
     int iceBulletTimer;
 
-    float BulletGravity;
+    float BulletGravity[5];
     float BulletJampPower;
 
     DebugCamera* camera;
