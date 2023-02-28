@@ -123,6 +123,8 @@ private:
 
     int bulletSpeed;
     int iceBulletTimer;
+    int rollingTimer;
+    int rollingNum;
 
     float BulletGravity[5];
     float BulletJampPower;

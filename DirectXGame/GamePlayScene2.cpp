@@ -137,6 +137,8 @@ void GamePlayScene2::Initialize()
 	endFlag = false;
 
 	iceBulletTimer = 0;
+	rollingTimer = 0;
+	rollingNum = 0;
 }
 
 void GamePlayScene2::Finalize()
@@ -168,10 +170,10 @@ void GamePlayScene2::Update()
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
 
-	if ((input->TriggerKey(DIK_SPACE) || input->TriggerButton(static_cast<int>(Button::BACK)))) {
-		//シーン切り替え
-		SceneManager::GetInstance()->ChangeScene("TITLE");
-	}
+	//if ((input->TriggerKey(DIK_SPACE) || input->TriggerButton(static_cast<int>(Button::BACK)))) {
+	//	//シーン切り替え
+	//	SceneManager::GetInstance()->ChangeScene("TITLE");
+	//}
 
 	//if (bulletFlag == false){
 	//	BulletPos = { 0,0,0 };
@@ -206,6 +208,7 @@ void GamePlayScene2::Update()
 	//}
 
 	//弾が飛びながら飛ぶ
+	if (rollingFlag == false) {
 
 		iceBulletTimer++;
 		for (int i = 0; i < 5; i++) {
@@ -216,7 +219,7 @@ void GamePlayScene2::Update()
 				bulletFbxObject[i]->SetPosition(yetiFbxObject->GetPosition());
 				oldPlayerPos[i] = playerFbxObject->GetPosition();
 				if (iceBulletTimer >= 60) {
-					
+
 					bulletFlag[i] = true;
 					iceBulletTimer = 0;
 				}
@@ -258,12 +261,20 @@ void GamePlayScene2::Update()
 				bulletFbxObject[i]->SetPosition({ YetiPos.x - BulletPos[i].x, YetiPos.y - BulletPos[i].y, YetiPos.z - BulletPos[i].z });
 			}
 		}
+	}
 
 	// 突進
 	if (rollingFlag == false) {
-		oldPlayerPos2 = playerFbxObject->GetPosition();
+		rollingTimer = 0;
+		rollingNum = 0;
 	}
-	if (rollingFlag == true) {
+	if (rollingTimer == 0) {
+		oldPlayerPos2 = playerFbxObject->GetPosition();
+		if (rollingFlag == true) {
+			rollingTimer = 1;
+		}
+	}
+	if (rollingFlag == true && rollingTimer >= 1) {
 		iceBulletTimer = 0;
 		if (oldPlayerPos2.z < yetiFbxObject->GetPosition().z) {
 			YetiPos.z -= 0.4f;
@@ -279,7 +290,15 @@ void GamePlayScene2::Update()
 		}
 		if (yetiFbxObject->GetPosition().x <= oldPlayerPos2.x + 0.4f && yetiFbxObject->GetPosition().x >= oldPlayerPos2.x - 0.4f &&
 			yetiFbxObject->GetPosition().z <= oldPlayerPos2.z + 0.4f && yetiFbxObject->GetPosition().z >= oldPlayerPos2.z - 0.4f) {
-			rollingFlag = false;
+			//rollingFlag = false;
+			rollingTimer++;
+			if (rollingTimer >= 60) {
+				rollingNum++;
+				if (rollingNum == 3) {
+					rollingFlag = false;
+				}
+				rollingTimer = 0;
+			}
 		}
 
 		for (int i = 0; i < 5; i++) {
@@ -315,9 +334,9 @@ void GamePlayScene2::Update()
 		}
 	}
 
-	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true ||(playerFbxObject, bulletFbxObject[0], 5, 5) == true || (playerFbxObject, bulletFbxObject[1], 5, 5) == true ||
-		(playerFbxObject, bulletFbxObject[2], 5, 5) == true || (playerFbxObject, bulletFbxObject[3], 5, 5) == true ||
-		(playerFbxObject, bulletFbxObject[4], 5, 5) == true) {
+	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 5, 5) == true ||
+		OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 5, 5) == true ||
+		OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 5, 5) == true) {
 		// プレイヤー
 		playerFlag = false;
 		endFlag = true;
