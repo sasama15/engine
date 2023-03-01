@@ -341,6 +341,12 @@ void GamePlayScene2::Update()
 		playerFlag = false;
 		endFlag = true;
 	}
+	if (endFlag == true) {
+		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))){
+			//シーン切り替え
+			SceneManager::GetInstance()->ChangeScene("TITLE");
+		}
+	}
 	
 
 	// 各オブジェクトの半径
