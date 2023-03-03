@@ -369,9 +369,9 @@ void GamePlayScene2::Update()
 	//	endFlag = true;
 	//}
 	if (endFlag == true) {
-		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))){
+		if (input->TriggerKey(DIK_SPACE) || input->PushButton(static_cast<int>(Button::B))){
 			//ƒV[ƒ“Ø‚è‘Ö‚¦
-			SceneManager::GetInstance()->ChangeScene("TITLE");
+			SceneManager::GetInstance()->ChangeScene("GAMEEND");
 		}
 	}
 	

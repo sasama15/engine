@@ -35,7 +35,7 @@ public:	// 静的メンバ関数
 	//アニメーションが終わったか
 	const bool& animationIsEnd() {
 		//1回きりの再生かつ再生が終わったら
-		if ((isLoop == false && currentTime > endTime) || currentTime == 0)
+		if ((isLoop == false && currentTime > endTime) || isLoop == true && currentTime == 0)
 		{
 			return true;
 		}
