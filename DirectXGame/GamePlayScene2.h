@@ -109,6 +109,9 @@ private:
     bool shootFlag4 = false;
     bool shootFlag5 = false;*/
 
+    // アニメーションフラグ
+    bool walkAnimationFlag = false;
+    bool attackAnimationFlag = false;
 
     // 突撃
     //bool onrushFlag = false;

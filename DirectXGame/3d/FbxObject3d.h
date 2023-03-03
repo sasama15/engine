@@ -30,7 +30,20 @@ public:	// 静的メンバ関数
 	const XMFLOAT3& GetPosition() { return position; }
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
-
+	//アニメーションを止める
+	void SetIsPlay(const bool& isPlay) { this->isPlay = isPlay; }
+	//アニメーションが終わったか
+	const bool& animationIsEnd() {
+		//1回きりの再生かつ再生が終わったら
+		if ((isLoop == false && currentTime > endTime) || currentTime == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 public:	// 定数
 	// ボーンの最大数
 	static const int MAX_BONES = 32;
@@ -56,6 +69,8 @@ private:	// 静的メンバ変数
 	FbxTime currentTime;
 	// アニメーション再生中
 	bool isPlay = false;
+	// アニメーションループ
+	bool isLoop = true;
 
 public:	// サブクラス
 	// 定数バッファ用データ構造体(座標変換行列用)
@@ -95,7 +110,7 @@ public:	// メンバ関数
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>
-	void PlayAnimation(const int &AnimationNum);
+	void PlayAnimation(const int& AnimationNum = 0,const bool &isLoop = true);
 
 	/// <summary>
 	/// サイズセット

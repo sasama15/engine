@@ -273,11 +273,13 @@ void FbxObject3d::Update()
 
 	// アニメーション
 	if (isPlay) {
-		// 1フレーム進める
-		currentTime += frameTime;
-		// 最後まで再生したら先頭に戻す
-		if (currentTime > endTime) {
-			currentTime = startTime;
+			// 1フレーム進める
+			currentTime += frameTime;
+			// 最後まで再生したら先頭に戻す
+		if (isLoop == true) {
+			if (currentTime > endTime) {
+				currentTime = startTime;
+			}
 		}
 	}
 }
@@ -304,15 +306,16 @@ void FbxObject3d::Draw(ID3D12GraphicsCommandList* cmdList)
 	fbxModel->Draw(cmdList);
 }
 
-void FbxObject3d::PlayAnimation(const int& AnimationNum)
+void FbxObject3d::PlayAnimation(const int& AnimationNum, const bool& isLoop)
 {
 	FbxScene* fbxScene = fbxModel->GetFbxScene();
-	// 0番のアニメーション取得
+	// 指定した番号のアニメーション取得
 	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(AnimationNum);
 	// アニメーションの名前取得
 	const char* animstackname = animstack->GetName();
 	// アニメーションの時間情報
 	FbxTakeInfo* takeinfo = fbxScene->GetTakeInfo(animstackname);
+	fbxScene->SetCurrentAnimationStack(animstack);
 
 	// 開始時間所得
 	startTime = takeinfo->mLocalTimeSpan.GetStart();
@@ -321,5 +324,7 @@ void FbxObject3d::PlayAnimation(const int& AnimationNum)
 	// 開始時間に合わせる
 	currentTime = startTime;
 	// 再生中状態にする
-	isPlay = true;
+	//isPlay = true;
+	//ループさせるか
+	this->isLoop = isLoop;
 }

@@ -76,7 +76,7 @@ void GamePlayScene2::Initialize()
 	yetiFbxObject->SetRotation({ 0, 90, 0 });
 
 	// プレイヤーアニメーション
-	playerFbxObject->PlayAnimation(1);
+	walkAnimationFlag = false;
 	// イエティアニメーション
 	//yetiFbxObject->PlayAnimation(1);
 
@@ -314,17 +314,44 @@ void GamePlayScene2::Update()
 	float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
 
 	// プレイヤー移動
+	if (walkAnimationFlag == true || attackAnimationFlag == true) {
+		playerFbxObject->SetIsPlay(true);
+	}
+	else{
+		//アニメーションを止める
+		playerFbxObject->SetIsPlay(false);
+	}
+	if (playerFbxObject->animationIsEnd() == true){
+		if (input->TriggerKey(DIK_W) || input->TriggerKey(DIK_S) || input->TriggerKey(DIK_D) || input->TriggerKey(DIK_A) ||
+			input->TriggerButton(static_cast<int>(Button::UP)) || input->TriggerButton(static_cast<int>(Button::DOWN)) ||
+			input->TriggerButton(static_cast<int>(Button::RIGHT)) || input->TriggerButton(static_cast<int>(Button::LEFT))) {
+			playerFbxObject->PlayAnimation(1, true);
+		}
+	}
 	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A) ||
 		input->PushButton(static_cast<int>(Button::UP)) || input->PushButton(static_cast<int>(Button::DOWN)) ||
 		input->PushButton(static_cast<int>(Button::RIGHT)) || input->PushButton(static_cast<int>(Button::LEFT))) {
-		if (input->PushKey(DIK_W) || input->PushButton(static_cast<int>(Button::UP))) { PlayerPos.z++; }
-		if (input->PushKey(DIK_S) || input->PushButton(static_cast<int>(Button::DOWN))) { PlayerPos.z--; }
-		if (input->PushKey(DIK_D) || input->PushButton(static_cast<int>(Button::RIGHT))) { PlayerPos.x++; }
-		if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x--; }
+		if (input->PushKey(DIK_W) || input->PushButton(static_cast<int>(Button::UP))) { PlayerPos.z += 0.3f; }
+		if (input->PushKey(DIK_S) || input->PushButton(static_cast<int>(Button::DOWN))) { PlayerPos.z -= 0.3f; }
+		if (input->PushKey(DIK_D) || input->PushButton(static_cast<int>(Button::RIGHT))) { PlayerPos.x += 0.3f; }
+		if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x -= 0.3f; }
 		playerFbxObject->SetPosition(PlayerPos);
+		walkAnimationFlag = true;
+	}
+	else {
+		walkAnimationFlag = false;
 	}
 
-	
+
+	if (input->TriggerKey(DIK_RETURN)) {
+		attackAnimationFlag = true;
+		playerFbxObject->PlayAnimation(0, false);
+	}
+
+	if (playerFbxObject->animationIsEnd() == true) {
+		attackAnimationFlag = false;
+	}
+
 	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 6) == true) {
 		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
 			// イエティ
@@ -334,13 +361,13 @@ void GamePlayScene2::Update()
 		}
 	}
 
-	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 5, 5) == true ||
-		OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 5, 5) == true ||
-		OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 5, 5) == true) {
-		// プレイヤー
-		playerFlag = false;
-		endFlag = true;
-	}
+	//if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 5, 5) == true ||
+	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 5, 5) == true ||
+	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 5, 5) == true) {
+	//	// プレイヤー
+	//	playerFlag = false;
+	//	endFlag = true;
+	//}
 	if (endFlag == true) {
 		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))){
 			//シーン切り替え
