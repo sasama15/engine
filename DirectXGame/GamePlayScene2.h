@@ -8,7 +8,6 @@
 #include "FbxObject3d.h"
 #include "DirectXCommon.h"
 #include "DebugCamera.h"
-#include "ParticleManager3d.h"
 
 #include <memory>
 #include <math.h>
@@ -63,8 +62,6 @@ private:
     FbxModel* yetiFbxModel = nullptr;
     // 弾
     FbxModel* bulletFbxModel = nullptr;
-    // 爆散パーティクル
-    FbxModel* explosionFbxModel = nullptr;
 
     // プレイヤー
     FbxObject3d* playerFbxObject = nullptr;
@@ -75,9 +72,6 @@ private:
 
     // 弾
     FbxObject3d* bulletFbxObject[5];
-
-    // パーティクル
-    ParticleManager3d* particleManager = nullptr;
 
     // プレイヤーポジション
     XMFLOAT3 PlayerPos;

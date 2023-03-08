@@ -36,11 +36,11 @@ void main(
 		// 中心からのオフセットをスケーリング
 		offset = offset_array[i] * input[0].scale;
 		// 中心からのオフセットをビルボード回転（モデル座標）
-		offset = mul(viewProjectBillboard, offset);
+		offset = mul(matBillboard, offset);
 		// オフセット分ずらす（ワールド座標）
 		element.svpos = input[0].pos + offset;
 		// ビュープロジェクション変換
-		element.svpos = mul(viewProject, element.svpos);
+		element.svpos = mul(mat, element.svpos);
 		element.uv = uv_array[i];
 		output.Append(element);
 	}
