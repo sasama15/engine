@@ -13,9 +13,11 @@ void GamePlayScene2::Initialize()
 	playerFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("player");         // プレイヤー
 	yetiFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("blueMountain");		// イエティ
 	bulletFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("iceBullet");		// 弾
+	explosionFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("redMountain");	// 爆散パーティクル
 
 	// グラフィックスパイプライン生成
 	FbxObject3d::CreateGraphicsPipeline();
+	ParticleManager3d::CreateGraphicsPipeline();
 
 	// 3Dオブジェクト生成とモデルのセット
 	 // プレイヤー
@@ -34,6 +36,12 @@ void GamePlayScene2::Initialize()
 		bulletFbxObject[i]->Initialize();
 		bulletFbxObject[i]->SetModel(bulletFbxModel);
 	}
+
+	// 爆散パーティクル
+	particleManager = new ParticleManager3d;
+	particleManager->Initialize();
+	particleManager->SetModel(explosionFbxModel);
+
 	// 弾
 	/*bulletFbxObject = new FbxObject3d;
 	bulletFbxObject->Initialize();
@@ -93,6 +101,9 @@ void GamePlayScene2::Initialize()
 	for (int i = 0; i < 5; i++) {
 		bulletFbxObject[i]->SetScale({ 0.01f, 0.01f, 0.01f });
 	}
+
+	particleManager->SetScale({ 0.05f, 0.05f, 0.05f });
+
 	//bulletFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
 	/*bulletFbxObject[0]->SetScale({ 0.01f, 0.01f, 0.01f });
 	bulletFbxObject[1]->SetScale({ 0.01f, 0.01f, 0.01f });*/
@@ -150,10 +161,12 @@ void GamePlayScene2::Finalize()
 	for (int i = 0; i < 5; i++) {
 		delete bulletFbxObject[i];
 	}
+	delete particleManager;
 
 	delete playerFbxModel;
 	delete yetiFbxModel;
 	delete bulletFbxModel;
+	delete explosionFbxModel;
 
 	delete camera;
 }
@@ -361,9 +374,9 @@ void GamePlayScene2::Update()
 		}
 	}
 
-	//if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 5, 5) == true ||
-	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 5, 5) == true ||
-	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 5, 5) == true) {
+	//if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 2, 2) == true ||
+	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 2, 2) == true ||
+	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 2, 2) == true) {
 	//	// プレイヤー
 	//	playerFlag = false;
 	//	endFlag = true;
@@ -405,6 +418,8 @@ void GamePlayScene2::Update()
 	/*bulletFbxObject[2]->Update();
 	bulletFbxObject[3]->Update();
 	bulletFbxObject[4]->Update();*/
+
+	particleManager->Update();
 
 	camera->Update();
 
@@ -464,6 +479,8 @@ void GamePlayScene2::Draw()
 	/*bulletFbxObject[2]->Draw(dxCommon->GetCmdList());
 	bulletFbxObject[3]->Draw(dxCommon->GetCmdList());
 	bulletFbxObject[4]->Draw(dxCommon->GetCmdList());*/
+
+	particleManager->Draw(dxCommon->GetCmdList());
 
 	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
