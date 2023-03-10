@@ -183,10 +183,14 @@
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="camera\DebugCamera.cpp" />
     <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameEnd.cpp" />
+    <ClCompile Include="GamePlayScene2.cpp" />
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Operation.cpp" />
     <ClCompile Include="scene\GamePlayScene.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
+    <ClCompile Include="StageSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
@@ -222,9 +226,13 @@
     <ClInclude Include="camera\DebugCamera.h" />
     <ClInclude Include="Collision\Collision.h" />
     <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameEnd.h" />
+    <ClInclude Include="GamePlayScene2.h" />
     <ClInclude Include="input\Input.h" />
+    <ClInclude Include="Operation.h" />
     <ClInclude Include="scene\GamePlayScene.h" />
     <ClInclude Include="scene\TitleScene.h" />
+    <ClInclude Include="StageSelect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli" />
