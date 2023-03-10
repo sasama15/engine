@@ -34,7 +34,6 @@ void GamePlayScene2::Initialize()
 		bulletFbxObject[i]->Initialize();
 		bulletFbxObject[i]->SetModel(bulletFbxModel);
 	}
-
 	// íe
 	/*bulletFbxObject = new FbxObject3d;
 	bulletFbxObject->Initialize();
@@ -94,7 +93,6 @@ void GamePlayScene2::Initialize()
 	for (int i = 0; i < 5; i++) {
 		bulletFbxObject[i]->SetScale({ 0.01f, 0.01f, 0.01f });
 	}
-
 	//bulletFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
 	/*bulletFbxObject[0]->SetScale({ 0.01f, 0.01f, 0.01f });
 	bulletFbxObject[1]->SetScale({ 0.01f, 0.01f, 0.01f });*/
@@ -363,9 +361,9 @@ void GamePlayScene2::Update()
 		}
 	}
 
-	//if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 2, 2) == true ||
-	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 2, 2) == true ||
-	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 2, 2) == true) {
+	//if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 5, 5) == true ||
+	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 5, 5) == true ||
+	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 5, 5) == true) {
 	//	// ÉvÉåÉCÉÑÅ[
 	//	playerFlag = false;
 	//	endFlag = true;
