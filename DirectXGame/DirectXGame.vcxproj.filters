@@ -156,6 +156,12 @@
     <ClCompile Include="GameClear.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="GameEnd.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+>>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
     <ClCompile Include="GamePlayScene2.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -165,9 +171,12 @@
     <ClCompile Include="StageSelect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="GameEnd.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+=======
+>>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -263,6 +272,12 @@
     <ClInclude Include="GameClear.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="GameEnd.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+>>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
     <ClInclude Include="GamePlayScene2.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -272,9 +287,12 @@
     <ClInclude Include="StageSelect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="GameEnd.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+=======
+>>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
