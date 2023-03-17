@@ -156,12 +156,9 @@
     <ClCompile Include="GameClear.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-<<<<<<< HEAD
-=======
     <ClCompile Include="GameEnd.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
->>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
     <ClCompile Include="GamePlayScene2.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -171,12 +168,9 @@
     <ClCompile Include="StageSelect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="GameEnd.cpp">
+    <ClCompile Include="3d\ParticleManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-=======
->>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -272,12 +266,9 @@
     <ClInclude Include="GameClear.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-<<<<<<< HEAD
-=======
     <ClInclude Include="GameEnd.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
->>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
     <ClInclude Include="GamePlayScene2.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -287,12 +278,9 @@
     <ClInclude Include="StageSelect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="GameEnd.h">
+    <ClInclude Include="3d\ParticleManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-=======
->>>>>>> b7c31c04b254f952ded05f9f6862914e2498cd4b
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Basic.hlsli">
@@ -311,6 +299,9 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="Resources\shaders\PostEffectTest.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\Particle.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
@@ -349,6 +340,15 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\MultiTextureVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleGS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticlePS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\ParticleVS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

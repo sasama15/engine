@@ -34,7 +34,19 @@ void GamePlayScene2::Initialize()
 		bulletFbxObject[i]->Initialize();
 		bulletFbxObject[i]->SetModel(bulletFbxModel);
 	}
-	
+
+	// OBJからモデルデータを読み込む
+	//model_particle = Model::LoadFromOBJ("sphere");
+
+	// オブジェクトマネージャ生成
+	//particleObjectManager_ = std::make_unique<ParticleObjectManager>();
+
+	// shared_ptr使う場合
+	/*std::weak_ptr<ParticleManager> particleWp = particleObjectManager_->AddObject(ParticleManager::Create(model_particle.get()));
+	object_particle = particleWp.lock();*/
+	/*DirectX::XMFLOAT3 pos = object_particle->GetPosition();
+	object_particle->SetPosition({ -5, 0, -5 });*/
+
     // スプライト共通テクスチャ読み込み
 	SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/title1.png");
 	SpriteCommon::GetInstance()->LoadTexture(2, L"Resources/HP.png");
@@ -48,6 +60,32 @@ void GamePlayScene2::Initialize()
 	hp2 = Sprite::Create(3, { 0,0 }, false, false);
 	hp3 = Sprite::Create(4, { 0,0 }, false, false);
 	end = Sprite::Create(5, { 0,0 }, false, false);
+
+	// パーティクル関連
+	//particleMan = ParticleManager::Create();
+	//for (int i = 0; i < 100; i++) {
+	//	// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
+	//	const float rnd_pos = 10.0f;
+	//	XMFLOAT3 pos{};
+	//	pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//	pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//	pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+	//	// X, Y, Z全て[-0.05f, +0.05f]でランダムに分布
+	//	const float rnd_vel = 0.1f;
+	//	XMFLOAT3 vel{};
+	//	vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//	vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//	// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
+	//	XMFLOAT3 acc{};
+	//	const float rnd_acc = 0.001f;
+	//	acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+	//	// 追加
+	//	particleMan->Add(60, pos, vel, acc);
+	//}
+
 
 	endFlag = false;
 
@@ -119,6 +157,11 @@ void GamePlayScene2::Initialize()
 
 void GamePlayScene2::Finalize()
 {
+	// 3Dモデル解放
+	/*delete model_particle;*/
+	// 3Dオブジェクト解放
+	//delete object_particle;
+	
 	// FBXオブジェクト、モデル解放
 	delete playerFbxObject;
 	delete yetiFbxObject;
@@ -266,6 +309,9 @@ void GamePlayScene2::Update()
 		if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x -= 0.3f; }
 		playerFbxObject->SetPosition(PlayerPos);
 		walkAnimationFlag = true;
+		// shared_ptr使う場合
+		//DirectX::XMFLOAT3 pos = object_particle->GetPosition();
+		//object_particle->SetModel(model_particle.get());
 	}
 	else {
 		walkAnimationFlag = false;
@@ -280,6 +326,29 @@ void GamePlayScene2::Update()
 	if (playerFbxObject->animationIsEnd() == true) {
 		attackAnimationFlag = false;
 	}
+
+	//for (int i = 0; i < 100; i++) {
+	//	// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
+	//	const float rnd_pos = 10.0f;
+	//	XMFLOAT3 pos{};
+	//	pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//	pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//	pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//	// X, Y, Z全て[-0.05f, + 0.05f]でランダムに分布
+	//	const float rnd_vel = 0.1f;
+	//	XMFLOAT3 vel{};
+	//	pos.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//	pos.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//	pos.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//	// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
+	//	XMFLOAT3 acc{};
+	//	const float rnd_acc = 0.001f;
+	//	acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+	//	// 追加
+	//	particleMan->Add(60, pos, vel, acc);
+	//	break;
+	//}
 
 	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 6) == true) {
 		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
@@ -333,6 +402,11 @@ void GamePlayScene2::Update()
 		bulletFbxObject[i]->Update();
 	}
 
+	// パーティクルオブジェクト更新
+	/*object_particle->Update();
+	particleObjectManager_->Update();*/
+	//particleMan->Update();
+
 	camera->Update();
 
 	// DirectX毎フレーム処理　ここまで
@@ -358,7 +432,11 @@ bool GamePlayScene2::OnCollisionCircle(FbxObject3d* playerCircle, FbxObject3d* e
 void GamePlayScene2::Draw()
 {
 	// 3Dオブジェクト描画前処理
-	Object3d::PreDraw();
+	//Object3d::PreDraw();
+
+	// パーティクルオブジェクトの描画
+	//object_particle->Draw();
+	//particleMan->Draw();
 
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
@@ -385,7 +463,8 @@ void GamePlayScene2::Draw()
 	}
 
 	// 3Dオブジェクト描画後処理
-	Object3d::PostDraw();
+	//Object3d::PostDraw();
+	//ParticleManager::PostDraw();
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
 

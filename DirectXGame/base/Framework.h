@@ -15,6 +15,7 @@
 #include "PostEffect.h"
 #include "MultiRenderTarget.h"
 #include "MultiTexture.h"
+#include "ParticleManager.h"
 
 #include <memory>
 
@@ -70,6 +71,8 @@ protected:
     PostEffect* postEffect = nullptr;
     MultiRenderTarget* postEffect2 = nullptr;
     MultiTexture* postEffect3 = nullptr;
+    // パーティクル
+    ParticleManager* particleMan = nullptr;
 
     // 所有者(管理者)
     //AbstractSceneFactory* sceneFactory_ = nullptr;

@@ -2,12 +2,13 @@
 
 #include "BaseScene.h"
 #include "Sprite.h"
-#include "Object3d.h"
+//#include "Object3d.h"
 #include "Audio.h"
-#include "ObjectManager.h"
+//#include "ObjectManager.h"
 #include "FbxObject3d.h"
 #include "DirectXCommon.h"
 #include "DebugCamera.h"
+#include "ParticleManager.h"
 
 #include <memory>
 #include <math.h>
@@ -72,6 +73,13 @@ private:
 
     // 弾
     FbxObject3d* bulletFbxObject[5];
+
+    // パーティクル
+    //std::unique_ptr<Model> model_particle;
+    // shared_ptr使う場合
+    /*std::shared_ptr<ParticleManager> object_particle;
+    std::unique_ptr<ParticleObjectManager> particleObjectManager_;*/
+    ParticleManager* particleMan = nullptr;
 
     // プレイヤーポジション
     XMFLOAT3 PlayerPos;

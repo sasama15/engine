@@ -87,6 +87,31 @@ void Framework::Initialize()
     // ポストエフェクトの初期化
     postEffect3 = new MultiTexture();
     postEffect3->Initialize();
+
+    particleMan->StaticInitialize(dxCommon->GetDev(), 1280, 720, L"Resources/effect3.png");
+    particleMan = ParticleManager::Create();
+    for (int i = 0; i < 100; i++)
+    {
+        //X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+        const float rnd_pos = 1.0f;
+        XMFLOAT3 pos{};
+        pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+        pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+        pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+        //X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+        const float rnd_vel = 0.1f;
+        XMFLOAT3 vel{};
+        vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+        vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+        vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+        //重力に見立ててYのみ[-0.0001f,0]でランダムに分布
+        XMFLOAT3 acc{};
+        const float rnd_acc = 0.001f;
+        acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+        //追加
+        particleMan->Add(60, pos, vel, acc);
+    }
 }
 
 void Framework::Finalize()
@@ -106,6 +131,8 @@ void Framework::Finalize()
 
     // Fbx関係
     FbxLoader::GetInstance()->Finalize();
+
+    delete particleMan;
 
     // PostEffect解放
     delete postEffect;
@@ -135,6 +162,30 @@ void Framework::Update()
 
     // シーンの更新
     SceneManager::GetInstance()->Update();
+    for (int i = 0; i < 100; i++)
+    {
+        //X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+        const float rnd_pos = 10.0f;
+        XMFLOAT3 pos{};
+        pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+        pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+        pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+        //X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+        const float rnd_vel = 0.1f;
+        XMFLOAT3 vel{};
+        vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+        vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+        vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+        //重力に見立ててYのみ[-0.0001f,0]でランダムに分布
+        XMFLOAT3 acc{};
+        const float rnd_acc = 0.001f;
+        acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+        //追加
+        particleMan->Add(60, pos, vel, acc);
+        break;
+    }
+    particleMan->Update();
 }
 
 void Framework::Draw()
@@ -147,6 +198,10 @@ void Framework::Draw()
     /*postEffect2->PreDrawScene(dxCommon->GetCmdList());
     SceneManager::GetInstance()->Draw();
     postEffect2->PostDrawScene(dxCommon->GetCmdList());*/
+
+
+    //ParticleManager::PreDraw(ID3D12GraphicsCommandList * cmdList);
+    //PreDraw(dxCommon->GetCmdList());
 
     dxCommon->PreDraw();
 
@@ -168,5 +223,8 @@ void Framework::Draw()
     //debugText->DrawAll();
 
     // 描画後処理
+    particleMan->PreDraw(dxCommon->GetCmdList());
+    particleMan->Draw();
+    particleMan->PostDraw();
     dxCommon->PostDraw();
 }
