@@ -13,6 +13,7 @@ void GamePlayScene2::Initialize()
 	playerFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("player");         // プレイヤー
 	yetiFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("blueMountain");		// イエティ
 	bulletFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("iceBullet");		// 弾
+	universeFbxModel = FbxLoader::GetInstance()->LoadModelFromFile("universe");     // 背景
 
 	// グラフィックスパイプライン生成
 	FbxObject3d::CreateGraphicsPipeline();
@@ -34,6 +35,11 @@ void GamePlayScene2::Initialize()
 		bulletFbxObject[i]->Initialize();
 		bulletFbxObject[i]->SetModel(bulletFbxModel);
 	}
+
+	// 背景宇宙
+	universeFbxObject = new FbxObject3d;
+	universeFbxObject->Initialize();
+	universeFbxObject->SetModel(universeFbxModel);
 
 	// OBJからモデルデータを読み込む
 	//model_particle = Model::LoadFromOBJ("sphere");
@@ -87,7 +93,7 @@ void GamePlayScene2::Initialize()
 	//}
 
 
-	endFlag = false;
+	/*endFlag = false;*/
 
 	// 音声読み込み
 	soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
@@ -99,11 +105,10 @@ void GamePlayScene2::Initialize()
 
 	// パーティクル
 	//particleMan = ParticleManager::GetInstance();
-	particleMan = ParticleManager::GetInstance();
-	particleMan->SetCamera(camera);
 
 	// プレイヤーの向き
-	playerFbxObject->SetRotation({ 0, 180, 0 });
+	PlayerRotation = { 0, 180, 0 };
+	playerFbxObject->SetRotation({ PlayerRotation });
 	// イエティの向き
 	yetiFbxObject->SetRotation({ 0, 90, 0 });
 
@@ -112,8 +117,8 @@ void GamePlayScene2::Initialize()
 
 	// HP表示大きさ
 	hp->SetSize({ 100, 100 });
-	hp2->SetSize({ 250, 250 });
-	hp3->SetSize({ 100, 100 });
+	hp2->SetSize({ 500, 500 });
+	hp3->SetSize({ 750, 750 });
 
 	// プレイヤーの大きさ
 	playerFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
@@ -123,6 +128,10 @@ void GamePlayScene2::Initialize()
 	for (int i = 0; i < 5; i++) {
 		bulletFbxObject[i]->SetScale({ 0.01f, 0.01f, 0.01f });
 	}
+
+	universeFbxObject->SetScale({ 5.0f, 5.0f, 5.0f });
+
+	universeFbxObject->SetRotation({ 0, 0, 0 });
 
 	// プレイヤーのポジション
 	PlayerPos = { 0,0,25 };
@@ -138,7 +147,11 @@ void GamePlayScene2::Initialize()
 		bulletFbxObject[i]->SetPosition({ BulletPos[i] });
 	}
 
-	hp2->SetPosition({ 515, 300.5f, 0});
+	UniversePos = { 0, playerFbxObject->GetPosition().y, -100};
+	universeFbxObject->SetPosition({ UniversePos });
+
+	hp2->SetPosition({ 390, 110, 0});
+	hp3->SetPosition({ 265, -15, 0 });
 
 	camera->SetTarget({ playerFbxObject->GetPosition().x, playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z + 20 });
 	camera->SetDistance(50);
@@ -155,9 +168,21 @@ void GamePlayScene2::Initialize()
 	rollingFlag = false;
 	endFlag = false;
 
+	stopFlag = false;
+	stopFlag2 = false;
+
 	iceBulletTimer = 0;
 	rollingTimer = 0;
 	rollingNum = 0;
+
+	stopTimer = 0;
+
+	particleMan = ParticleManager::GetInstance();
+	particleMan->SetCamera(camera);
+	particleSmoke = ParticleManager::GetInstance();
+	particleSmoke->SetCamera(camera);
+	particleGone = ParticleManager::GetInstance();
+	particleGone->SetCamera(camera);
 }
 
 void GamePlayScene2::Finalize()
@@ -173,10 +198,12 @@ void GamePlayScene2::Finalize()
 	for (int i = 0; i < 5; i++) {
 		delete bulletFbxObject[i];
 	}
+	delete universeFbxObject;
 
 	delete playerFbxModel;
 	delete yetiFbxModel;
 	delete bulletFbxModel;
+	delete universeFbxModel;
 
 	delete camera;
 }
@@ -192,103 +219,104 @@ void GamePlayScene2::Update()
 	{
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
+	if (stopTimer == 0) {
+		//弾が弧を描きながら飛ぶ
+		if (rollingFlag == false) {
 
-	//弾が弧を描きながら飛ぶ
-	if (rollingFlag == false) {
+			iceBulletTimer++;
+			for (int i = 0; i < 5; i++) {
+				if (bulletFlag[i] == false) {
+					//移動
+					BulletGravity[i] = 0;
+					BulletPos[i] = { 0, 0, 0 };
+					bulletFbxObject[i]->SetPosition(yetiFbxObject->GetPosition());
+					oldPlayerPos[i] = playerFbxObject->GetPosition();
+					if (iceBulletTimer >= 30) {
 
-		iceBulletTimer++;
-		for (int i = 0; i < 5; i++) {
-			if (bulletFlag[i] == false) {
-				//移動
-				BulletGravity[i] = 0;
-				BulletPos[i] = { 0, 0, 0 };
-				bulletFbxObject[i]->SetPosition(yetiFbxObject->GetPosition());
-				oldPlayerPos[i] = playerFbxObject->GetPosition();
-				if (iceBulletTimer >= 60) {
+						bulletFlag[i] = true;
+						iceBulletTimer = 0;
+					}
+					break;
+				}
+			}
 
-					bulletFlag[i] = true;
+			for (int i = 0; i < 5; i++) {
+				if (bulletFbxObject[4]->GetPosition().y < -10) {
 					iceBulletTimer = 0;
+					for (int s = 0; s < 5; s++) {
+						BulletGravity[s] = 0;
+						BulletPos[s] = { 0, 0, 0 };
+						bulletFbxObject[s]->SetPosition(yetiFbxObject->GetPosition());
+						bulletFlag[s] = false;
+					}
+					rollingFlag = true;
 				}
-				break;
+				if (bulletFlag[i] == true) {
+					if (oldPlayerPos[i].z < bulletFbxObject[i]->GetPosition().z) {
+						BulletPos[i].z += 0.4f;
+					}
+					if (oldPlayerPos[i].z > bulletFbxObject[i]->GetPosition().z) {
+						BulletPos[i].z -= 0.4f;
+					}
+					if (oldPlayerPos[i].x <= bulletFbxObject[i]->GetPosition().x) {
+						BulletPos[i].x = BulletPos[i].x + BulletJampPower;
+					}
+					if (oldPlayerPos[i].x >= bulletFbxObject[i]->GetPosition().x) {
+						BulletPos[i].x = BulletPos[i].x - BulletJampPower;
+					}
+					BulletGravity[i] += 0.005f;
+					BulletPos[i].y = BulletPos[i].y - BulletJampPower;
+					BulletPos[i].y += BulletGravity[i];
+					bulletFbxObject[i]->SetPosition({ YetiPos.x - BulletPos[i].x, YetiPos.y - BulletPos[i].y, YetiPos.z - BulletPos[i].z });
+				}
 			}
 		}
 
-		for (int i = 0; i < 5; i++) {
-			if (bulletFbxObject[4]->GetPosition().y < -10) {
-				iceBulletTimer = 0;
-				for (int s = 0; s < 5; s++) {
-					BulletGravity[s] = 0;
-					BulletPos[s] = { 0, 0, 0 };
-					bulletFbxObject[s]->SetPosition(yetiFbxObject->GetPosition());
-					bulletFlag[s] = false;
-				}
-				rollingFlag = true;
+		// 突進
+		if (rollingFlag == false) {
+			rollingTimer = 0;
+			rollingNum = 0;
+		}
+		if (rollingTimer == 0) {
+			oldPlayerPos2 = playerFbxObject->GetPosition();
+			if (rollingFlag == true) {
+				rollingTimer = 1;
 			}
-			if (bulletFlag[i] == true) {
-				if (oldPlayerPos[i].z < bulletFbxObject[i]->GetPosition().z) {
-					BulletPos[i].z += 0.4f;
-				}
-				if (oldPlayerPos[i].z > bulletFbxObject[i]->GetPosition().z) {
-					BulletPos[i].z -= 0.4f;
-				}
-				if (oldPlayerPos[i].x <= bulletFbxObject[i]->GetPosition().x) {
-					BulletPos[i].x = BulletPos[i].x + BulletJampPower;
-				}
-				if (oldPlayerPos[i].x >= bulletFbxObject[i]->GetPosition().x) {
-					BulletPos[i].x = BulletPos[i].x - BulletJampPower;
-				}
-				BulletGravity[i] += 0.005f;
-				BulletPos[i].y = BulletPos[i].y - BulletJampPower;
-				BulletPos[i].y += BulletGravity[i];
-				bulletFbxObject[i]->SetPosition({ YetiPos.x - BulletPos[i].x, YetiPos.y - BulletPos[i].y, YetiPos.z - BulletPos[i].z });
+		}
+		if (rollingFlag == true && rollingTimer >= 1) {
+			iceBulletTimer = 0;
+			if (oldPlayerPos2.z < yetiFbxObject->GetPosition().z) {
+				YetiPos.z -= 0.4f;
 			}
+			if (oldPlayerPos2.z > yetiFbxObject->GetPosition().z) {
+				YetiPos.z += 0.4f;
+			}
+			if (oldPlayerPos2.x <= yetiFbxObject->GetPosition().x) {
+				YetiPos.x = YetiPos.x - 0.4f;
+			}
+			if (oldPlayerPos2.x >= yetiFbxObject->GetPosition().x) {
+				YetiPos.x = YetiPos.x + 0.4f;
+			}
+			if (yetiFbxObject->GetPosition().x <= oldPlayerPos2.x + 0.4f && yetiFbxObject->GetPosition().x >= oldPlayerPos2.x - 0.4f &&
+				yetiFbxObject->GetPosition().z <= oldPlayerPos2.z + 0.4f && yetiFbxObject->GetPosition().z >= oldPlayerPos2.z - 0.4f) {
+				rollingTimer++;
+				if (rollingTimer >= 60) {
+					rollingNum++;
+					if (rollingNum == 3) {
+						rollingFlag = false;
+					}
+					rollingTimer = 0;
+				}
+			}
+
+			for (int i = 0; i < 5; i++) {
+				bulletFbxObject[i]->SetPosition(yetiFbxObject->GetPosition());
+			}
+			yetiFbxObject->SetPosition({ YetiPos.x, YetiPos.y, YetiPos.z });
 		}
 	}
 
-	// 突進
-	if (rollingFlag == false) {
-		rollingTimer = 0;
-		rollingNum = 0;
-	}
-	if (rollingTimer == 0) {
-		oldPlayerPos2 = playerFbxObject->GetPosition();
-		if (rollingFlag == true) {
-			rollingTimer = 1;
-		}
-	}
-	if (rollingFlag == true && rollingTimer >= 1) {
-		iceBulletTimer = 0;
-		if (oldPlayerPos2.z < yetiFbxObject->GetPosition().z) {
-			YetiPos.z -= 0.4f;
-		}
-		if (oldPlayerPos2.z > yetiFbxObject->GetPosition().z) {
-			YetiPos.z += 0.4f;
-		}
-		if (oldPlayerPos2.x <= yetiFbxObject->GetPosition().x) {
-			YetiPos.x = YetiPos.x - 0.4f;
-		}
-		if (oldPlayerPos2.x >= yetiFbxObject->GetPosition().x) {
-			YetiPos.x = YetiPos.x + 0.4f;
-		}
-		if (yetiFbxObject->GetPosition().x <= oldPlayerPos2.x + 0.4f && yetiFbxObject->GetPosition().x >= oldPlayerPos2.x - 0.4f &&
-			yetiFbxObject->GetPosition().z <= oldPlayerPos2.z + 0.4f && yetiFbxObject->GetPosition().z >= oldPlayerPos2.z - 0.4f) {
-			rollingTimer++;
-			if (rollingTimer >= 60) {
-				rollingNum++;
-				if (rollingNum == 3) {
-					rollingFlag = false;
-				}
-				rollingTimer = 0;
-			}
-		}
-
-		for (int i = 0; i < 5; i++) {
-			bulletFbxObject[i]->SetPosition(yetiFbxObject->GetPosition());
-		}
-		yetiFbxObject->SetPosition({ YetiPos.x, YetiPos.y, YetiPos.z });
-	}
-
-	float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // 青っぽい色
+	float clearColor[] = { 0.1f, 0.25f, 0.5f, 0.0f }; // 青っぽい色
 
 	// プレイヤー移動
 	if (walkAnimationFlag == true || attackAnimationFlag == true) {
@@ -308,10 +336,10 @@ void GamePlayScene2::Update()
 	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A) ||
 		input->PushButton(static_cast<int>(Button::UP)) || input->PushButton(static_cast<int>(Button::DOWN)) ||
 		input->PushButton(static_cast<int>(Button::RIGHT)) || input->PushButton(static_cast<int>(Button::LEFT))) {
-		if (input->PushKey(DIK_W) || input->PushButton(static_cast<int>(Button::UP))) { PlayerPos.z += 0.3f; }
-		if (input->PushKey(DIK_S) || input->PushButton(static_cast<int>(Button::DOWN))) { PlayerPos.z -= 0.3f; }
-		if (input->PushKey(DIK_D) || input->PushButton(static_cast<int>(Button::RIGHT))) { PlayerPos.x += 0.3f; }
-		if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x -= 0.3f; }
+		if (input->PushKey(DIK_W) || input->PushButton(static_cast<int>(Button::UP))) { PlayerPos.z += 0.5f; }
+		if (input->PushKey(DIK_S) || input->PushButton(static_cast<int>(Button::DOWN))) { PlayerPos.z -= 0.5f; }
+		if (input->PushKey(DIK_D) || input->PushButton(static_cast<int>(Button::RIGHT))) { PlayerPos.x += 0.5f; }
+		if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x -= 0.5f; }
 		playerFbxObject->SetPosition(PlayerPos);
 		walkAnimationFlag = true;
 		// shared_ptr使う場合
@@ -320,6 +348,41 @@ void GamePlayScene2::Update()
 	}
 	else {
 		walkAnimationFlag = false;
+	}
+
+	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A) ||
+		input->PushButton(static_cast<int>(Button::UP)) || input->PushButton(static_cast<int>(Button::DOWN)) ||
+		input->PushButton(static_cast<int>(Button::RIGHT)) || input->PushButton(static_cast<int>(Button::LEFT))) {
+		if (input->TriggerKey(DIK_LSHIFT)) {
+			if (input->PushKey(DIK_W) || input->PushButton(static_cast<int>(Button::UP))) { PlayerPos.z += 2.0f; }
+			if (input->PushKey(DIK_S) || input->PushButton(static_cast<int>(Button::DOWN))) { PlayerPos.z -= 2.0f; }
+			if (input->PushKey(DIK_D) || input->PushButton(static_cast<int>(Button::RIGHT))) { PlayerPos.x += 2.0f; }
+			if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x -= 2.0f; }
+			playerFbxObject->SetPosition(PlayerPos);
+			particleSmoke->LoadTexture(L"Resources/smoke.png");
+			for (int i = 0; i < 100; i++) {
+				//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+				/*const float rnd_pos = 1.0f;
+				XMFLOAT3 pos{};
+				pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
+				//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+				const float rnd_vel = 0.01f;
+				XMFLOAT3 vel{};
+				//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				//vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				vel.y = 0.2f;
+				//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
+				XMFLOAT3 acc{};
+				const float rnd_acc = 0.001f;
+				acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+				//追加
+				particleSmoke->Add(60, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y - 5, playerFbxObject->GetPosition().z }, vel, acc, 3.0f, 0.0f);
+			}
+		}
 	}
 
 
@@ -354,81 +417,122 @@ void GamePlayScene2::Update()
 	//	particleMan->Add(60, pos, vel, acc);
 	//	break;
 	//}
-	if (input->TriggerKey(DIK_N)) {
-		particleMan->LoadTexture(L"Resources/HP.png");
-		for (int i = 0; i < 100; i++) {
-			//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-			/*const float rnd_pos = 1.0f;
-			XMFLOAT3 pos{};
-			pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
-			//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-			const float rnd_vel = 0.1f;
-			XMFLOAT3 vel{};
-			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
-			XMFLOAT3 acc{};
-			const float rnd_acc = 0.001f;
-			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+	//if (input->TriggerKey(DIK_Q)) {
+	//	particleMan->LoadTexture(L"Resources/HP.png");
+	//	for (int i = 0; i < 100; i++) {
+	//		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+	//		const float rnd_pos = 1.0f;
+	//		XMFLOAT3 pos{};
+	//		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+	//		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+	//		const float rnd_vel = 0.1f;
+	//		XMFLOAT3 vel{};
+	//		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+	//		//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
+	//		XMFLOAT3 acc{};
+	//		const float rnd_acc = 0.001f;
+	//		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
-			//追加
-			particleMan->Add(60, { playerFbxObject->GetPosition().x-10,  playerFbxObject->GetPosition().y + 5, playerFbxObject->GetPosition().z }, vel, acc, 1.0f, 0.0f);
-		}
-	}
+	//		//追加
+	//		particleMan->Add(60, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y + 5, playerFbxObject->GetPosition().z - 5 }, vel, acc, 100.0f, 0.0f);
+	//	}
+	//}
 
-	if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
-		particleMan->LoadTexture(L"Resources/particlePla.png");
-		for (int i = 0; i < 100; i++){
-			//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-			/*const float rnd_pos = 1.0f;
-			XMFLOAT3 pos{};
-			pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
-			//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-			const float rnd_vel = 0.1f;
-			XMFLOAT3 vel{};
-			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
-			XMFLOAT3 acc{};
-			const float rnd_acc = 0.001f;
-			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-			//追加
-			particleMan->Add(60, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y + 5, playerFbxObject->GetPosition().z}, vel, acc, 1.0f, 0.0f);
-		}
-	}
-	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 6) == true) {
+	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 7) == true) {
 		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
+			particleMan->LoadTexture(L"Resources/particlePla.png");
+			for (int i = 0; i < 100; i++) {
+				//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+				/*const float rnd_pos = 1.0f;
+				XMFLOAT3 pos{};
+				pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
+				//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+				const float rnd_vel = 0.1f;
+				XMFLOAT3 vel{};
+				vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
+				XMFLOAT3 acc{};
+				const float rnd_acc = 0.001f;
+				acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+				//追加
+				particleMan->Add(60, { yetiFbxObject->GetPosition().x,  yetiFbxObject->GetPosition().y + 5, yetiFbxObject->GetPosition().z -5 }, vel, acc, 10.0f, 0.0f);
+			}
 			// イエティ
 			yetiFlag = false;
 			//シーン切り替え
+			//SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
+		}
+	}
+
+	if (yetiFlag == false) {
+		if (input->TriggerKey(DIK_SPACE)) {
 			SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
 		}
 	}
 
+	if (yetiFlag == false) {
+		endFlag = false;
+	}
+
 	// 敵か弾に当たったらエンド
-	//if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 5) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 2, 2) == true ||
-	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 2, 2) == true ||
-	//	OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 2, 2) == true) {
-	//	// プレイヤー
-	//	playerFlag = false;
-	//	endFlag = true;
-	//}
+	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 4) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 2, 2) == true ||
+		OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 2, 2) == true ||
+		OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 2, 2) == true) {
+		endFlag = true;
+	}
 
 	// エンドフラグたったらエンド画面へ
 	if (endFlag == true) {
-		if (input->TriggerKey(DIK_SPACE) || input->PushButton(static_cast<int>(Button::B))){
-			//シーン切り替え
-			SceneManager::GetInstance()->ChangeScene("GAMEEND");
+		stopTimer++;
+		if (stopTimer >= 120) {
+			stopFlag = true;
+		}
+		if (stopTimer >= 240) {
+			stopFlag = false;
+			stopFlag2 = true;
+		}
+		if (stopTimer >= 360) {
+			stopFlag2 = false;
+			//particleMan = ParticleManager::Create();
+			particleGone->LoadTexture(L"Resources/Gone.png");
+			for (int i = 0; i < 100; i++) {
+				// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
+				const float rnd_pos = 1000.0f;
+				XMFLOAT3 pos{};
+				pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+				// X, Y, Z全て[-0.05f, +0.05f]でランダムに分布
+				const float rnd_vel = 0.1f;
+				XMFLOAT3 vel{};
+				vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
+				XMFLOAT3 acc{};
+				const float rnd_acc = 0.001f;
+				acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+				// 追加
+				particleGone->Add(60, pos, vel, acc, 10.0f, 0.0f);
+			}
+			// プレイヤー
+			playerFlag = false;
+		}
+		if (stopTimer >= 500) {
+				SceneManager::GetInstance()->ChangeScene("GAMEEND");
 		}
 	}
-	
 
 	// 各オブジェクトの半径
 	const float radius1 = 3.0f;
@@ -455,10 +559,14 @@ void GamePlayScene2::Update()
 		bulletFbxObject[i]->Update();
 	}
 
+	universeFbxObject->Update();
+
 	// パーティクルオブジェクト更新
 	/*object_particle->Update();
 	particleObjectManager_->Update();*/
 	particleMan->Update();
+	particleSmoke->Update();
+	particleGone->Update();
 
 	camera->Update();
 
@@ -490,8 +598,8 @@ void GamePlayScene2::Draw()
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
 	// スプライト描画
-	title->Draw();
-	hp->Draw();
+	//title->Draw();
+	//hp->Draw();
 
 
 #pragma region 3D描画
@@ -510,10 +618,13 @@ void GamePlayScene2::Draw()
 			bulletFbxObject[i]->Draw(dxCommon->GetCmdList());
 		}
 	}
+	universeFbxObject->Draw(dxCommon->GetCmdList());
 
 	// パーティクルオブジェクトの描画
 	//object_particle->Draw();
 	particleMan->Draw(dxCommon->GetCmdList());
+	particleSmoke->Draw(dxCommon->GetCmdList());
+	particleGone->Draw(dxCommon->GetCmdList());
 
 	// 3Dオブジェクト描画後処理
 	//Object3d::PostDraw();
@@ -521,7 +632,13 @@ void GamePlayScene2::Draw()
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
 
-	if (endFlag == true) {
+	/*if (endFlag == true) {
 		end->Draw();
+	}*/
+	if (stopFlag == true) {
+		hp2->Draw();
+	}
+	if (stopFlag2 == true) {
+		hp3->Draw();
 	}
 }

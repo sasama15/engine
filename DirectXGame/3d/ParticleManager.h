@@ -104,7 +104,7 @@ public: // メンバ関数
 	/// カメラのセット
 	/// </summary>
 	/// <param name="camera">カメラ</param>
-	inline void SetCamera(Camera* camera) { this->camera = camera; }
+ 	inline void SetCamera(Camera* camera) { this->camera = camera; }
 
 	/// <summary>
 	/// パーティクルの追加

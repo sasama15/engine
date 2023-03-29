@@ -63,6 +63,7 @@ private:
     FbxModel* yetiFbxModel = nullptr;
     // 弾
     FbxModel* bulletFbxModel = nullptr;
+    FbxModel* universeFbxModel = nullptr;
 
     // プレイヤー
     FbxObject3d* playerFbxObject = nullptr;
@@ -73,6 +74,7 @@ private:
 
     // 弾
     FbxObject3d* bulletFbxObject[5];
+    FbxObject3d* universeFbxObject;
 
     // パーティクル
     //std::unique_ptr<Model> model_particle;
@@ -80,6 +82,11 @@ private:
     /*std::shared_ptr<ParticleManager> object_particle;
     std::unique_ptr<ParticleObjectManager> particleObjectManager_;*/
     ParticleManager* particleMan = nullptr;
+    ParticleManager* particleSmoke = nullptr;
+    ParticleManager* particleGone = nullptr;
+
+    // プレイヤーローテーション
+    XMFLOAT3 PlayerRotation;
 
     // プレイヤーポジション
     XMFLOAT3 PlayerPos;
@@ -92,6 +99,7 @@ private:
     XMFLOAT3 oldPlayerPos2;
     // 弾
     XMFLOAT3 BulletPos[5];
+    XMFLOAT3 UniversePos;
 
     // 弾の最大数
     const int iceMax = 5;
@@ -125,6 +133,11 @@ private:
     //bool onrushFlag = false;
     //敵転がる
     bool rollingFlag = false;
+
+    // 時間止めてる時のフラグ
+    bool stopFlag = false;
+    bool stopFlag2 = false;
+
     // 弾をジャンプ
     bool BulletJump;
     bool BulletJump2;
@@ -132,10 +145,18 @@ private:
     bool BulletJump4;
     bool BulletJump5;
 
+    // 弾のスピード
     int bulletSpeed;
+
+    // 弾の時
     int iceBulletTimer;
+
+    // 転がる時間
     int rollingTimer;
     int rollingNum;
+
+    // 時間止める
+    int stopTimer;
 
     float BulletGravity[5];
     float BulletJampPower;

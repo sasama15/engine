@@ -243,7 +243,7 @@ void FbxObject3d::Update()
 	ConstBufferDataTransform* constMap = nullptr;
 	result = constBuffTransform->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result)) {
-		constMap->viewproj = matViewProjection;
+ 		constMap->viewproj = matViewProjection;
 		constMap->world = modelTransform * matWorld;
 		constMap->cameraPos = cameraPos;
 		constBuffTransform->Unmap(0, nullptr);
