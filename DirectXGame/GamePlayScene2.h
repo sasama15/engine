@@ -2,9 +2,7 @@
 
 #include "BaseScene.h"
 #include "Sprite.h"
-//#include "Object3d.h"
 #include "Audio.h"
-//#include "ObjectManager.h"
 #include "FbxObject3d.h"
 #include "DirectXCommon.h"
 #include "DebugCamera.h"
@@ -69,22 +67,16 @@ private:
     FbxObject3d* playerFbxObject = nullptr;
     // イエティ
     FbxObject3d* yetiFbxObject = nullptr;
-    // 弾
-    //FbxObject3d* bulletFbxObject = nullptr;
 
     // 弾
     FbxObject3d* bulletFbxObject[5];
     FbxObject3d* universeFbxObject;
 
     // パーティクル
-    //std::unique_ptr<Model> model_particle;
-    // shared_ptr使う場合
-    /*std::shared_ptr<ParticleManager> object_particle;
-    std::unique_ptr<ParticleObjectManager> particleObjectManager_;*/
     ParticleManager* particleMan = nullptr;
     ParticleManager* particleSmoke = nullptr;
     ParticleManager* particleGone = nullptr;
-    ParticleManager* particleSnow = nullptr;
+    //ParticleManager* particleSnow = nullptr;
     ParticleManager* particleBlood = nullptr;
 
     // プレイヤーローテーション
@@ -94,8 +86,6 @@ private:
     XMFLOAT3 PlayerPos;
     // イエティポジション
     XMFLOAT3 YetiPos;
-    // 弾
-    //XMFLOAT3 BulletPos;
     // プレイヤーポジション(プレイヤーが居た場所)
     XMFLOAT3 oldPlayerPos[5];
     XMFLOAT3 oldPlayerPos2;
@@ -114,27 +104,15 @@ private:
     bool clearFlag = false;
     // エンドフラグ
     bool endFlag = false;
-    // 弾フラグ
-    /*bool bulletFlag = false;
-    bool bulletFlag2 = false;
-    bool bulletFlag3 = false;
-    bool bulletFlag4 = false;
-    bool bulletFlag5 = false;*/
 
     bool bulletFlag[5];
     // 弾撃つ
     bool shootFlag = false;
-    /*bool shootFlag2 = false;
-    bool shootFlag3 = false;
-    bool shootFlag4 = false;
-    bool shootFlag5 = false;*/
 
     // アニメーションフラグ
     bool walkAnimationFlag = false;
     bool attackAnimationFlag = false;
 
-    // 突撃
-    //bool onrushFlag = false;
     //敵転がる
     bool rollingFlag = false;
 

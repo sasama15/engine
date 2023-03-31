@@ -41,19 +41,7 @@ void GamePlayScene2::Initialize()
 	universeFbxObject->Initialize();
 	universeFbxObject->SetModel(universeFbxModel);
 
-	// OBJからモデルデータを読み込む
-	//model_particle = Model::LoadFromOBJ("sphere");
-
-	// オブジェクトマネージャ生成
-	//particleObjectManager_ = std::make_unique<ParticleObjectManager>();
-
-	// shared_ptr使う場合
-	/*std::weak_ptr<ParticleManager> particleWp = particleObjectManager_->AddObject(ParticleManager::Create(model_particle.get()));
-	object_particle = particleWp.lock();*/
-	/*DirectX::XMFLOAT3 pos = object_particle->GetPosition();
-	object_particle->SetPosition({ -5, 0, -5 });*/
-
-    // スプライト共通テクスチャ読み込み
+	// スプライト共通テクスチャ読み込み
 	SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/title1.png");
 	SpriteCommon::GetInstance()->LoadTexture(2, L"Resources/HP.png");
 	SpriteCommon::GetInstance()->LoadTexture(3, L"Resources/HP2.png");
@@ -67,34 +55,6 @@ void GamePlayScene2::Initialize()
 	hp3 = Sprite::Create(4, { 0,0 }, false, false);
 	end = Sprite::Create(5, { 0,0 }, false, false);
 
-	// パーティクル関連
-	//particleMan = ParticleManager::Create();
-	//for (int i = 0; i < 100; i++) {
-	//	// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
-	//	const float rnd_pos = 10.0f;
-	//	XMFLOAT3 pos{};
-	//	pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//	pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//	pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-
-	//	// X, Y, Z全て[-0.05f, +0.05f]でランダムに分布
-	//	const float rnd_vel = 0.1f;
-	//	XMFLOAT3 vel{};
-	//	vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
-	//	XMFLOAT3 acc{};
-	//	const float rnd_acc = 0.001f;
-	//	acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-	//	// 追加
-	//	particleMan->Add(60, pos, vel, acc);
-	//}
-
-
-	/*endFlag = false;*/
-
 	// 音声読み込み
 	soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
 
@@ -102,9 +62,6 @@ void GamePlayScene2::Initialize()
 
 	// カメラをセット
 	FbxObject3d::SetCamera(camera);
-
-	// パーティクル
-	//particleMan = ParticleManager::GetInstance();
 
 	// プレイヤーの向き
 	PlayerRotation = { 0, 180, 0 };
@@ -193,11 +150,6 @@ void GamePlayScene2::Initialize()
 
 void GamePlayScene2::Finalize()
 {
-	// 3Dモデル解放
-	/*delete model_particle;*/
-	// 3Dオブジェクト解放
-	//delete object_particle;
-	
 	// FBXオブジェクト、モデル解放
 	delete playerFbxObject;
 	delete yetiFbxObject;
@@ -348,9 +300,6 @@ void GamePlayScene2::Update()
 		if (input->PushKey(DIK_A) || input->PushButton(static_cast<int>(Button::LEFT))) { PlayerPos.x -= 0.5f; }
 		playerFbxObject->SetPosition(PlayerPos);
 		walkAnimationFlag = true;
-		// shared_ptr使う場合
-		//DirectX::XMFLOAT3 pos = object_particle->GetPosition();
-		//object_particle->SetModel(model_particle.get());
 	}
 	else {
 		walkAnimationFlag = false;
@@ -367,19 +316,10 @@ void GamePlayScene2::Update()
 			playerFbxObject->SetPosition(PlayerPos);
 			particleSmoke->LoadTexture(L"Resources/smoke.png");
 			for (int i = 0; i < 100; i++) {
-				//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-				/*const float rnd_pos = 1.0f;
-				XMFLOAT3 pos{};
-				pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-				pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-				pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
 				//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 				const float rnd_vel = 0.01f;
 				XMFLOAT3 vel{};
-				//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-				//vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 				vel.y = 0.2f;
-				//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 				//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
 				XMFLOAT3 acc{};
 				const float rnd_acc = 0.001f;
@@ -401,63 +341,10 @@ void GamePlayScene2::Update()
 		attackAnimationFlag = false;
 	}
 
-	//for (int i = 0; i < 100; i++) {
-	//	// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
-	//	const float rnd_pos = 10.0f;
-	//	XMFLOAT3 pos{};
-	//	pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//	pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//	pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//	// X, Y, Z全て[-0.05f, + 0.05f]でランダムに分布
-	//	const float rnd_vel = 0.1f;
-	//	XMFLOAT3 vel{};
-	//	pos.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	pos.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	pos.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
-	//	XMFLOAT3 acc{};
-	//	const float rnd_acc = 0.001f;
-	//	acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-	//	// 追加
-	//	particleMan->Add(60, pos, vel, acc);
-	//	break;
-	//}
-	//if (input->TriggerKey(DIK_Q)) {
-	//	particleMan->LoadTexture(L"Resources/HP.png");
-	//	for (int i = 0; i < 100; i++) {
-	//		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-	//		const float rnd_pos = 1.0f;
-	//		XMFLOAT3 pos{};
-	//		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-	//		const float rnd_vel = 0.1f;
-	//		XMFLOAT3 vel{};
-	//		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//		//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
-	//		XMFLOAT3 acc{};
-	//		const float rnd_acc = 0.001f;
-	//		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-	//		//追加
-	//		particleMan->Add(60, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y + 5, playerFbxObject->GetPosition().z - 5 }, vel, acc, 100.0f, 0.0f);
-	//	}
-	//}
-
 	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 7) == true) {
 		if (input->TriggerKey(DIK_RETURN) || input->PushButton(static_cast<int>(Button::B))) {
 			particleMan->LoadTexture(L"Resources/particlePla.png");
 			for (int i = 0; i < 100; i++) {
-				//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-				/*const float rnd_pos = 1.0f;
-				XMFLOAT3 pos{};
-				pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-				pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-				pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
 				//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 				const float rnd_vel = 0.1f;
 				XMFLOAT3 vel{};
@@ -476,8 +363,6 @@ void GamePlayScene2::Update()
 			yetiFlag = false;
 
 			clearFlag = true;
-			//シーン切り替え
-			//SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
 		}
 	}
 
@@ -494,7 +379,6 @@ void GamePlayScene2::Update()
 		}
 		if (clearStopTimer >= 360) {
 			stopFlag2 = false;
-			//particleMan = ParticleManager::Create();
 			particleGone->LoadTexture(L"Resources/Gone-export.png");
 			for (int i = 0; i < 100; i++) {
 				// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
@@ -518,32 +402,15 @@ void GamePlayScene2::Update()
 				// 追加
 				particleGone->Add(60, pos, vel, acc, 10.0f, 0.0f);
 			}
-			// プレイヤー
-			//playerFlag = false;
 		}
 		if (clearStopTimer >= 500) {
 			SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
 		}
 	}
 
-	/*if (yetiFlag == false) {
-		if (input->TriggerKey(DIK_SPACE)) {
-			SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
-		}
-	}*/
-
-	/*if (yetiFlag == false) {
-		endFlag = false;
-	}*/
 	if (particleFlag == true) {
 		particleBlood->LoadTexture(L"Resources/particleEne.png");
 		for (int i = 0; i < 100; i++) {
-			//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-			/*const float rnd_pos = 1.0f;
-			XMFLOAT3 pos{};
-			pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
 			//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 			const float rnd_vel = 0.1f;
 			XMFLOAT3 vel{};
@@ -599,44 +466,11 @@ void GamePlayScene2::Update()
 			}
 			// プレイヤー
 			playerFlag = false;
-			//stopFlag = true;
 		}
-		if (stopTimer >= 240) {
-			/*stopFlag = false;
-			stopFlag2 = true;*/
-		}
+		/*if (stopTimer >= 240) {
+		}*/
 		if (stopTimer >= 360) {
 			SceneManager::GetInstance()->ChangeScene("GAMEEND");
-			//stopFlag2 = false;
-			//particleMan = ParticleManager::Create();
-			//particleBlood->LoadTexture(L"Resources/particleEne.png");
-			//for (int i = 0; i < 100; i++) {
-			//	// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
-			//	const float rnd_pos = 1000.0f;
-			//	XMFLOAT3 pos{};
-			//	pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			//	pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			//	pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-
-			//	// X, Y, Z全て[-0.05f, +0.05f]でランダムに分布
-			//	const float rnd_vel = 0.1f;
-			//	XMFLOAT3 vel{};
-			//	vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			//	vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			//	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			//	// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
-			//	XMFLOAT3 acc{};
-			//	const float rnd_acc = 0.001f;
-			//	acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-			//	// 追加
-			//	particleBlood->Add(60, pos, vel, acc, 10.0f, 0.0f);
-			//}
-			// プレイヤー
-			/*playerFlag = false;*/
-		}
-		if (stopTimer >= 500) {
-				SceneManager::GetInstance()->ChangeScene("GAMEEND");
 		}
 	}
 
@@ -659,7 +493,6 @@ void GamePlayScene2::Update()
 	// FBXオブジェクト更新
 	playerFbxObject->Update();
 	yetiFbxObject->Update();
-	//bulletFbxObject->Update();
 
 	for (int i = 0; i < 5; i++) {
 		bulletFbxObject[i]->Update();
@@ -668,8 +501,6 @@ void GamePlayScene2::Update()
 	universeFbxObject->Update();
 
 	// パーティクルオブジェクト更新
-	/*object_particle->Update();
-	particleObjectManager_->Update();*/
 	particleMan->Update();
 	particleSmoke->Update();
 	particleGone->Update();
@@ -700,14 +531,9 @@ bool GamePlayScene2::OnCollisionCircle(FbxObject3d* playerCircle, FbxObject3d* e
 void GamePlayScene2::Draw()
 {
 	// 3Dオブジェクト描画前処理
-	//Object3d::PreDraw();
 
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
-	// スプライト描画
-	//title->Draw();
-	//hp->Draw();
-
 
 #pragma region 3D描画
 	DirectXcommon* dxCommon = DirectXcommon::GetInstance();
@@ -735,14 +561,10 @@ void GamePlayScene2::Draw()
 	particleBlood->Draw(dxCommon->GetCmdList());
 
 	// 3Dオブジェクト描画後処理
-	//Object3d::PostDraw();
-	//ParticleManager::PostDraw();
+	
 	// スプライト共通コマンド
 	SpriteCommon::GetInstance()->PreDrow();
 
-	/*if (endFlag == true) {
-		end->Draw();
-	}*/
 	if (stopFlag == true) {
 		hp2->Draw();
 	}
