@@ -166,16 +166,20 @@ void GamePlayScene2::Initialize()
 	BulletJampPower = 0.4f;
 
 	rollingFlag = false;
+	clearFlag = false;
 	endFlag = false;
 
 	stopFlag = false;
 	stopFlag2 = false;
+
+	particleFlag = false;
 
 	iceBulletTimer = 0;
 	rollingTimer = 0;
 	rollingNum = 0;
 
 	stopTimer = 0;
+	clearStopTimer = 0;
 
 	particleMan = ParticleManager::GetInstance();
 	particleMan->SetCamera(camera);
@@ -183,6 +187,8 @@ void GamePlayScene2::Initialize()
 	particleSmoke->SetCamera(camera);
 	particleGone = ParticleManager::GetInstance();
 	particleGone->SetCamera(camera);
+	particleBlood = ParticleManager::GetInstance();
+	particleBlood->SetCamera(camera);
 }
 
 void GamePlayScene2::Finalize()
@@ -219,7 +225,7 @@ void GamePlayScene2::Update()
 	{
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
-	if (stopTimer == 0) {
+	if (stopTimer == 0 && clearStopTimer == 0) {
 		//弾が弧を描きながら飛ぶ
 		if (rollingFlag == false) {
 
@@ -468,42 +474,28 @@ void GamePlayScene2::Update()
 			}
 			// イエティ
 			yetiFlag = false;
+
+			clearFlag = true;
 			//シーン切り替え
 			//SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
 		}
 	}
 
-	if (yetiFlag == false) {
-		if (input->TriggerKey(DIK_SPACE)) {
-			SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
-		}
-	}
-
-	if (yetiFlag == false) {
+	// クリアフラグたったらクリア画面へ
+	if (clearFlag == true) {
 		endFlag = false;
-	}
-
-	// 敵か弾に当たったらエンド
-	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 4) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 2, 2) == true ||
-		OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 2, 2) == true ||
-		OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 2, 2) == true) {
-		endFlag = true;
-	}
-
-	// エンドフラグたったらエンド画面へ
-	if (endFlag == true) {
-		stopTimer++;
-		if (stopTimer >= 120) {
+		clearStopTimer++;
+		if (clearStopTimer >= 120) {
 			stopFlag = true;
 		}
-		if (stopTimer >= 240) {
+		if (clearStopTimer >= 240) {
 			stopFlag = false;
 			stopFlag2 = true;
 		}
-		if (stopTimer >= 360) {
+		if (clearStopTimer >= 360) {
 			stopFlag2 = false;
 			//particleMan = ParticleManager::Create();
-			particleGone->LoadTexture(L"Resources/Gone.png");
+			particleGone->LoadTexture(L"Resources/Gone-export.png");
 			for (int i = 0; i < 100; i++) {
 				// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
 				const float rnd_pos = 1000.0f;
@@ -527,7 +519,121 @@ void GamePlayScene2::Update()
 				particleGone->Add(60, pos, vel, acc, 10.0f, 0.0f);
 			}
 			// プレイヤー
+			//playerFlag = false;
+		}
+		if (clearStopTimer >= 500) {
+			SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
+		}
+	}
+
+	/*if (yetiFlag == false) {
+		if (input->TriggerKey(DIK_SPACE)) {
+			SceneManager::GetInstance()->ChangeScene("GAMECLEAR");
+		}
+	}*/
+
+	/*if (yetiFlag == false) {
+		endFlag = false;
+	}*/
+	if (particleFlag == true) {
+		particleBlood->LoadTexture(L"Resources/particleEne.png");
+		for (int i = 0; i < 100; i++) {
+			//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+			/*const float rnd_pos = 1.0f;
+			XMFLOAT3 pos{};
+			pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
+			//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+			const float rnd_vel = 0.1f;
+			XMFLOAT3 vel{};
+			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			//重力に見立ててYのみ[-0.0001f,0]でランダムに分布
+			XMFLOAT3 acc{};
+			const float rnd_acc = 0.001f;
+			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+			//追加
+			particleBlood->Add(10, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z }, vel, acc, 5.0f, 0.0f);
+		}
+	}
+
+	// 敵か弾に当たったらエンド
+	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 4) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 2, 2) == true ||
+		OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 2, 2) == true ||
+		OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 2, 2) == true) {
+		endFlag = true;
+		particleFlag = true;
+	}
+
+	// エンドフラグたったらエンド画面へ
+	if (endFlag == true) {
+		clearFlag = false;
+		stopTimer++;
+		if (stopTimer >= 120) {
+			particleFlag = false;
+			particleBlood->LoadTexture(L"Resources/particleEne.png");
+			for (int i = 0; i < 100; i++) {
+				// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
+				const float rnd_pos = 1000.0f;
+				XMFLOAT3 pos{};
+				pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+				// X, Y, Z全て[-0.05f, +0.05f]でランダムに分布
+				const float rnd_vel = 0.1f;
+				XMFLOAT3 vel{};
+				vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+				// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
+				XMFLOAT3 acc{};
+				const float rnd_acc = 0.001f;
+				acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+				// 追加
+				particleBlood->Add(60, pos, vel, acc, 10.0f, 0.0f);
+			}
+			// プレイヤー
 			playerFlag = false;
+			//stopFlag = true;
+		}
+		if (stopTimer >= 240) {
+			/*stopFlag = false;
+			stopFlag2 = true;*/
+		}
+		if (stopTimer >= 360) {
+			SceneManager::GetInstance()->ChangeScene("GAMEEND");
+			//stopFlag2 = false;
+			//particleMan = ParticleManager::Create();
+			//particleBlood->LoadTexture(L"Resources/particleEne.png");
+			//for (int i = 0; i < 100; i++) {
+			//	// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
+			//	const float rnd_pos = 1000.0f;
+			//	XMFLOAT3 pos{};
+			//	pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			//	pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			//	pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+			//	// X, Y, Z全て[-0.05f, +0.05f]でランダムに分布
+			//	const float rnd_vel = 0.1f;
+			//	XMFLOAT3 vel{};
+			//	vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			//	vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			//	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			//	// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
+			//	XMFLOAT3 acc{};
+			//	const float rnd_acc = 0.001f;
+			//	acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+			//	// 追加
+			//	particleBlood->Add(60, pos, vel, acc, 10.0f, 0.0f);
+			//}
+			// プレイヤー
+			/*playerFlag = false;*/
 		}
 		if (stopTimer >= 500) {
 				SceneManager::GetInstance()->ChangeScene("GAMEEND");
@@ -567,6 +673,7 @@ void GamePlayScene2::Update()
 	particleMan->Update();
 	particleSmoke->Update();
 	particleGone->Update();
+	particleBlood->Update();
 
 	camera->Update();
 
@@ -625,6 +732,7 @@ void GamePlayScene2::Draw()
 	particleMan->Draw(dxCommon->GetCmdList());
 	particleSmoke->Draw(dxCommon->GetCmdList());
 	particleGone->Draw(dxCommon->GetCmdList());
+	particleBlood->Draw(dxCommon->GetCmdList());
 
 	// 3Dオブジェクト描画後処理
 	//Object3d::PostDraw();

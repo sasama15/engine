@@ -84,6 +84,8 @@ private:
     ParticleManager* particleMan = nullptr;
     ParticleManager* particleSmoke = nullptr;
     ParticleManager* particleGone = nullptr;
+    ParticleManager* particleSnow = nullptr;
+    ParticleManager* particleBlood = nullptr;
 
     // プレイヤーローテーション
     XMFLOAT3 PlayerRotation;
@@ -108,6 +110,8 @@ private:
     bool playerFlag = false;
     // イエティフラグ
     bool yetiFlag = false;
+    // クリアフラグ
+    bool clearFlag = false;
     // エンドフラグ
     bool endFlag = false;
     // 弾フラグ
@@ -134,9 +138,12 @@ private:
     //敵転がる
     bool rollingFlag = false;
 
-    // 時間止めてる時のフラグ
+    // 時間止めてる時の画像描画フラグ
     bool stopFlag = false;
     bool stopFlag2 = false;
+
+    // パーティクルフラグ
+    bool particleFlag = false;
 
     // 弾をジャンプ
     bool BulletJump;
@@ -157,6 +164,7 @@ private:
 
     // 時間止める
     int stopTimer;
+    int clearStopTimer;
 
     float BulletGravity[5];
     float BulletJampPower;
