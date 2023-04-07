@@ -7,6 +7,7 @@
 #include "DirectXCommon.h"
 #include "DebugCamera.h"
 #include "ParticleManager.h"
+#include "easing.h"
 
 #include <memory>
 #include <math.h>
@@ -51,6 +52,8 @@ private:
     Sprite* hp2 = nullptr;
     Sprite* hp3 = nullptr;
     Sprite* end = nullptr;
+    Sprite* blackOut = nullptr;
+    Sprite* whiteOut = nullptr;
 
     // BGM
     Audio::SoundData soundData1;
@@ -76,8 +79,9 @@ private:
     ParticleManager* particleMan = nullptr;
     ParticleManager* particleSmoke = nullptr;
     ParticleManager* particleGone = nullptr;
-    //ParticleManager* particleSnow = nullptr;
+    ParticleManager* particleSnow = nullptr;
     ParticleManager* particleBlood = nullptr;
+    ParticleManager* particleCollision = nullptr;
 
     // プレイヤーローテーション
     XMFLOAT3 PlayerRotation;
@@ -123,6 +127,11 @@ private:
     // パーティクルフラグ
     bool particleFlag = false;
 
+    // blackアウトさせる
+    bool blackOutFlag = false;
+    // ホワイトアウトさせる
+    bool whiteOutFlag = false;
+
     // 弾をジャンプ
     bool BulletJump;
     bool BulletJump2;
@@ -146,6 +155,10 @@ private:
 
     float BulletGravity[5];
     float BulletJampPower;
+
+    // フェイドアウト用
+    double fadeoutSize;
+    double fadeoutTime;
 
     DebugCamera* camera;
 };

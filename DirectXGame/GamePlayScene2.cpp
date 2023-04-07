@@ -43,10 +43,12 @@ void GamePlayScene2::Initialize()
 
 	// スプライト共通テクスチャ読み込み
 	SpriteCommon::GetInstance()->LoadTexture(1, L"Resources/title1.png");
-	SpriteCommon::GetInstance()->LoadTexture(2, L"Resources/HP.png");
-	SpriteCommon::GetInstance()->LoadTexture(3, L"Resources/HP2.png");
-	SpriteCommon::GetInstance()->LoadTexture(4, L"Resources/HP3.png");
+	SpriteCommon::GetInstance()->LoadTexture(2, L"Resources/enemyHp.png");
+	SpriteCommon::GetInstance()->LoadTexture(3, L"Resources/enemyHp2.png");
+	SpriteCommon::GetInstance()->LoadTexture(4, L"Resources/enemyHp3.png");
 	SpriteCommon::GetInstance()->LoadTexture(5, L"Resources/gameend.png");
+	SpriteCommon::GetInstance()->LoadTexture(6, L"Resources/blackOut.png");
+	SpriteCommon::GetInstance()->LoadTexture(7, L"Resources/whiteOut.png");
 
 	// スプライトの生成
 	title = Sprite::Create(1, { 0, 0 }, false, false);
@@ -54,6 +56,8 @@ void GamePlayScene2::Initialize()
 	hp2 = Sprite::Create(3, { 0,0 }, false, false);
 	hp3 = Sprite::Create(4, { 0,0 }, false, false);
 	end = Sprite::Create(5, { 0,0 }, false, false);
+	blackOut = Sprite::Create(6, { 0, 0 }, false, false);
+	whiteOut = Sprite::Create(7, { 0, 0 }, false, false);
 
 	// 音声読み込み
 	soundData1 = Audio::SoundLoadWave("Resources/Alarm01.wav");
@@ -76,6 +80,8 @@ void GamePlayScene2::Initialize()
 	hp->SetSize({ 100, 100 });
 	hp2->SetSize({ 500, 500 });
 	hp3->SetSize({ 750, 750 });
+	//blackOut->SetSize({ 0, 0 });
+	whiteOut->SetSize({ 0, 0 });
 
 	// プレイヤーの大きさ
 	playerFbxObject->SetScale({ 0.01f, 0.01f, 0.01f });
@@ -109,6 +115,8 @@ void GamePlayScene2::Initialize()
 
 	hp2->SetPosition({ 390, 110, 0});
 	hp3->SetPosition({ 265, -15, 0 });
+	//blackOut->SetPosition({ 640, 360, 0 });
+	whiteOut->SetPosition({ 640, 360, 0 });
 
 	camera->SetTarget({ playerFbxObject->GetPosition().x, playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z + 20 });
 	camera->SetDistance(50);
@@ -130,6 +138,8 @@ void GamePlayScene2::Initialize()
 	stopFlag2 = false;
 
 	particleFlag = false;
+	blackOutFlag = false;
+	whiteOutFlag = false;
 
 	iceBulletTimer = 0;
 	rollingTimer = 0;
@@ -137,6 +147,9 @@ void GamePlayScene2::Initialize()
 
 	stopTimer = 0;
 	clearStopTimer = 0;
+
+	fadeoutSize = 0;
+	fadeoutTime = 0;
 
 	particleMan = ParticleManager::GetInstance();
 	particleMan->SetCamera(camera);
@@ -146,9 +159,13 @@ void GamePlayScene2::Initialize()
 	particleGone->SetCamera(camera);
 	particleBlood = ParticleManager::GetInstance();
 	particleBlood->SetCamera(camera);
+	particleSnow = ParticleManager::GetInstance();
+	particleSnow->SetCamera(camera);
+	particleCollision = ParticleManager::GetInstance();
+	particleCollision->SetCamera(camera);
 }
 
-void GamePlayScene2::Finalize()
+void GamePlayScene2::Finalize() 
 {
 	// FBXオブジェクト、モデル解放
 	delete playerFbxObject;
@@ -177,6 +194,33 @@ void GamePlayScene2::Update()
 	{
 		OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
 	}
+
+	particleSnow->LoadTexture(L"Resources/crystalOfSnow.png");
+	for (int i = 0; i < 100; i++) {
+		// X, Y, Z全て[-5.0f, +5.0f]でランダムに分布
+		const float rnd_pos = 1000.0f;
+		XMFLOAT3 pos{};
+		/*pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;*/
+		pos.y = 0;
+
+		// X, Y, Z全て[-0.05f, +0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		// 重力に見立ててYのみ[-0.0001f, 0]でランダムに分布
+		XMFLOAT3 acc{};
+		const float rnd_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		// 追加
+		particleSnow->Add(60, pos, vel, acc, 10.0f, 0.0f);
+	}
+
+	// タイマーが0だったら
 	if (stopTimer == 0 && clearStopTimer == 0) {
 		//弾が弧を描きながら飛ぶ
 		if (rollingFlag == false) {
@@ -409,7 +453,7 @@ void GamePlayScene2::Update()
 	}
 
 	if (particleFlag == true) {
-		particleBlood->LoadTexture(L"Resources/particleEne.png");
+		particleCollision->LoadTexture(L"Resources/particleEne.png");
 		for (int i = 0; i < 100; i++) {
 			//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 			const float rnd_vel = 0.1f;
@@ -423,7 +467,7 @@ void GamePlayScene2::Update()
 			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 			//追加
-			particleBlood->Add(10, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z }, vel, acc, 5.0f, 0.0f);
+			particleCollision->Add(10, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z }, vel, acc, 10.0f, 0.0f);
 		}
 	}
 
@@ -467,8 +511,18 @@ void GamePlayScene2::Update()
 			// プレイヤー
 			playerFlag = false;
 		}
-		/*if (stopTimer >= 240) {
-		}*/
+		if (stopTimer >= 240) {
+			blackOutFlag = true;
+			if (blackOutFlag == true) {
+				// フェイドアウト
+				fadeoutTime += 0.008;
+				blackOut->SetSize({ (float)fadeoutSize,(float)fadeoutSize });
+				// 中央から
+				blackOut->SetPosition({ 1280 / 2.0f - (float)fadeoutSize / 2,
+					720 / 2.0f - (float)fadeoutSize / 2, 0 });
+				easing::Update(fadeoutSize, 1280, 3, fadeoutTime);
+			}
+		}
 		if (stopTimer >= 360) {
 			SceneManager::GetInstance()->ChangeScene("GAMEEND");
 		}
@@ -489,6 +543,8 @@ void GamePlayScene2::Update()
 	hp2->Update();
 	hp3->Update();
 	end->Update();
+	blackOut->Update();
+	whiteOut->Update();
 
 	// FBXオブジェクト更新
 	playerFbxObject->Update();
@@ -505,6 +561,8 @@ void GamePlayScene2::Update()
 	particleSmoke->Update();
 	particleGone->Update();
 	particleBlood->Update();
+	particleSnow->Update();
+	particleCollision->Update();
 
 	camera->Update();
 
@@ -559,6 +617,8 @@ void GamePlayScene2::Draw()
 	particleSmoke->Draw(dxCommon->GetCmdList());
 	particleGone->Draw(dxCommon->GetCmdList());
 	particleBlood->Draw(dxCommon->GetCmdList());
+	particleSnow->Draw(dxCommon->GetCmdList());
+	particleCollision->Draw(dxCommon->GetCmdList());
 
 	// 3Dオブジェクト描画後処理
 	
@@ -570,5 +630,12 @@ void GamePlayScene2::Draw()
 	}
 	if (stopFlag2 == true) {
 		hp3->Draw();
+	}
+
+	if (blackOutFlag == true) {
+		blackOut->Draw();
+	}
+	if (whiteOutFlag == true) {
+		whiteOut->Draw();
 	}
 }
