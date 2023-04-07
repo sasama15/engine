@@ -148,8 +148,9 @@ void GamePlayScene2::Initialize()
 	stopTimer = 0;
 	clearStopTimer = 0;
 
-	fadeoutSize = 0;
-	fadeoutTime = 0;
+	// フェイドアウト用
+	fadeOutSize = 0;
+	fadeOutTime = 0;
 
 	particleMan = ParticleManager::GetInstance();
 	particleMan->SetCamera(camera);
@@ -515,12 +516,12 @@ void GamePlayScene2::Update()
 			blackOutFlag = true;
 			if (blackOutFlag == true) {
 				// フェイドアウト
-				fadeoutTime += 0.008;
-				blackOut->SetSize({ (float)fadeoutSize,(float)fadeoutSize });
+				fadeOutTime += 0.008;
+				blackOut->SetSize({ (float)fadeOutSize,(float)fadeOutSize });
 				// 中央から
-				blackOut->SetPosition({ 1280 / 2.0f - (float)fadeoutSize / 2,
-					720 / 2.0f - (float)fadeoutSize / 2, 0 });
-				easing::Update(fadeoutSize, 1280, 3, fadeoutTime);
+				blackOut->SetPosition({ 1280 / 2.0f - (float)fadeOutSize / 2,
+					720 / 2.0f - (float)fadeOutSize / 2, 0 });
+				easing::Update(fadeOutSize, 1280, 3, fadeOutTime);
 			}
 		}
 		if (stopTimer >= 360) {

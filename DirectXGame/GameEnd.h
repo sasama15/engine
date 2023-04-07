@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "Object3d.h"
 #include "Audio.h"
+#include "Easing.h"
 
 /// <summary>
 /// ゲームクリアシーン
@@ -31,6 +32,14 @@ public:
 
 private:
     Sprite* sprite1 = nullptr;
+    Sprite* blackIn = nullptr;
+
+    // blackアウトさせる
+    bool blackInFlag = false;
+
+    // フェイドイン用
+    double fadeInSize;
+    double fadeInTime;
 
     //Audio::SoundData soundData1;
 };

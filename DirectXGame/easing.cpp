@@ -1,4 +1,4 @@
-#include "easing.h"
+#include "Easing.h"
 
 
 using namespace DirectX;

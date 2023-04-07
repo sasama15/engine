@@ -7,7 +7,7 @@
 #include "DirectXCommon.h"
 #include "DebugCamera.h"
 #include "ParticleManager.h"
-#include "easing.h"
+#include "Easing.h"
 
 #include <memory>
 #include <math.h>
@@ -157,8 +157,8 @@ private:
     float BulletJampPower;
 
     // フェイドアウト用
-    double fadeoutSize;
-    double fadeoutTime;
+    double fadeOutSize;
+    double fadeOutTime;
 
     DebugCamera* camera;
 };

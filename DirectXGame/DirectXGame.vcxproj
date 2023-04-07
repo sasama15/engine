@@ -183,7 +183,7 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="camera\DebugCamera.cpp" />
-    <ClCompile Include="easing.cpp" />
+    <ClCompile Include="Easing.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameEnd.cpp" />
     <ClCompile Include="GamePlayScene2.cpp" />
@@ -228,7 +228,7 @@
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="camera\DebugCamera.h" />
     <ClInclude Include="Collision\Collision.h" />
-    <ClInclude Include="easing.h" />
+    <ClInclude Include="Easing.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameEnd.h" />
     <ClInclude Include="GamePlayScene2.h" />
