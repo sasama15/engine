@@ -455,7 +455,7 @@ void GamePlayScene2::Update()
 
 	if (particleFlag == true) {
 		particleCollision->LoadTexture(L"Resources/particleEne.png");
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 5; i++) {
 			//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 			const float rnd_vel = 0.1f;
 			XMFLOAT3 vel{};
@@ -468,16 +468,20 @@ void GamePlayScene2::Update()
 			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 			//追加
-			particleCollision->Add(10, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z }, vel, acc, 10.0f, 0.0f);
+			particleCollision->Add(60, { playerFbxObject->GetPosition().x,  playerFbxObject->GetPosition().y, playerFbxObject->GetPosition().z }, vel, acc, 5.0f, 0.0f);
 		}
+		particleFlag = false;
 	}
 
 	// 敵か弾に当たったらエンド
 	if (OnCollisionCircle(playerFbxObject, yetiFbxObject, 5, 4) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[0], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[1], 2, 2) == true ||
 		OnCollisionCircle(playerFbxObject, bulletFbxObject[2], 2, 2) == true || OnCollisionCircle(playerFbxObject, bulletFbxObject[3], 2, 2) == true ||
 		OnCollisionCircle(playerFbxObject, bulletFbxObject[4], 2, 2) == true) {
+		if (endFlag == false)
+		{
+			particleFlag = true;
+		}
 		endFlag = true;
-		particleFlag = true;
 	}
 
 	// エンドフラグたったらエンド画面へ
@@ -521,7 +525,7 @@ void GamePlayScene2::Update()
 				// 中央から
 				blackOut->SetPosition({ 1280 / 2.0f - (float)fadeOutSize / 2,
 					720 / 2.0f - (float)fadeOutSize / 2, 0 });
-				easing::Update(fadeOutSize, 1280, 3, fadeOutTime);
+				easing::Update(fadeOutSize, 1280, 10, fadeOutTime);
 			}
 		}
 		if (stopTimer >= 360) {
