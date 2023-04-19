@@ -47,7 +47,8 @@ void Operation::Update()
     if (clearConditionFrag == true && nextTimer > 60) {
         if (input->TriggerKey(DIK_SPACE) || input->TriggerButton(static_cast<int>(Button::BACK))) {
             //ƒV[ƒ“Ø‚è‘Ö‚¦
-            SceneManager::GetInstance()->ChangeScene("GAMEPLAY2");
+            //SceneManager::GetInstance()->ChangeScene("GAMEPLAY2");
+            SceneManager::GetInstance()->ChangeScene("STAGESELECT");
         }
     }
    

@@ -97,6 +97,9 @@ private:
     XMFLOAT3 BulletPos[5];
     XMFLOAT3 UniversePos;
 
+    // 違うポジション
+    XMFLOAT3 differencePos[5];
+
     // 弾の最大数
     const int iceMax = 5;
 
@@ -153,8 +156,10 @@ private:
     int stopTimer;
     int clearStopTimer;
 
+    // 弾関連
     float BulletGravity[5];
     float BulletJampPower;
+    float movement[5];
 
     // フェイドアウト用
     double fadeOutSize;

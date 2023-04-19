@@ -104,10 +104,12 @@ void GamePlayScene2::Initialize()
 	YetiPos = { 0, 0, 70 };
 	yetiFbxObject->SetPosition({ YetiPos });
 
-	// 弾のポジション
 	for (int i = 0; i < 5; i++) {
+		// 弾のポジション
 		BulletPos[i] = { 0, 0, 70 };
 		bulletFbxObject[i]->SetPosition({ BulletPos[i] });
+		// 違うポジション
+		//differencePos[i] = { 0, 0, 0 };
 	}
 
 	UniversePos = { 0, playerFbxObject->GetPosition().y, -100};
@@ -239,6 +241,13 @@ void GamePlayScene2::Update()
 						bulletFlag[i] = true;
 						iceBulletTimer = 0;
 					}
+					/*differencePos[i].x = PlayerPos.x - YetiPos.x;
+					differencePos[i].y = PlayerPos.y - YetiPos.y;
+					differencePos[i].z = PlayerPos.z - YetiPos.z;
+					movement[i] = sqrtf(differencePos[i].x *
+						differencePos[i].x + differencePos[i].y *
+						differencePos[i].y + differencePos[i].z *
+						differencePos[i].z);*/
 					break;
 				}
 			}
@@ -267,10 +276,15 @@ void GamePlayScene2::Update()
 					if (oldPlayerPos[i].x >= bulletFbxObject[i]->GetPosition().x) {
 						BulletPos[i].x = BulletPos[i].x - BulletJampPower;
 					}
+
+
 					BulletGravity[i] += 0.005f;
 					BulletPos[i].y = BulletPos[i].y - BulletJampPower;
 					BulletPos[i].y += BulletGravity[i];
 					bulletFbxObject[i]->SetPosition({ YetiPos.x - BulletPos[i].x, YetiPos.y - BulletPos[i].y, YetiPos.z - BulletPos[i].z });
+					// 弾のポジションに移動量を足すとき
+					/*bulletFbxObject[i]->SetPosition({ BulletPos[i].x + (differencePos[i].x / movement[i]) + 0.4f,
+						BulletPos[i].y, BulletPos[i].z + (differencePos[i].z / movement[i]) * 0.4f});*/
 				}
 			}
 		}

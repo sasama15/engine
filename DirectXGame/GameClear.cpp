@@ -37,7 +37,8 @@ void GameClear::Update()
 
     if (input->TriggerKey(DIK_SPACE) || input->TriggerButton(static_cast<int>(Button::BACK))) {
         //シーン切り替え
-        SceneManager::GetInstance()->ChangeScene("TITLE");
+        //SceneManager::GetInstance()->ChangeScene("TITLE");
+        SceneManager::GetInstance()->ChangeScene("STAGESELECT");
     }
     // DirectX毎フレーム処理　ここまで
 #pragma endregion DirectX毎フレーム処理

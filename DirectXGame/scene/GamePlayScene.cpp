@@ -328,7 +328,7 @@ void GamePlayScene::Update()
 
     if ((input->TriggerKey(DIK_SPACE) || input->TriggerButton(static_cast<int>(Button::BACK))) && endFlag == true) {
         //ƒV[ƒ“Ø‚è‘Ö‚¦
-        SceneManager::GetInstance()->ChangeScene("TITLE");
+        SceneManager::GetInstance()->ChangeScene("STAGESELECT");
     }
 
     float clearColor[] = { 0.1f,0.25f, 0.5f,0.0f }; // Â‚Á‚Û‚¢F
