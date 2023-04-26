@@ -125,9 +125,9 @@ void StageSelect::Update()
 
    if (input->PushKey(DIK_S)) {
        OperationSize.x--, OperationSize.y--;
-       SelectSize.x--, SelectSize.y--;
-       SelectSize2.x--, SelectSize2.y--;
-       SelectSize3.x--, SelectSize3.y--;
+        SelectSize.x--, SelectSize.y--;
+        SelectSize2.x--, SelectSize2.y--;
+        SelectSize3.x--, SelectSize3.y--;
    }
 
    miniOperationSprite->SetSize({ OperationSize.x, OperationSize.y });
@@ -135,77 +135,71 @@ void StageSelect::Update()
     selectSprite2->SetSize({ SelectSize2.x,SelectSize2.y });
     selectSprite3->SetSize({ SelectSize3.x,SelectSize3.y });
 
-    if (OperationSize.x <= 0 && OperationSize.y <= 0) {
-        OperationFlag = false;
-        if (input->PushKey(DIK_W)) {
-            OperationSize.x++, OperationSize.y++;
-            if (OperationSize.x >= 0 && OperationSize.y >= 0) {
-                OperationFlag = true;
-            }
+    if (input->PushKey(DIK_W)) {
+        if (OperationSize.x > 0 && OperationSize.y > 0) {
+            OperationFlag = true;
+        }
+        if (OperationSize.x >= 160 && OperationSize.y >= 160) {
+            OperationFlag = false;
         }
     }
-    if (OperationSize.x >= 160 && OperationSize.y >= 160) {
-        OperationFlag = false;
-        if (input->PushKey(DIK_S)) {
-            OperationSize.x--, OperationSize.y--;
-            if (OperationSize.x <= 160 && OperationSize.y <= 160) {
-                OperationFlag = true;
-            }
+    if (input->PushKey(DIK_S)) {
+        if (OperationSize.x <= 160 && OperationSize.y <= 160) {
+            OperationFlag = true;
+        }
+        if (OperationSize.x <= 0 && OperationSize.y <= 0) {
+            OperationFlag = false;
         }
     }
 
-    if (SelectSize.x <= 0 && SelectSize.y <= 0) {
-        select1Flag = false;
-        if (input->PushKey(DIK_W)) {
-            SelectSize.x++, SelectSize.y++;
-            if (SelectSize.x >= 0 && SelectSize.y >= 0) {
-                select1Flag = true;
-            }
+    if (input->PushKey(DIK_W)) {
+        if (SelectSize.x > 0 && SelectSize.y > 0) {
+            select1Flag = true;
+        }
+        if (SelectSize.x >= 160 && SelectSize.y >= 160) {
+            select1Flag = false;
         }
     }
-    if (SelectSize.x >= 160 && SelectSize.y >= 160) {
-        select1Flag = false;
-        if (input->PushKey(DIK_S)) {
-            SelectSize.x--, SelectSize.y--;
-            if (SelectSize.x <= 160 && SelectSize.y <= 160) {
-                select1Flag = true;
-            }
+    if (input->PushKey(DIK_S)) {
+        if (SelectSize.x <= 160 && SelectSize.y <= 160) {
+            select1Flag = true;
+        }
+        if (SelectSize.x <= 0 && SelectSize.y <= 0) {
+            select1Flag = false;
         }
     }
-    if (SelectSize2.x <= 0 && SelectSize2.y <= 0) {
-        select2Flag = false;
-        if (input->PushKey(DIK_W)) {
-            SelectSize2.x++, SelectSize2.y++;
-            if (SelectSize2.x >= 0 && SelectSize2.y >= 0) {
-                select2Flag = true;
-            }
+
+    if (input->PushKey(DIK_W)) {
+        if (SelectSize2.x > 0 && SelectSize2.y > 0) {
+            select2Flag = true;
+        }
+        if (SelectSize2.x > 160 && SelectSize2.y > 160) {
+            select2Flag = false;
         }
     }
-    if (SelectSize2.x >= 160 && SelectSize2.y >= 160) {
-        select2Flag = false;
-        if (input->PushKey(DIK_S)) {
-            SelectSize2.x--, SelectSize2.y--;
-            if (SelectSize2.x <= 160 && SelectSize2.y <= 160) {
-                select2Flag = true;
-            }
+    if (input->PushKey(DIK_S)) {
+        if (SelectSize2.x <= 160 && SelectSize2.y <= 160) {
+            select2Flag = true;
+        }
+        if (SelectSize2.x <= 0 && SelectSize2.y <= 0) {
+            select2Flag = false;
         }
     }
-    if (SelectSize3.x <= 0 && SelectSize3.y <= 0) {
-        select3Flag = false;
-        if (input->PushKey(DIK_W)) {
-            SelectSize3.x++, SelectSize3.y++;
-            if (SelectSize3.x >= 0 && SelectSize3.y >= 0) {
-                select3Flag = true;
-            }
+
+    if (input->PushKey(DIK_W)) {
+        if (SelectSize3.x > 0 && SelectSize3.y > 0) {
+            select3Flag = true;
+        }
+        if (SelectSize3.x >= 160 && SelectSize3.y >= 160) {
+            select3Flag = false;
         }
     }
-    if (SelectSize3.x >= 160 && SelectSize3.y >= 160) {
-        select3Flag = false;
-        if (input->PushKey(DIK_S)) {
-            SelectSize3.x--, SelectSize3.y--;
-            if (SelectSize3.x <= 160 && SelectSize3.y <= 160) {
-                select3Flag = true;
-            }
+    if (input->PushKey(DIK_S)) {
+        if (SelectSize3.x <= 160 && SelectSize3.y <= 160) {
+            select3Flag = true;
+        }
+        if (SelectSize3.x <= 0 && SelectSize3.y <= 0) {
+            select3Flag = false;
         }
     }
 
