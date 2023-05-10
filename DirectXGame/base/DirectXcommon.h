@@ -2,6 +2,8 @@
 #include <d3dx12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
+#include <chrono>
+#include <thread>
 
 #include "WinApp.h"
 
@@ -31,6 +33,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap;
 
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+
+	// 記録時間(FPS固定用)
+	std::chrono::steady_clock::time_point reference_;
 
 	// WindowsAPI 借りてきた
 	WinApp* winApp = nullptr;
@@ -70,6 +75,10 @@ private:
 	void InitializeDepthBuffer();
 	// フェンスの初期化
 	void InitializeFence();
+	// FPS固定初期化
+	void InitializeFixFps();
+	// FPS固定更新
+	void UpdateFixFps();
 
 public:	// メンバ関数
 	// 初期化

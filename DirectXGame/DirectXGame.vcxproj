@@ -187,6 +187,7 @@
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameEnd.cpp" />
     <ClCompile Include="GamePlayScene2.cpp" />
+    <ClCompile Include="GamePlayScene3.cpp" />
     <ClCompile Include="input\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Operation.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameEnd.h" />
     <ClInclude Include="GamePlayScene2.h" />
+    <ClInclude Include="GamePlayScene3.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="scene\GamePlayScene.h" />

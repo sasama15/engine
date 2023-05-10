@@ -1,6 +1,8 @@
 #include "WinApp.h"
 #include <windows.h>
 
+#pragma comment(lib, "winmm.lib")
+
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // メッセージで分岐
@@ -41,6 +43,9 @@ void WinApp::Initialize()
 
     // ウィンドウ表示
     ShowWindow(hwnd, SW_SHOW);
+
+    // systemtimerの分解能をあげる
+    timeBeginPeriod(1);
 }
 
 void WinApp::Update()
