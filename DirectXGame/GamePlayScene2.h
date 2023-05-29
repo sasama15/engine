@@ -54,6 +54,7 @@ private:
     Sprite* end = nullptr;
     Sprite* blackOut = nullptr;
     Sprite* whiteOut = nullptr;
+    //Sprite* iceFloor = nullptr;
 
     // BGM
     Audio::SoundData soundData1;
@@ -64,7 +65,9 @@ private:
     FbxModel* yetiFbxModel = nullptr;
     // 弾
     FbxModel* bulletFbxModel = nullptr;
+    // 背景
     FbxModel* universeFbxModel = nullptr;
+    FbxModel* iceFloorFbxModel = nullptr;
 
     // プレイヤー
     FbxObject3d* playerFbxObject = nullptr;
@@ -73,7 +76,10 @@ private:
 
     // 弾
     FbxObject3d* bulletFbxObject[5];
+
+    // 背景
     FbxObject3d* universeFbxObject;
+    FbxObject3d* iceFloorFbxObject;
 
     // パーティクル
     ParticleManager* particleMan = nullptr;
@@ -95,7 +101,12 @@ private:
     XMFLOAT3 oldPlayerPos2;
     // 弾
     XMFLOAT3 BulletPos[5];
+    XMFLOAT3 BulletVec[5];
+
+    XMFLOAT3 RollingVec;
+
     XMFLOAT3 UniversePos;
+    XMFLOAT3 IceFloorPos;
 
     // 違うポジション
     XMFLOAT3 differencePos[5];
@@ -134,6 +145,9 @@ private:
     bool blackOutFlag = false;
     // ホワイトアウトさせる
     bool whiteOutFlag = false;
+
+    // 移動方向フラグ
+    bool movementFlag = false;
 
     // 弾をジャンプ
     bool BulletJump;

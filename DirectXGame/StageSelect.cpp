@@ -279,9 +279,9 @@ void StageSelect::Draw()
     if (select2Flag == true) {
         selectSprite2->Draw();
     }
-    if (select3Flag == true) {
+   /* if (select3Flag == true) {
         selectSprite3->Draw();
-    }
+    }*/
 
     if (clear1Flag == true) {
         clearSprite1->Draw();
@@ -289,9 +289,9 @@ void StageSelect::Draw()
     if (clear2Flag == true) {
         clearSprite2->Draw();
     }
-    if (clear3Flag == true) {
+    /*if (clear3Flag == true) {
         clearSprite3->Draw();
-    }
+    }*/
     
     frameSprite->Draw();
 }
